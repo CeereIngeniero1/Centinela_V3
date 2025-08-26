@@ -1,29 +1,29 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+require("dotenv").config();
+
 // const { Console } = require("console");
 // const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
 // const colors = require("colors");
 
+
 const os = require("os");
 const { url } = require("inspector");
+require('dotenv').config();
+
+const EquiposGenerales = JSON.parse(process.env.EQUIPOS_GENERALES);
+const Informacion_Empresas = JSON.parse(process.env.InformacionEmpresas);
 const NombreEquipo = os.hostname();
-const EquiposGenerales = {
-  HPGRIS: "EQUIPO CREADOR",
-  "DESKTOP-6JICI9S": "ASUS OLD",
-  "DESKTOP-SNSPTLM": "DELLC3",
-  "LAPTOP-2VU2EBUO": "EQUIPO VALEN",
-  HPRED240: "FER EQUIPO",
-  "LAPTOP-JL0BL28F": "JORGE EQUIPO",
-  MERCADEO: "MERCADEO",
-  "DESKTOP-RF3NUO3": "PIXEL",
-  HPRED241: "FERCHO ingeniero en sistemas best",
-};
+console.log(" Nombre del equipo: " , NombreEquipo);
 
 const EquipoActual = EquiposGenerales[NombreEquipo];
+console.log(" Equipo Actual: " , EquipoActual);
+
 // Actualizado
 const Empresa = "Collective";
-const user1 = "76966";
-const pass1 = "Titulacion2025.";
+const Datos_Empresa = Informacion_Empresas[Empresa];
+const user1 = Datos_Empresa.Codigo;
+const pass1 = Datos_Empresa.Contraseña;
 const user2 = "83955";
 const pass2 = "wX2*dQ3*cS";
 const Agente = 1;
@@ -31,6 +31,7 @@ var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
 var Band = 0;
+//console.log( Informacion_Empresas[Empresa]);
 
 Pagina();
 async function Pagina() {
@@ -62,7 +63,7 @@ async function Pagina() {
     // Reemplaza con la ruta real a tu Google Chrome
     headless: false,
     args: [
-      "--start-maximized", 
+      "--start-maximized",
     ],
     devtools: false,
   });
@@ -147,23 +148,28 @@ async function Agente_Selecion_Empresa(page) {
     () =>
       (document.getElementById("submitterPersonOrganizationNameId").value = "")
   );
-  await page.type("#submitterPersonOrganizationNameId", "76966");
+  // await page.type("#submitterPersonOrganizationNameId", "76966");
+  await page.type("#submitterPersonOrganizationNameId", Datos_Empresa.Codigo);
   // await page.waitForTimeout(300000);
   await page.waitForFunction(
-    () => {
+    (Datos_Empresa) => {
       const el = document.querySelector(
-        'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
+        // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
+         `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]` 
       );
       return (
         el &&
-        el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
+        // el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
+        el.innerText.includes(Datos_Empresa.Nombre)
       );
     },
-    { timeout: 5000 }
+    { timeout: 5000 },
+    Datos_Empresa
   ); // espera máximo 10s
 
-
+  
   await page.keyboard.press("Enter");
+
 }
 
 async function seleccionar_Pin(page, Pin, Veces) {
@@ -959,36 +965,38 @@ async function Profesionales(page, Eventos) {
 }
 
 async function Informacion_financiera(page) {
-
-
+ 
   await page.waitForSelector("#personClassificationId0");
   await page.select("#personClassificationId0", "PJ");
-  await page.evaluate(() => {
+    console.log(Datos_Empresa);
 
-    document.getElementById("activoCorrienteId0").value = "31049615000";
+  await page.evaluate((Datos_Empresa) => {
+    // console.log(Datos_Empresa);
+    
+
+    document.getElementById("activoCorrienteId0").value = Datos_Empresa.activoCorrienteId0;
 
     angular
       .element(document.getElementById("activoCorrienteId0"))
       .triggerHandler("change");
 
-    document.getElementById("pasivoCorrienteId0").value = "7024772000";
+    document.getElementById("pasivoCorrienteId0").value = Datos_Empresa.pasivoCorrienteId0;
 
     angular
       .element(document.getElementById("pasivoCorrienteId0"))
       .triggerHandler("change");
-    document.getElementById("activoTotalId0").value = "193966804000";
+    document.getElementById("activoTotalId0").value = Datos_Empresa.activoTotalId0;
 
     angular
       .element(document.getElementById("activoTotalId0"))
       .triggerHandler("change");
 
-    document.getElementById("pasivoTotalId0").value = "7345458000";
+    document.getElementById("pasivoTotalId0").value = Datos_Empresa.pasivoTotalId0;
 
     angular
       .element(document.getElementById("pasivoTotalId0"))
       .triggerHandler("change");
-  });
-  // ==============================================================================
+  }, Datos_Empresa);
 
   const continPag4 = await page.$x('//span[contains(.,"Continuar")]');
   await continPag4[1].click();
@@ -1015,7 +1023,7 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
     await btncenti[0].click();
 
     await page.waitForSelector(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
-    const RutadeShapefile = `./Documentos/${Empresa}/Sheips/Sector_Collective.zip`;
+    const RutadeShapefile = `./Documentos/${Empresa}/Sheips/Sector_${Empresa}.zip`;
     const ControladorDeCargaShapefile = await page.$(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
     await ControladorDeCargaShapefile.uploadFile(RutadeShapefile);
 
@@ -1230,7 +1238,7 @@ function Mineria(browser, Pin) {
         console.log("Se encontraron errores o reapertura");
 
         const spans = await page.$$eval("span", (els) => els.map(el => el.textContent.trim()));
-         const mensajes = await page.$$eval('.errorMsg a', enlaces =>
+        const mensajes = await page.$$eval('.errorMsg a', enlaces =>
           enlaces.map(el => el.textContent.trim())
         );
         if (spans.includes("Vea los errores a continuación (dentro de las pestañas):")) {
@@ -1238,7 +1246,7 @@ function Mineria(browser, Pin) {
           page.evaluate(() => {
             document.querySelector('[id="cellIdsTxtId"]').value = "";
           });
-        }    
+        }
         if (mensajes.some(msg => msg.includes('CELL_REOPENING_DATE'))) {
           console.log('Mensaje que contiene CELL_REOPENING_DATE encontrado');
           if (contreapertura < 2) {
@@ -1396,7 +1404,7 @@ function Mineria(browser, Pin) {
     });
     // console.log(" si navego ");
 
-  
+
     // clearTimeout(Radisegundo);
 
     // let RadiTercero = setTimeout(() => {
@@ -1829,7 +1837,7 @@ function VerificarVencimientoPin(
 
 const Areas =
   [
-    
+
     {
       NombreArea: "prueba",
       Referencia: "18N05N14M12R",
@@ -1923,7 +1931,7 @@ const Areas =
       NombreArea: "671_17",
       Referencia: "18N05E04E05N",
       Celdas: ["18N05E04E05N, 18N05E04F01F, 18N05E04F06G, 18N05E04F01W, 18N05E04F01R, 18N05E04F01L, 18N05E04F01B, 18N05E04F06H, 18N05E04F01M, 18N05E04F01T, 18N05E04F07A, 18N05E04F02A, 18N05E04F02G, 18N05E04F02D, 18N05E04B22Y, 18N05E04F08L, 18N05E04F03W, 18N05E04F08H, 18N05E04F03X, 18N05E04F03H, 18N05E04F08I, 18N05E04F08U, 18N05E04F08P, 18N05E04F09M, 18N05E04F09T, 18N05E04F09N, 18N05E04E05T, 18N05E04F06F, 18N05E04F06A, 18N05E04F06B, 18N05E04F01C, 18N05E04F01I, 18N05E04B21Y, 18N05E04B22V, 18N05E04F07B, 18N05E04F02B, 18N05E04F07J, 18N05E04F02Z, 18N05E04F03M, 18N05E04F08Z, 18N05E04F04F, 18N05E04F09W, 18N05E04F09L, 18N05E04F09X, 18N05E04E05I, 18N05E04E10P, 18N05E04F01X, 18N05E04F06J, 18N05E04F01P, 18N05E04B21Z, 18N05E04F02V, 18N05E04F02Q, 18N05E04F02K, 18N05E04F02W, 18N05E04F02R, 18N05E04B22W, 18N05E04F02C, 18N05E04F02N, 18N05E04B22Z, 18N05E04F08K, 18N05E04F08G, 18N05E04F03V, 18N05E04F03F, 18N05E04F03G, 18N05E04F03B, 18N05E04F08M, 18N05E04F03S, 18N05E04B23X, 18N05E04F08Y, 18N05E04F08D, 18N05E04F03T, 18N05E04F03D, 18N05E04F04L, 18N05E04F04B, 18N05E04E10N, 18N05E04E10I, 18N05E04E10D, 18N05E04A25Y, 18N05E04F06V, 18N05E04F01K, 18N05E04A25Z, 18N05E04F01H, 18N05E04B21X, 18N05E04F01U, 18N05E04F01J, 18N05E04F08V, 18N05E04F08B, 18N05E04B23W, 18N05E04F08X, 18N05E04F03J, 18N05E04F09A, 18N05E04B24V, 18N05E04F09H, 18N05E04B24X, 18N05E04F09I, 18N05E04E05Y, 18N05E04E10E, 18N05E04F01V, 18N05E04E05E, 18N05E04F06D, 18N05E04F01Z, 18N05E04F07H, 18N05E04F07C, 18N05E04F02S, 18N05E04F07E, 18N05E04F02P, 18N05E04F08W, 18N05E04F08F, 18N05E04F03K, 18N05E04F09V, 18N05E04F09F, 18N05E04F04G, 18N05E04E05D, 18N05E04E10J, 18N05E04E05U, 18N05E04E05P, 18N05E04F01Q, 18N05E04F06C, 18N05E04F06I, 18N05E04F01E, 18N05E04F07F, 18N05E04F02F, 18N05E04F02H, 18N05E04F07D, 18N05E04F02U, 18N05E04F02J, 18N05E04F02E, 18N05E04F08Q, 18N05E04F08R, 18N05E04F08A, 18N05E04F03R, 18N05E04F03A, 18N05E04F08N, 18N05E04F03I, 18N05E04F03Z, 18N05E04F03P, 18N05E04F04V, 18N05E04F09R, 18N05E04F09B, 18N05E04F09C, 18N05E04F04X, 18N05E04F04S, 18N05E04F04H, 18N05E04F04C, 18N05E04F09Y, 18N05E04F06Q, 18N05E04F01A, 18N05E04F01D, 18N05E04F06E, 18N05E04F07G, 18N05E04F07I, 18N05E04F02Y, 18N05E04F02T, 18N05E04F02I, 18N05E04F03Q, 18N05E04B23V, 18N05E04F03C, 18N05E04F08J, 18N05E04F09Q, 18N05E04F04A, 18N05E04F04W, 18N05E04F04R, 18N05E04F09S, 18N05E04F06K, 18N05E04E05Z, 18N05E04E05J, 18N05E04B21V, 18N05E04F01G, 18N05E04B21W, 18N05E04F01S, 18N05E04F01Y, 18N05E04F01N, 18N05E04F02L, 18N05E04F02X, 18N05E04F02M, 18N05E04B22X, 18N05E04F03L, 18N05E04F08S, 18N05E04F08C, 18N05E04F08T, 18N05E04F03Y, 18N05E04F03N, 18N05E04B23Y, 18N05E04F08E, 18N05E04F03U, 18N05E04F03E, 18N05E04B23Z, 18N05E04F09K, 18N05E04F04Q, 18N05E04F04K, 18N05E04F09G, 18N05E04B24W, 18N05E04F04M"]
-    } 
+    }
     /* {
       NombreArea: "prueba",
       Referencia: "18N05N14M12R",
