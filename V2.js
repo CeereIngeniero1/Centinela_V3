@@ -12,16 +12,31 @@ const { url } = require("inspector");
 require('dotenv').config();
 
 const EquiposGenerales = JSON.parse(process.env.EQUIPOS_GENERALES);
-const Informacion_Empresas = JSON.parse(process.env.InformacionEmpresas);
+const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
+const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
+const Geologos = JSON.parse(process.env.Geologos);
+const Contadores = JSON.parse(process.env.Contadores);
+// console.log(Informacion_Empresas);
+// console.log(Informacion_Economica);
+// console.log(EquiposGenerales);
+// console.log(Geologos);
+console.log(Contadores);
+
+
 const NombreEquipo = os.hostname();
-console.log(" Nombre del equipo: " , NombreEquipo);
+console.log(" Nombre del equipo: ", NombreEquipo);
 
 const EquipoActual = EquiposGenerales[NombreEquipo];
-console.log(" Equipo Actual: " , EquipoActual);
+console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "Collective";
+const Empresa = "Collective"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
+const Datos_Economicos = Informacion_Economica[Empresa];
+const Datos_Geologos = Geologos[Empresa];
+const Datos_Contadores = Contadores[Empresa];
+console.log(" Datos de Datos_Geologos: ", Datos_Geologos);
+console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
 const user2 = "83955";
@@ -155,7 +170,7 @@ async function Agente_Selecion_Empresa(page) {
     (Datos_Empresa) => {
       const el = document.querySelector(
         // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
-         `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]` 
+        `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]`
       );
       return (
         el &&
@@ -167,7 +182,7 @@ async function Agente_Selecion_Empresa(page) {
     Datos_Empresa
   ); // espera máximo 10s
 
-  
+
   await page.keyboard.press("Enter");
 
 }
@@ -918,13 +933,13 @@ async function Profesionales(page, Eventos) {
   console.log(
     "================================================================"
   );
-  let profesionales = [
-    { tipo: "Geólogo", nombres: ["Oscar Javier Pinilla Reyes (73619)"] },
-    //  { tipo: "Ingeniero Geólogo", nombres: [""]},
-    //  { tipo: "Ingeniero de Minas", nombres: [""]}
-  ];
+  // let profesionales = [
+  //   { tipo: "Geólogo", nombres: ["Oscar Javier Pinilla Reyes (73619)"] },
+  //   //  { tipo: "Ingeniero Geólogo", nombres: [""]},
+  //   //  { tipo: "Ingeniero de Minas", nombres: [""]}
+  // ];
 
-  await seleccionar_Profesional(profesionales, page, 1, Eventos);
+  await seleccionar_Profesional(Datos_Geologos, page, 1, Eventos);
 
   // Hacer clic en el botón "Agregar"
   const addProfesional = await page.$x('//span[contains(.,"Agregar")]');
@@ -951,11 +966,11 @@ async function Profesionales(page, Eventos) {
   console.log(
     "================================================================"
   );
-  let Contador_es = [
-    { tipo: "Contador", nombres: ["PABLO ESTEBAN MONTOYA MONTOYA (91124)"] },
-  ];
+  // let Contador_es = [
+  //   { tipo: "Contador", nombres: ["PABLO ESTEBAN MONTOYA MONTOYA (91124)"] },
+  // ];
 
-  await seleccionar_Profesional(Contador_es, page, 2, Eventos);
+  await seleccionar_Profesional(Datos_Contadores, page, 2, Eventos);
 
   console.log(
     "================================================================"
@@ -965,38 +980,38 @@ async function Profesionales(page, Eventos) {
 }
 
 async function Informacion_financiera(page) {
- 
+
   await page.waitForSelector("#personClassificationId0");
   await page.select("#personClassificationId0", "PJ");
-    console.log(Datos_Empresa);
+  console.log(Datos_Economicos);
 
-  await page.evaluate((Datos_Empresa) => {
+  await page.evaluate((Datos_Economicos) => {
     // console.log(Datos_Empresa);
-    
 
-    document.getElementById("activoCorrienteId0").value = Datos_Empresa.activoCorrienteId0;
+
+    document.getElementById("activoCorrienteId0").value = Datos_Economicos.activoCorrienteId0;
 
     angular
       .element(document.getElementById("activoCorrienteId0"))
       .triggerHandler("change");
 
-    document.getElementById("pasivoCorrienteId0").value = Datos_Empresa.pasivoCorrienteId0;
+    document.getElementById("pasivoCorrienteId0").value = Datos_Economicos.pasivoCorrienteId0;
 
     angular
       .element(document.getElementById("pasivoCorrienteId0"))
       .triggerHandler("change");
-    document.getElementById("activoTotalId0").value = Datos_Empresa.activoTotalId0;
+    document.getElementById("activoTotalId0").value = Datos_Economicos.activoTotalId0;
 
     angular
       .element(document.getElementById("activoTotalId0"))
       .triggerHandler("change");
 
-    document.getElementById("pasivoTotalId0").value = Datos_Empresa.pasivoTotalId0;
+    document.getElementById("pasivoTotalId0").value = Datos_Economicos.pasivoTotalId0;
 
     angular
       .element(document.getElementById("pasivoTotalId0"))
       .triggerHandler("change");
-  }, Datos_Empresa);
+  }, Datos_Economicos);
 
   const continPag4 = await page.$x('//span[contains(.,"Continuar")]');
   await continPag4[1].click();
