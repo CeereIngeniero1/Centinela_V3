@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/CeereIngeniero1/Centinela_V3#readme",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^17.2.1",
     "fs": "0.0.1-security",
     "nodemailer": "^7.0.5",
