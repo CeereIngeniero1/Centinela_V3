@@ -1290,9 +1290,9 @@ function Mineria(browser, Pin) {
             document.querySelector('#cellIdsTxtId').value = '';
           });
         } else {
-           /* CODIGO PARA REORGANIZAR AREA CON CELDAS NO DISPONIBLES, INFERIOR A LA INICIAL */
+          /* CODIGO PARA REORGANIZAR AREA CON CELDAS NO DISPONIBLES, INFERIOR A LA INICIAL */
           try {
-           
+
             // Extraer celdas no disponibles del DOM
             const celdasNoDisponibles = await page.$$eval('a.errorMsg', links => {
               return links
@@ -1432,16 +1432,29 @@ function Mineria(browser, Pin) {
       Mineria(browser, Pin);
     }, 30000);
 
-    await Detalles_de_area(page);
+    try {
+      await Detalles_de_area(page);
+    } catch (error) {
+      await Detalles_de_area(page);
+    }
 
-    await Informacion_tecnica(page);
+    try {
+      await Informacion_tecnica(page);
+    } catch (error) {
+      await Informacion_tecnica(page);
+    }
 
+    try {
+      await Profesionales(page, 0);
+    } catch (error) {
+      await Profesionales(page, 0);
+    }
 
-
-    await Profesionales(page, 0);
-
-
-    await Informacion_financiera(page);
+    try {
+      await Informacion_financiera(page);
+    } catch (error) {
+      await Informacion_financiera(page);
+    }
 
     try {
       await page.waitForFunction(
