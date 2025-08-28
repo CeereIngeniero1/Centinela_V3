@@ -1,10 +1,10 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 require("dotenv").config();
+const colors = require("colors");
 
 // const { Console } = require("console");
 // const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
-// const colors = require("colors");
 
 
 const os = require("os");

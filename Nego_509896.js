@@ -1,11 +1,10 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 require("dotenv").config();
+const colors = require("colors");
 
 // const { Console } = require("console");
 // const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
-// const colors = require("colors");
-
 
 const os = require("os");
 const { url } = require("inspector");
@@ -20,7 +19,7 @@ const Contadores = JSON.parse(process.env.Contadores);
 // console.log(Informacion_Economica);
 // console.log(EquiposGenerales);
 // console.log(Geologos);
-console.log(Contadores);
+// console.log(Contadores);
 
 
 const NombreEquipo = os.hostname();
@@ -41,11 +40,14 @@ const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
 const user2 = "83955";
 const pass2 = "wX2*dQ3*cS";
-const Agente = 0;
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
 var Band = 0;
+var ComparacionCeldas = "";
+var areaFiltrado;
+
 //console.log( Informacion_Empresas[Empresa]);
 
 Pagina();
@@ -345,6 +347,7 @@ async function Minerales(page) {
 async function MonitorearAreas(page, IdArea, Celda, Area) {
   //console.log(IdArea, Aviso, Celda, Comas);
 
+  const AreaCeldas = Area[0].split(',').map(celda => celda.trim());
   await page.evaluate(
     ({ Area }) => {
       document.querySelector('[id="cellIdsTxtId"]').value = Area.join("");
@@ -359,6 +362,7 @@ async function MonitorearAreas(page, IdArea, Celda, Area) {
     IdArea: IdArea,
     Celda: Celda,
     Area: Area,
+    AreaCeldas: AreaCeldas,
   };
 
   return DetallesCompletos;
@@ -1212,7 +1216,11 @@ function Mineria(browser, Pin) {
       "Usando el mapa de selección para dibujar un polígono o ingresar celdas"
     );
 
+
+
     while (true) {
+
+
 
       const Pestanas = await browser.pages();
       console.log(`HAY ${Pestanas.length} PESTAÑAS ABIERTAS`);
@@ -1235,10 +1243,15 @@ function Mineria(browser, Pin) {
       console.log("NombreArea: " + Areas[Band].NombreArea);
       console.log("Referencia: " + Areas[Band].Referencia);
 
-      await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Areas[Band].Celdas);
+
+      DetallesCompletos = await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Areas[Band].Celdas);
+
+
+
+
 
       // console.log("Celdas: " + Areas[Band].Celdas);
-
+      ComparacionCeldas = DetallesCompletos.AreaCeldas;
       const continCeldas = await page.$x('//span[contains(.,"Continuar")]');
       await page.waitForTimeout(1000);
       await continCeldas[1].click();
@@ -1251,6 +1264,11 @@ function Mineria(browser, Pin) {
         }, { timeout: 2000 });
 
         console.log("Se encontraron errores o reapertura");
+
+
+
+
+
 
         const spans = await page.$$eval("span", (els) => els.map(el => el.textContent.trim()));
         const mensajes = await page.$$eval('.errorMsg a', enlaces =>
@@ -1271,6 +1289,82 @@ function Mineria(browser, Pin) {
           await page.evaluate(() => {
             document.querySelector('#cellIdsTxtId').value = '';
           });
+        } else {
+           /* CODIGO PARA REORGANIZAR AREA CON CELDAS NO DISPONIBLES, INFERIOR A LA INICIAL */
+          try {
+           
+            // Extraer celdas no disponibles del DOM
+            const celdasNoDisponibles = await page.$$eval('a.errorMsg', links => {
+              return links
+                .filter(link => link.textContent.includes('Las siguientes celdas de selección no están disponibles:'))
+                .map(link => link.textContent.split(': ')[1].split(',').map(celda => celda.trim())); // Extrae las celdas y las limpia
+            });
+
+            console.log(`===============================================================================================`.cyan.bold);
+            // console.log(`AREA COMPLETA => ${Area}`);
+            // console.log(`CELDAS NO DISPONIBLES => ${celdasNoDisponibles}`);
+
+            console.log(`ÁREA COMPLETA => `.magenta.bold);
+            console.log(`[${Areas[Band].Celdas}]`);
+            console.log(`CELDAS NO DISPONIBLES => `.red.bold);
+            console.log(`[${celdasNoDisponibles}]`);
+
+
+
+            if (Band != 81) {
+
+
+              // Tipo, Area, Celda
+              // Crear una lista de celdas no disponibles (eliminando espacios innecesarios)
+              const celdasNoDisponiblesLimpias = celdasNoDisponibles[0].map(celda => celda.trim());
+
+              // Asegurarse de que 'ComparacionCeldas' esté correctamente dividido en celdas
+              const areaCeldas = ComparacionCeldas;
+
+              // Filtrar el arreglo 'areaCeldas' para excluir las celdas no disponibles
+              areaFiltrado = areaCeldas.filter(celda => !celdasNoDisponiblesLimpias.includes(celda));
+              console.log('area filtrado ' + areaFiltrado);
+
+
+              //console.log(`CELDAS DISPONIBLES => `. areaFiltrado);
+
+
+              if (areaFiltrado.length > 0) {
+                //Correo(1, Area, areaFiltrado);
+
+                // Mostrar el nuevo arreglo que no contiene las celdas no disponibles
+                // console.log('ÁREA MONTADA EXCLUYENDO LAS CELDAS QUE NO ESTÁN DISPONIBLES => ', areaFiltrado);
+                // console.log(`ÁREA MONTADA EXCLUYENDO LAS CELDAS QUE NO ESTÁN DISPONIBLES => `.green.bold);
+                console.log(`CELDAS DISPONIBLES => `.green.bold);
+                console.log(`["${areaFiltrado.join(', ')}"],`);
+                console.log(`===============================================================================================`.cyan.bold);
+                //Band = 80;
+
+                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, areaFiltrado);
+                // await page.waitForTimeout(1000);
+                await continCeldas[1].click();
+                await page.waitForFunction(
+                  url => window.location.href === url,
+                  { timeout: 6000 },
+                  "https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataInputTechnicalEconomicalDetails"
+                );
+                //se tiene que cambiar para decir que fue por reorganizacion
+                Correo(1, Areas[Band].NombreArea, Areas[Band].Referencia);
+                break;
+
+              } else {
+
+                console.log('No se encontraron celdas no disponibles.');
+                console.log(`===============================================================================================`.cyan.bold);
+              }
+
+
+            }
+            /* FIN FIN FIN */
+          } catch (error) {
+            console.log('Error al reorganizar las celdas del área:', error);
+
+          }
         }
 
 
@@ -1397,7 +1491,7 @@ function Mineria(browser, Pin) {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
       Mineria(browser, Pin);
-    }, 120000);
+    }, 10000);
 
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
@@ -1426,7 +1520,7 @@ function Mineria(browser, Pin) {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
       Mineria(browser, Pin);
-    }, 120000);
+    }, 60000);
 
     const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
       '//a[contains(.,"Documentac")]'
@@ -1849,7 +1943,7 @@ function VerificarVencimientoPin(
     PrimerCorreoEnviado = false;
   }
 }
-///////////////////////////OJO ESTE JS SI RADICA//////////////////////////////
+
 const Areas =
   [
     // // // /*{
