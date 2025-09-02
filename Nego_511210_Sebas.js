@@ -1585,11 +1585,11 @@ function Mineria(browser, Pin) {
     //await page.waitForTimeout(4000);
     console.log("Le di click");
 
-    try {
-      await btnRadicar1[0].click();
-    } catch (exepcion) {
-      console.log("La pos 0 No fue ");
-    }
+    // try {
+    //   await btnRadicar1[0].click();
+    // } catch (exepcion) {
+    //   console.log("La pos 0 No fue ");
+    // }
     try {
       await btnRadicar1[1].click();
     } catch (exepcion) {

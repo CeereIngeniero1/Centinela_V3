@@ -3,8 +3,10 @@ const fs = require("fs");
 require("dotenv").config();
 const colors = require("colors");
 
-// const { Console } = require("console");
-// const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
+
+const { Console } = require("console");
+const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
+
 
 const os = require("os");
 const { url } = require("inspector");
@@ -29,7 +31,7 @@ const EquipoActual = EquiposGenerales[NombreEquipo];
 console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "NegoYMetales"; // Collective, NegoYMetales, Freeport, Provenza
+const Empresa = "Collective"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
 const Datos_Economicos = Informacion_Economica[Empresa];
 const Datos_Geologos = Geologos[Empresa];
@@ -38,8 +40,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '79814';
-const pass2 = 'Y%15928344';
+const user2 = "83955";
+const pass2 = "wX2*dQ3*cS";
 const Agente = 0;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -261,10 +263,11 @@ async function seleccionar_Pin(page, Pin, Veces) {
   await page.waitForXPath('//span[contains(.,"Continuar")]');
   const continPin = await page.$x('//span[contains(.,"Continuar")]');
   //if(Veces == 1){
+  await page.waitForTimeout(8000);
   await continPin[1].click();
   //}
 
-  await page.waitForTimeout(1000);
+
 
   try {
     // Intentar esperar el botón 5 segundos
@@ -1456,6 +1459,8 @@ function Mineria(browser, Pin) {
       await Informacion_financiera(page);
     }
 
+
+
     try {
       await page.waitForFunction(
         url => window.location.href === url,
@@ -1533,7 +1538,7 @@ function Mineria(browser, Pin) {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
       Mineria(browser, Pin);
-    }, 60000);
+    }, 120000);
 
     const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
       '//a[contains(.,"Documentac")]'
@@ -1557,7 +1562,7 @@ function Mineria(browser, Pin) {
 
     await keyboard.pressKey(Key.Enter);
 
-    // await page.waitForTimeout(1000000);
+     
 
     while (true) {
       await page.waitForTimeout(1000);
@@ -1576,26 +1581,26 @@ function Mineria(browser, Pin) {
         console.log("El captcha no ha sido resuelto aún.");
       }
     }
-
+    
     console.log("51. Bóton Radicar");
 
     const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
     console.log("Este es el boton radicar : " + btnRadicar1);
-
+  
     //await page.waitForTimeout(4000);
     console.log("Le di click");
-
     // try {
     //   await btnRadicar1[0].click();
     // } catch (exepcion) {
     //   console.log("La pos 0 No fue ");
     // }
+     
     try {
       await btnRadicar1[1].click();
     } catch (exepcion) {
       console.log("La 1 tampoco Y_Y");
     }
-
+    await page.waitForTimeout(1000000);
     //CAPTURA DE PANTALLA
 
     //CORREO RADICACION
@@ -1667,8 +1672,8 @@ function Correo(Tipo, Area, Celda) {
   var mensaje = msg;
   var mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -1959,26 +1964,35 @@ function VerificarVencimientoPin(
 
 const Areas =
   [
-    // // // /*{
-    // // //   NombreArea: "prueba", // nombre del area
-    // // //   Referencia: "18N05N14M12R", // celda referencia
-    // // //   Celdas: ["18N05N14M12R"] // area completa de celdas
-    // // // },*/
 
-    // // // /* {
-    // // //   NombreArea: "prueba",
-    // // //   Referencia: "18N05N14M12R",
-    // // //   Celdas: ["18N05N14M12R"]
-    // // // }*/
+    /* {
+      NombreArea: "prueba", // nombre del area
+      Referencia: "18N05N14M12R", // celda referencia
+      Celdas: ["18N05N14M12R"] // area completa de celdas
+    },*/
     {
-      NombreArea: "509896",
-      Referencia: "18N05E04N06T",
-      Celdas: ["18N05E04N06T, 18N05E04J21N, 18N05E04N01E, 18N05E04N07X, 18N05E04J21I, 18N05E04N06E, 18N05E04N01U, 18N05E04N06I, 18N05E04N06U, 18N05E04N06J, 18N05E04J21P, 18N05E04N07Y, 18N05E04J21Y, 18N05E04N01P, 18N05E04J21Z, 18N05E04J21U, 18N05E04N06N, 18N05E04J21T, 18N05E04N06P, 18N05E04N07Q, 18N05E04N07F, 18N05E04N06Y, 18N05E04N01N, 18N05E04N01Z, 18N05E04N07Z, 18N05E04N08V, 18N05E04N01T, 18N05E04N01D, 18N05E04N01J, 18N05E04N07V, 18N05E04N07K, 18N05E04N07A, 18N05E04N02V, 18N05E04N07W, 18N05E04N06D, 18N05E04N01Y, 18N05E04N01I, 18N05E04N06Z"]
+      NombreArea: "Area1Caldas", // nombre del area
+      Referencia: "18N05A20N19N", // celda referencia
+      Celdas: ["18N05A20N18L, 18N05A20N19N, 18N05A20N18R, 18N05A20N20K, 18N05A20N18Q, 18N05A20N18S, 18N05A20N18N, 18N05A20N18P, 18N05A20N18K, 18N05A20N18M, 18N05A20N19L, 18N05A20N19M, 18N05A20N19P, 18N05A20N19K"] // area completa de celdas
+    },
+    {
+      NombreArea: "Area2Caldas", // nombre del area
+      Referencia: "18N05A20N16M", // celda referencia
+      Celdas: ["18N05A20N16M, 18N05A20N17L, 18N05A20N17M, 18N05A20N17K, 18N05A20N16P, 18N05A20N16N, 18N05A20N16L"] // area completa de celdas
+    },
+    {
+      NombreArea: "PruebaAreaREORGANIZAR",
+      Referencia: "18N05A25G21R",
+      Celdas: [" 18N05A25G21R, 18N05A25G16L, 18N05A25G21S, 18N05A25G21T, 18N05A25G21J, 18N05A25G16U, 18N05A25G22Q, 18N05A25G22A, 18N05A25G17W, 18N05A25G17S, 18N05A25G22T, 18N05A25G23F, 18N05A25G23A, 18N05A25G16P, 18N05A25G22K, 18N05A25G17V, 18N05A25G22H, 18N05A25G22C, 18N05A25G17H, 18N05A25G17Y, 18N05A25G22J, 18N05A25G22E, 18N05A25G17Z, 18N05A25G17P, 18N05A25G16X, 18N05A25G16M, 18N05A25G16Y, 18N05A25G22F, 18N05A25G22N, 18N05A25G22P, 18N05A25G23K, 18N05A25G21L, 18N05A25G16W, 18N05A25G21C, 18N05A25G16S, 18N05A25G21I, 18N05A25G16T, 18N05A25G16I, 18N05A25G21U, 18N05A25G21E, 18N05A25G17X, 18N05A25G17G, 18N05A25G17T, 18N05A25G17U, 18N05A25G18V, 18N05A25G18Q, 18N05A25G21M, 18N05A25G21P, 18N05A25G16J, 18N05A25G17K, 18N05A25G17J, 18N05A25G21H, 18N05A25G16N, 18N05A25G22R, 18N05A25G22S, 18N05A25G22B, 18N05A25G17N, 18N05A25G18K, 18N05A25G21N, 18N05A25G21D, 18N05A25G16Z, 18N05A25G17F, 18N05A25G17R, 18N05A25G17M, 18N05A25G22I, 18N05A25G22D, 18N05A25G22U, 18N05A25G18F, 18N05A25G21G, 18N05A25G21B, 18N05A25G16H, 18N05A25G17Q, 18N05A25G22L, 18N05A25G22M, 18N05A25G22G, 18N05A25G17L, 18N05A25G17I, 18N05A25G23Q"]
+    }, {
+      NombreArea: "Area18",
+      Referencia: "18N05E04D06M",
+      Celdas: ["18N05E04D06M"]
     }
-    // , {
-    //   NombreArea: "511210",
-    //   Referencia: "18N05E04A03C",
-    //   Celdas: ["18N05E04A03C, 18N05A24M13S, 18N05A24M18Z, 18N05A24M18I, 18N05A24M19V, 18N05A24M19F, 18N05A24M14Q, 18N05A24M24L, 18N05A24M24H, 18N05A24M19S, 18N05A24M19M, 18N05A24M19H, 18N05A24M24Y, 18N05A24M24D, 18N05A24M24J, 18N05A24M20R, 18N05A24M25C, 18N05A24M20X, 18N05A24M25D, 18N05A24M23X, 18N05A24M23S, 18N05A24M18H, 18N05A24M14K, 18N05A24M19L, 18N05A24M19G, 18N05A24M25Q, 18N05E04A05B, 18N05A24M23M, 18N05A24M18M, 18N05A24M13X, 18N05A24M13M, 18N05A24M23T, 18N05A24M23D, 18N05A24M18Y, 18N05A24M18P, 18N05A24M18J, 18N05A24M13U, 18N05E04A04B, 18N05A24M19Y, 18N05E04A05A, 18N05A24M20F, 18N05A24M25L, 18N05A24M20W, 18N05A24M25M, 18N05A24M25T, 18N05A24M18U, 18N05A24M18N, 18N05A24M18D, 18N05A24M18E, 18N05A24M13T, 18N05A24M24F, 18N05A24M24A, 18N05A24M14V, 18N05A24M24X, 18N05A24M19C, 18N05A24M19T, 18N05A24M24P, 18N05A24M25K, 18N05A24M23C, 18N05A24M18X, 18N05E04A03E, 18N05A24M23Y, 18N05A24M23Z, 18N05A24M23E, 18N05A24M19Q, 18N05A24M19K, 18N05A24M24B, 18N05A24M19R, 18N05E04A04D, 18N05A24M24T, 18N05A24M19Z, 18N05A24M25A, 18N05A24M20Q, 18N05A24M25B, 18N05A24M25H, 18N05A24M25I, 18N05A24M23U, 18N05A24M23I, 18N05A24M13Y, 18N05A24M24V, 18N05A24M19W, 18N05A24M14W, 18N05E04A04C, 18N05A24M24M, 18N05A24M19X, 18N05A24M19J, 18N05A24M25W, 18N05A24M25G, 18N05A24M25S, 18N05A24M20S, 18N05A24M25N, 18N05A24M23H, 18N05A24M23P, 18N05A24M23J, 18N05A24M18T, 18N05A24M13Z, 18N05A24M13P, 18N05A24M24K, 18N05A24M19A, 18N05A24M24W, 18N05A24M19B, 18N05A24M24S, 18N05A24M24C, 18N05A24M24N, 18N05A24M19I, 18N05E04A04E, 18N05A24M24Z, 18N05A24M24U, 18N05A24M19U, 18N05A24M25R, 18N05A24M25X, 18N05A24M18S, 18N05A24M18C, 18N05E04A03D, 18N05A24M23N, 18N05A24M13N, 18N05E04A04A, 18N05A24M24Q, 18N05A24M24R, 18N05A24M24G, 18N05A24M24I, 18N05A24M19N, 18N05A24M24E, 18N05A24M19P, 18N05A24M25V, 18N05A24M25F, 18N05A24M20V, 18N05A24M20K"]
-    // }
+    /* {
+      NombreArea: "prueba",
+      Referencia: "18N05N14M12R",
+      Celdas: ["18N05N14M12R"]
+    }*/
   ]
 
