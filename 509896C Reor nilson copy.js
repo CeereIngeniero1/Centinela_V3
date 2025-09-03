@@ -184,7 +184,7 @@ async function Agente_Selecion_Empresa(page) {
     Datos_Empresa
   ); // espera máximo 10s
 
-
+await page.waitForTimeout(500);
   await page.keyboard.press("Enter");
 
 }
