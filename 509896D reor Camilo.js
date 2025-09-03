@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '79731';
-const pass2 = 'bX9*iC3*oG';
+const user2 = '88272';
+const pass2 = 'Camilo$0307';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "Co:") {
+    if (Pines.substring(i + 1, i + 4) == "N3:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -1455,6 +1455,7 @@ function Mineria(browser, Pin) {
     } catch (error) {
       await Informacion_financiera(page);
     }
+
     try {
       await page.waitForFunction(
         url => window.location.href === url,
@@ -1526,13 +1527,13 @@ function Mineria(browser, Pin) {
     console.log(" si navego ");
 
 
-    clearTimeout(Radisegundo);
+  
 
     let RadiTercero = setTimeout(() => {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
       Mineria(browser, Pin);
-    }, 60000);
+    }, 120000);
 
     const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
       '//a[contains(.,"Documentac")]'
@@ -1972,7 +1973,7 @@ const Areas =
     {
       NombreArea: "509896",
       Referencia: "18N05E04N06T",
-      Celdas: ["18N05E04N06T, 18N05E04J21N, 18N05E04N01E, 18N05E04N07X, 18N05E04J21I, 18N05E04N06E, 18N05E04N01U, 18N05E04N06I, 18N05E04N06U, 18N05E04N06J, 18N05E04J21P, 18N05E04N07Y, 18N05E04J21Y, 18N05E04N01P, 18N05E04J21Z, 18N05E04J21U, 18N05E04N06N, 18N05E04J21T, 18N05E04N06P, 18N05E04N07Q, 18N05E04N07F, 18N05E04N06Y, 18N05E04N01N, 18N05E04N01Z, 18N05E04N07Z, 18N05E04N08V, 18N05E04N01T, 18N05E04N01D, 18N05E04N01J, 18N05E04N07V, 18N05E04N07K, 18N05E04N07A, 18N05E04N02V, 18N05E04N07W, 18N05E04N06D, 18N05E04N01Y, 18N05E04N01I, 18N05E04N06Z"]
+      Celdas: ["18N05E04N06T, 18N05E04N07X, 18N05E04N06I, 18N05E04N06U, 18N05E04N06J, 18N05E04N07Y, 18N05E04N06N, 18N05E04N06P, 18N05E04N07Q, 18N05E04N07F, 18N05E04N06Y, 18N05E04N07Z, 18N05E04N08V, 18N05E04N07V, 18N05E04N07K, 18N05E04N07W, 18N05E04N06Z"]
     }
     // , {
     //   NombreArea: "511210",
