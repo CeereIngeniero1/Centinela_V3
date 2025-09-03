@@ -186,6 +186,7 @@ async function Agente_Selecion_Empresa(page) {
 
 await page.waitForTimeout(500);
   await page.keyboard.press("Enter");
+await page.waitForTimeout(500);
 
 }
 
