@@ -1518,7 +1518,7 @@ function Mineria(browser, Pin) {
 
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-    await continPag[1].click();
+    // await continPag[1].click();
 
     // clearTimeout(Radisegundo);
     // // await page.waitForTimeout(1000000);
