@@ -1532,12 +1532,12 @@ function Mineria(browser, Pin) {
     //CAPTURA DE PANTALLA
     clearTimeout(Radisegundo);
 
-    // let RadiTercero = setTimeout(() => {
+    let RadiTercero = setTimeout(() => {
 
-    //     console.log("ENTRO EN EL Radisegundo");
-    //     //page.close();
-    //     Mineria(browser, Pin);
-    // }, 60000);
+        console.log("ENTRO EN EL Radisegundo");
+        //page.close();
+        Mineria(browser, Pin);
+    }, 60000);
 
 
   await page.waitForTimeout(2000);
@@ -1598,11 +1598,11 @@ function Mineria(browser, Pin) {
     //await page.waitForTimeout(4000);
     console.log("Le di click");
 
-    try {
-        await btnRadicar1[0].click();
-    } catch (exepcion) {
-        console.log("La pos 0 No fue ")
-    }
+    // try {
+    //     await btnRadicar1[0].click();
+    // } catch (exepcion) {
+    //     console.log("La pos 0 No fue ")
+    // }
     try {
 
         await btnRadicar1[1].click();
