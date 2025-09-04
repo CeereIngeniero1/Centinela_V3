@@ -1340,6 +1340,7 @@ function Mineria(browser, Pin) {
                 );
                 //se tiene que cambiar para decir que fue por reorganizacion
                 Correo(1, Areas[Band].NombreArea, Areas[Band].Referencia);
+                clearTimeout(TimeArea);
                 break;
 
               } else {
@@ -1377,6 +1378,7 @@ function Mineria(browser, Pin) {
 
         console.log("✅ La URL esperada ya está activa");
         Correo(1, Areas[Band].NombreArea, Areas[Band].Referencia);
+        clearTimeout(TimeArea);
         break;
       }
 

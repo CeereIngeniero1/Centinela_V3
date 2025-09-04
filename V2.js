@@ -1293,6 +1293,7 @@ function Mineria(browser, Pin) {
 
         console.log("✅ La URL esperada ya está activa");
         Correo(1, Areas[Band].NombreArea, Areas[Band].Referencia);
+                clearTimeout(TimeArea);
         break;
       }
 
