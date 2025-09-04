@@ -4,8 +4,8 @@ require("dotenv").config();
 const colors = require("colors");
 
 
-// const { Console } = require("console");
-// const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
+ const { Console } = require("console");
+ const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
 
 
 const os = require("os");
