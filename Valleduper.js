@@ -1660,8 +1660,8 @@ function Correo(Tipo, Area, Celda) {
   var mensaje = msg;
   var mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -1964,9 +1964,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
    {
-      NombreArea: "Libres1",
+      NombreArea: "Libre8",
       Referencia: "18P09K21D02I",
-      Celdas: ["18P09K21D02I, 18P09K21D03G, 18P09K21D03B, 18P09K16Q23Y, 18P09K16Q23P, 18P09K21D03A, 18P09K16Q24Q, 18P09K21D02L, 18P09K21D02N, 18P09K21D03F, 18P09K21D03C, 18P09K16Q23X, 18P09K16Q23S, 18P09K16Q24K, 18P09K21D02M, 18P09K21D02H, 18P09K16Q23T, 18P09K16Q23W, 18P09K21D02J, 18P09K21D02E, 18P09K16Q23U, 18P09K16Q23Z"]
+      Celdas: ["18P09K21L21G"]
     }
     // , {
     //   NombreArea: "511210",
