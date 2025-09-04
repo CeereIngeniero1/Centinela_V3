@@ -1526,7 +1526,8 @@ function Mineria(browser, Pin) {
       //page.close();
       Mineria(browser, Pin);
     }, 120000);
-
+    await page.waitForTimeout(2000);
+    
     const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
       '//a[contains(.,"Documentac")]'
     );
