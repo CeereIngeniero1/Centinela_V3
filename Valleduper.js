@@ -1543,7 +1543,7 @@ function Mineria(browser, Pin) {
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(200);
 
         //aca comienza
 
@@ -1554,7 +1554,7 @@ function Mineria(browser, Pin) {
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
-        await page.waitForTimeout(900);
+        await page.waitForTimeout(500);
         //aca termina 
         //ACA COMIENZA
         console.log('✅ Título RECAPTCHA encontrado');
