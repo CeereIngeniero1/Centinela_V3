@@ -2004,9 +2004,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "Libres5",
+      NombreArea: "Libres6",
       Referencia: "18P09K21D02I",
-      Celdas: ["18P09K21H14W"]
+      Celdas: ["18P09K21H19A"]
     }
     // , {
     //   NombreArea: "511210",
