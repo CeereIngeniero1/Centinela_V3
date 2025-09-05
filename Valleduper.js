@@ -1512,7 +1512,6 @@ function Mineria(browser, Pin) {
     await continPag[1].click();
 
     clearTimeout(Radisegundo);
-    // await page.waitForTimeout(1000000);
     await page.waitForNavigation({
       waitUntil: "networkidle0",
     });
@@ -1521,17 +1520,16 @@ function Mineria(browser, Pin) {
 
 
 
-    let RadiTercero = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 120000);
+    // let RadiTercero = setTimeout(() => {
+    //   console.log("ENTRO EN EL Radisegundo");
+    //   //page.close();
+    //   Mineria(browser, Pin);
+    // }, 120000);
 
-    await page.waitForTimeout(2500);
+    //  await page.waitForTimeout(1000000);
 
-
-
-try {
+    while (true) {
+      try {
         // Buscar el h2 que contenga la palabra RECAPTCHA usando XPath
         const [tituloHandle] = await page.$x("//h2[contains(text(), 'RECAPTCHA')]");
         if (!tituloHandle) {
@@ -1547,6 +1545,28 @@ try {
         // Esperar un momento para que el foco se mueva
         await page.waitForTimeout(500);
 
+        //aca comienza
+
+        console.log('✅ Título RECAPTCHA encontrado');
+
+        // Hacer click en el título
+        await tituloHandle.click();
+        console.log('✅ Hice click en el título');
+
+        // Esperar un momento para que el foco se mueva
+        await page.waitForTimeout(900);
+        //aca termina 
+        //ACA COMIENZA
+        console.log('✅ Título RECAPTCHA encontrado');
+
+        // Hacer click en el título
+        await tituloHandle.click();
+        console.log('✅ Hice click en el título');
+
+        // Esperar un momento para que el foco se mueva
+        // await page.waitForTimeout(900);
+        //ACATERMINA
+
         // Simular presionar Tab
         await page.keyboard.press('Tab');
         console.log('✅ Presioné TAB para mover el foco');
@@ -1554,16 +1574,23 @@ try {
         // Esperar un poco
         await page.waitForTimeout(500);
 
-        // Simular presionar Enter
-        await page.keyboard.press('Enter');
+        // // Simular presionar Enter
+         await page.keyboard.press('Enter');
         console.log('✅ Presioné ENTER para activar el reCAPTCHA');
+        break; // Salir del bucle si todo fue exitoso
       } catch (error) {
         console.error('❌ Error:', error.message);
+        await page.waitForTimeout(500); // Esperar antes de reintentar
       }
 
+    }
+
+
+
+    await page.waitForTimeout(500000);
     while (true) {
 
-      
+
 
       await page.waitForTimeout(1000);
       console.log("Chequeando si el captcha está resuelto...");
@@ -1581,7 +1608,7 @@ try {
         console.log("El captcha no ha sido resuelto aún.");
       }
     }
-   
+
     console.log("51. Bóton Radicar");
 
     const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
@@ -1595,11 +1622,11 @@ try {
     // } catch (exepcion) {
     //   console.log("La pos 0 No fue ");
     // }
-    try {
-      await btnRadicar1[1].click();
-    } catch (exepcion) {
-      console.log("La 1 tampoco Y_Y");
-    }
+    // try {
+    //   await btnRadicar1[1].click();
+    // } catch (exepcion) {
+    //   console.log("La 1 tampoco Y_Y");
+    // }
 
     //CAPTURA DE PANTALLA
 
@@ -1976,9 +2003,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "Libres4",
+      NombreArea: "Libres5",
       Referencia: "18P09K21D02I",
-      Celdas: ["18P09K21H14S, 18P09K21H14I, 18P09K21H14N ,18P09K21H14M"]
+      Celdas: ["18P09K21H14W"]
     }
     // , {
     //   NombreArea: "511210",
