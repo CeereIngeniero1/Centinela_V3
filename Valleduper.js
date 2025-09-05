@@ -1520,11 +1520,11 @@ function Mineria(browser, Pin) {
 
 
 
-    // let RadiTercero = setTimeout(() => {
-    //   console.log("ENTRO EN EL Radisegundo");
-    //   //page.close();
-    //   Mineria(browser, Pin);
-    // }, 120000);
+    let RadiTercero = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 120000);
 
     //  await page.waitForTimeout(1000000);
 
@@ -1543,7 +1543,7 @@ function Mineria(browser, Pin) {
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
-        await page.waitForTimeout(600);
+        await page.waitForTimeout(500);
 
         //aca comienza
 
@@ -1554,7 +1554,7 @@ function Mineria(browser, Pin) {
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
-        await page.waitForTimeout(600);
+        await page.waitForTimeout(500);
         //aca termina 
         //ACA COMIENZA
         console.log('✅ Título RECAPTCHA encontrado');
