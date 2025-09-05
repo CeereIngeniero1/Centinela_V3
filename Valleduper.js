@@ -1590,7 +1590,7 @@ function Mineria(browser, Pin) {
 
 
 
-    await page.waitForTimeout(500000);
+    // await page.waitForTimeout(500000);
     while (true) {
 
 
