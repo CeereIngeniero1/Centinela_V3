@@ -3,8 +3,8 @@ const fs = require("fs");
 require("dotenv").config();
 const colors = require("colors");
 
- const { Console } = require("console");
- const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
+const { Console } = require("console");
+const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
 
 const os = require("os");
 const { url } = require("inspector");
@@ -294,12 +294,12 @@ async function Minerales(page) {
     document.querySelector('[ng-class="settings.buttonClasses"]').click();
     var elementos = document.getElementsByClassName("ng-binding ng-scope");
     let Minerales = [
-      "COBRE", 
+      "COBRE",
       "cobre",
-       "PLATA", 
-       "Plata", 
-       "ORO",
-       "oro"
+      "PLATA",
+      "Plata",
+      "ORO",
+      "oro"
     ];
     let elementosConMinerales = [];
 
@@ -1519,40 +1519,52 @@ function Mineria(browser, Pin) {
     console.log(" si navego ");
 
 
-    
+
 
     let RadiTercero = setTimeout(() => {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
       Mineria(browser, Pin);
     }, 120000);
-    await page.waitForTimeout(2000);
-    
-    const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
-      '//a[contains(.,"Documentac")]'
-    );
-    await HacerClicEnSpanDocumentacionDeSoporte[0].click();
-    const AparecioCaptcha = await page.waitForSelector(
-      'iframe[title="reCAPTCHA"]'
-    );
-    if (AparecioCaptcha) {
-      console.log("EL CAPTCHA YA ESTÁ DISPONIBLE");
-      await page.waitForTimeout(500);
-    } else {
-      console.log("EL CAPTCHA NO ESTÁ DISPONIBLE");
-    }
 
-    for (let i = 0; i < 1; i += 1) {
-      // await page.keyboard.press('Tab');
-      await keyboard.pressKey(Key.Tab);
-      console.log(`PRESIONÉ LA TABULADORA EN ITERACIÓN ${i}`);
-    }
+    await page.waitForTimeout(2500);
 
-    await keyboard.pressKey(Key.Enter);
 
-    // await page.waitForTimeout(1000000);
+
+try {
+        // Buscar el h2 que contenga la palabra RECAPTCHA usando XPath
+        const [tituloHandle] = await page.$x("//h2[contains(text(), 'RECAPTCHA')]");
+        if (!tituloHandle) {
+          throw new Error('No se encontró el título con texto RECAPTCHA');
+        }
+
+        console.log('✅ Título RECAPTCHA encontrado');
+
+        // Hacer click en el título
+        await tituloHandle.click();
+        console.log('✅ Hice click en el título');
+
+        // Esperar un momento para que el foco se mueva
+        await page.waitForTimeout(500);
+
+        // Simular presionar Tab
+        await page.keyboard.press('Tab');
+        console.log('✅ Presioné TAB para mover el foco');
+
+        // Esperar un poco
+        await page.waitForTimeout(500);
+
+        // Simular presionar Enter
+        await page.keyboard.press('Enter');
+        console.log('✅ Presioné ENTER para activar el reCAPTCHA');
+      } catch (error) {
+        console.error('❌ Error:', error.message);
+      }
 
     while (true) {
+
+      
+
       await page.waitForTimeout(1000);
       console.log("Chequeando si el captcha está resuelto...");
 
@@ -1569,7 +1581,7 @@ function Mineria(browser, Pin) {
         console.log("El captcha no ha sido resuelto aún.");
       }
     }
-
+   
     console.log("51. Bóton Radicar");
 
     const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
@@ -1600,132 +1612,132 @@ function Mineria(browser, Pin) {
 
 // FUNCIÓN PARA ENVÍO DE CORREO SEGÚN LA SITUACIÓN
 function Correo(Tipo, Area, Celda) {
-  // 1. Liberada 2. radicada 3. Fecha reapertura
-  var msg = "";
-  var Color = "";
-  var Texto = "";
-  //Area = "Tranquilos area de prueba";
-  if (Tipo == 1) {
-    msg =
-      "¡¡¡Posible Area Liberada!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
-    Color = "#4CAF50";
-    Texto = "POSIBLE AREA LIBERADA";
-  } else if (Tipo == 2) {
-    msg =
-      "¡¡¡Posible Area Radicada!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
-    Color = "#D4AF37";
-    Texto = "POSIBLE AREA RADICADA";
-  } else if (Tipo == 3) {
-    msg =
-      "¡¡¡Area Con fecha de Reapertura!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
-    Color = "#2196F3";
-    Texto = "AREA CON REAPERTURA";
-  } else if (Tipo == 4) {
-    msg = Area + " " + Empresa + " ¡¡¡Verificar!!!!.";
-  } else if (Tipo == 5) {
-    msg = "¡¡¡Ojo Pestañas!!! " + EquipoActual;
-    Color = "#fe1426";
-    Texto = "Pestañas";
-  }
+  // // 1. Liberada 2. radicada 3. Fecha reapertura
+  // var msg = "";
+  // var Color = "";
+  // var Texto = "";
+  // //Area = "Tranquilos area de prueba";
+  // if (Tipo == 1) {
+  //   msg =
+  //     "¡¡¡Posible Area Liberada!!! " +
+  //     EquipoActual +
+  //     " " +
+  //     Area +
+  //     " " +
+  //     Empresa;
+  //   Color = "#4CAF50";
+  //   Texto = "POSIBLE AREA LIBERADA";
+  // } else if (Tipo == 2) {
+  //   msg =
+  //     "¡¡¡Posible Area Radicada!!! " +
+  //     EquipoActual +
+  //     " " +
+  //     Area +
+  //     " " +
+  //     Empresa;
+  //   Color = "#D4AF37";
+  //   Texto = "POSIBLE AREA RADICADA";
+  // } else if (Tipo == 3) {
+  //   msg =
+  //     "¡¡¡Area Con fecha de Reapertura!!! " +
+  //     EquipoActual +
+  //     " " +
+  //     Area +
+  //     " " +
+  //     Empresa;
+  //   Color = "#2196F3";
+  //   Texto = "AREA CON REAPERTURA";
+  // } else if (Tipo == 4) {
+  //   msg = Area + " " + Empresa + " ¡¡¡Verificar!!!!.";
+  // } else if (Tipo == 5) {
+  //   msg = "¡¡¡Ojo Pestañas!!! " + EquipoActual;
+  //   Color = "#fe1426";
+  //   Texto = "Pestañas";
+  // }
 
-  var nodemailer = require("nodemailer");
+  // var nodemailer = require("nodemailer");
 
-  var transporter = nodemailer.createTransport({
-    host: "mail.ceere.net", // hostname
-    secureConnection: false,
-    port: 465,
-    tls: {
-      ciphers: "SSLv3",
-    },
-    auth: {
-      user: "correomineria2@ceere.net",
-      pass: "1998Ceere*",
-    },
-  });
-  var mensaje = msg;
-  var mailOptions = {
-    from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    to: '  Soporte2ceere@gmail.com',
-    subject: "LA AREA ES-> " + Area,
-    text: "LA AREA ES->  " + Area + "  " + Celda,
-    html: `
-            <html>
-                <head>
-                    <style>
-                        .container {
-                            font-family: Arial, sans-serif;
-                            max-width: 600px;
-                            margin: auto;
-                            padding: 20px;
-                            border: 1px solid #ddd;
-                            border-radius: 5px;
-                            background-color: #f9f9f9;
-                        }
-                        .header {
-                            background-color: ${Color};
-                            color: white;
-                            padding: 10px;
-                            text-align: center;
-                            border-radius: 5px 5px 0 0;
-                        }
-                        .content {
-                            margin: 20px 0;
-                        }
-                        .footer {
-                            text-align: center;
-                            padding: 10px;
-                            font-size: 12px;
-                            color: #777;
-                            border-top: 1px solid #ddd;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <div class="header">
-                            <h3> ${Texto} </h3>
-                        </div>
-                        <div class="content">
-                            <p><strong>Detalles:</strong></p>
-                            <ul>
-                                <li><strong>Empresa: </strong><br>${Empresa}</li>
-                                <li><strong>Area:</strong><br>${Area}</li>
-                                <li><strong>Celda:</strong><br>${Celda}</li>
-                            <li><strong>Equipo Actual:</strong><br>${EquipoActual}</li>
-                            </ul>
-                        </div>
-                        <div class="footer">
-                            <p>Creado por Ceere Software - © 2024 Todos los derechos reservados</p>
-                        </div>
-                    </div>
-                </body>
-            </html>
-        `,
-  };
+  // var transporter = nodemailer.createTransport({
+  //   host: "mail.ceere.net", // hostname
+  //   secureConnection: false,
+  //   port: 465,
+  //   tls: {
+  //     ciphers: "SSLv3",
+  //   },
+  //   auth: {
+  //     user: "correomineria2@ceere.net",
+  //     pass: "1998Ceere*",
+  //   },
+  // });
+  // var mensaje = msg;
+  // var mailOptions = {
+  //   from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
+  //   //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+  //   to: '  Soporte2ceere@gmail.com',
+  //   subject: "LA AREA ES-> " + Area,
+  //   text: "LA AREA ES->  " + Area + "  " + Celda,
+  //   html: `
+  //           <html>
+  //               <head>
+  //                   <style>
+  //                       .container {
+  //                           font-family: Arial, sans-serif;
+  //                           max-width: 600px;
+  //                           margin: auto;
+  //                           padding: 20px;
+  //                           border: 1px solid #ddd;
+  //                           border-radius: 5px;
+  //                           background-color: #f9f9f9;
+  //                       }
+  //                       .header {
+  //                           background-color: ${Color};
+  //                           color: white;
+  //                           padding: 10px;
+  //                           text-align: center;
+  //                           border-radius: 5px 5px 0 0;
+  //                       }
+  //                       .content {
+  //                           margin: 20px 0;
+  //                       }
+  //                       .footer {
+  //                           text-align: center;
+  //                           padding: 10px;
+  //                           font-size: 12px;
+  //                           color: #777;
+  //                           border-top: 1px solid #ddd;
+  //                       }
+  //                   </style>
+  //               </head>
+  //               <body>
+  //                   <div class="container">
+  //                       <div class="header">
+  //                           <h3> ${Texto} </h3>
+  //                       </div>
+  //                       <div class="content">
+  //                           <p><strong>Detalles:</strong></p>
+  //                           <ul>
+  //                               <li><strong>Empresa: </strong><br>${Empresa}</li>
+  //                               <li><strong>Area:</strong><br>${Area}</li>
+  //                               <li><strong>Celda:</strong><br>${Celda}</li>
+  //                           <li><strong>Equipo Actual:</strong><br>${EquipoActual}</li>
+  //                           </ul>
+  //                       </div>
+  //                       <div class="footer">
+  //                           <p>Creado por Ceere Software - © 2024 Todos los derechos reservados</p>
+  //                       </div>
+  //                   </div>
+  //               </body>
+  //           </html>
+  //       `,
+  // };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      return console.log(error);
-    }
+  // transporter.sendMail(mailOptions, function (error, info) {
+  //   if (error) {
+  //     return console.log(error);
+  //   }
 
-    console.log("Message sent: " + info.response);
-  });
+  //   console.log("Message sent: " + info.response);
+  // });
 }
 
 
@@ -1963,10 +1975,10 @@ const Areas =
     // // //   Referencia: "18N05N14M12R",
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
-   {
-      NombreArea: "Libre8",
+    {
+      NombreArea: "Libres4",
       Referencia: "18P09K21D02I",
-      Celdas: ["18P09K21L21G"]
+      Celdas: ["18P09K21H14S, 18P09K21H14I, 18P09K21H14N ,18P09K21H14M"]
     }
     // , {
     //   NombreArea: "511210",
