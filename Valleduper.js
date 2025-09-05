@@ -1551,21 +1551,24 @@ function Mineria(browser, Pin) {
 
         // Hacer click en el título
         await tituloHandle.click();
+        await tituloHandle.click();
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
-        await page.waitForTimeout(600);
+        await page.waitForTimeout(500);
         //aca termina 
         //ACA COMIENZA
         console.log('✅ Título RECAPTCHA encontrado');
 
         // Hacer click en el título
         await tituloHandle.click();
+        await tituloHandle.click();
         console.log('✅ Hice click en el título');
 
         // Esperar un momento para que el foco se mueva
         // await page.waitForTimeout(900);
         //ACATERMINA
+        await page.waitForTimeout(200);
 
         // Simular presionar Tab
         await page.keyboard.press('Tab');
@@ -1622,11 +1625,11 @@ function Mineria(browser, Pin) {
     // } catch (exepcion) {
     //   console.log("La pos 0 No fue ");
     // }
-    // try {
-    //   await btnRadicar1[1].click();
-    // } catch (exepcion) {
-    //   console.log("La 1 tampoco Y_Y");
-    // }
+    try {
+      await btnRadicar1[1].click();
+    } catch (exepcion) {
+      console.log("La 1 tampoco Y_Y");
+    }
 
     //CAPTURA DE PANTALLA
 
