@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '12161';
-const pass2 = 'EEOO2024anm*';
-const Agente = 0;
+const user2 = '83955';
+const pass2 = 'wX2*dQ3*cS';
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -168,27 +168,27 @@ async function Agente_Selecion_Empresa(page) {
   // await page.type("#submitterPersonOrganizationNameId", "76966");
   await page.type("#submitterPersonOrganizationNameId", Datos_Empresa.Codigo);
   // await page.waitForTimeout(300000);
-    console.log(`${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})`);
-  try {
-    await page.waitForFunction(
-      (Datos_Empresa) => {
-        const el = document.querySelector(
-          // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
-          `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]`
-        );
-        return (
-          el &&
-          // el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
-          el.innerText.includes(Datos_Empresa.Nombre)
-        );
-      },
-      { timeout: 5000 },
-      Datos_Empresa
-    ); // espera máximo 10s
-  } catch (error) {
-
-  }
-
+   console.log(`${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})`);
+   try {
+     await page.waitForFunction(
+       (Datos_Empresa) => {
+         const el = document.querySelector(
+           // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
+           `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]`
+         );
+         return (
+           el &&
+           // el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
+           el.innerText.includes(Datos_Empresa.Nombre)
+         );
+       },
+       { timeout: 5000 },
+       Datos_Empresa
+     ); // espera máximo 10s
+   } catch (error) {
+ 
+   }
+ 
 
 
   await page.keyboard.press("Enter");

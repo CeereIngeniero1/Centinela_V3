@@ -3,7 +3,7 @@ const fs = require("fs");
 require("dotenv").config();
 const colors = require("colors");
 const nodemailer = require("nodemailer");
-const { Console } = require("console");
+const { Console, log } = require("console");
 const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
 
 const os = require("os");
@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '12161';
-const pass2 = 'EEOO2024anm*';
-const Agente = 0;
+const user2 = '88272';
+const pass2 = 'Camilo$0307';
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -168,7 +168,7 @@ async function Agente_Selecion_Empresa(page) {
   // await page.type("#submitterPersonOrganizationNameId", "76966");
   await page.type("#submitterPersonOrganizationNameId", Datos_Empresa.Codigo);
   // await page.waitForTimeout(300000);
-    console.log(`${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})`);
+  console.log(`${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})`);
   try {
     await page.waitForFunction(
       (Datos_Empresa) => {
@@ -981,7 +981,7 @@ async function Profesionales(page, Eventos) {
 
 async function Informacion_financiera(page) {
 
-   await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
+  await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
   //sE MANEJA DUALIDAD DSDE EL .ENV PARA CUANDO SON PERSONAS NATURALES O EMPRESAS
   // await page.select("#personClassificationId0", "PN");
   // await page.select("#personClassificationId0", "PJ");
@@ -1373,7 +1373,7 @@ async function verificarCaptchaResuelto(page, imagendeCaptcha) {
 }
 
 
-function Mineria(browser, Pin, ) {
+function Mineria(browser, Pin,) {
   (async () => {
     console.log("Esta es la vuelta " + ContadorVueltas);
     const page = await browser.newPage();
@@ -1724,7 +1724,7 @@ function Mineria(browser, Pin, ) {
 
 
 
-   if (Datos_Empresa.TipoUsuario === 'PJ') {
+    if (Datos_Empresa.TipoUsuario === 'PJ') {
       await Documentos_Persona_juridica(page, Empresa);
 
     } else {

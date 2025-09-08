@@ -168,21 +168,26 @@ async function Agente_Selecion_Empresa(page) {
   // await page.type("#submitterPersonOrganizationNameId", "76966");
   await page.type("#submitterPersonOrganizationNameId", Datos_Empresa.Codigo);
   // await page.waitForTimeout(300000);
-  await page.waitForFunction(
-    (Datos_Empresa) => {
-      const el = document.querySelector(
-        // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
-        `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]`
-      );
-      return (
-        el &&
-        // el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
-        el.innerText.includes(Datos_Empresa.Nombre)
-      );
-    },
-    { timeout: 5000 },
-    Datos_Empresa
-  ); // espera máximo 10s
+    console.log(`${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})`);
+  try {
+    await page.waitForFunction(
+      (Datos_Empresa) => {
+        const el = document.querySelector(
+          // 'a[title*="COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA (76966)"]'
+          `a[title*="${Datos_Empresa.Nombre} (${Datos_Empresa.Codigo})"]`
+        );
+        return (
+          el &&
+          // el.innerText.includes("COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA")
+          el.innerText.includes(Datos_Empresa.Nombre)
+        );
+      },
+      { timeout: 5000 },
+      Datos_Empresa
+    ); // espera máximo 10s
+  } catch (error) {
+
+  }
 
 
   await page.keyboard.press("Enter");
@@ -975,8 +980,10 @@ async function Profesionales(page, Eventos) {
 
 async function Informacion_financiera(page) {
 
-  await page.waitForSelector("#personClassificationId0");
-  await page.select("#personClassificationId0", "PJ");
+  await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
+  //sE MANEJA DUALIDAD DSDE EL .ENV PARA CUANDO SON PERSONAS NATURALES O EMPRESAS
+  // await page.select("#personClassificationId0", "PN");
+  // await page.select("#personClassificationId0", "PJ");
   console.log(Datos_Economicos);
 
   await page.evaluate((Datos_Economicos) => {
@@ -1065,7 +1072,93 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
 }
 
 
-async function Documentos(page, Empresa) {
+async function Documentos_Persona_Natural(page, Empresa) {
+
+  try {
+
+
+    // await page.waitForTimeout(300);
+    await page.click("#acceptanceOfTermsId");
+    // await page.waitForTimeout(300);
+
+    const btnDocuSopor = await page.$x('//a[contains(.,"Documentac")]');
+    await btnDocuSopor[0].click();
+    console.log("si llego");
+    await page.waitForTimeout(300);
+
+    console.log("INICIA PROCESO DE ADJUNTAR DOCUMENTOS REGLAMENTARIOS");
+    console.log(
+      "================================================================"
+    );
+
+    let Documentos = [
+      "1. Aceptacion Del Profesional Para Refrendar Documentos Tecnicos.pdf",//1
+      "2. Fotocopia Tarjeta Profesional.pdf",//2
+      "4. Declaracion De Renta Proponente 1 Anio 1.pdf",//3
+      "5. Declaracion De Renta Proponente 1 Anio 2.pdf",//4
+      "6. Estados Financieros Propios Certificados Y O Dictaminados Proponente 1 Anio 1.pdf",//5
+      "7. Estados Financieros Propios Certificados Y O Dictaminados Proponente 1 Anio 2.pdf",//6
+      "8. Extractos Bancarios Proponente 1.pdf",//7
+      "9. RUT.pdf",//8
+      "10. Fotocopia Documento De Identificacion.pdf",//9
+      "13. Certificado Vigente De Antecedentes Disciplinarios.pdf",//10
+      "14. Fotocopia Tarjeta Profesional Del Contador Revisor Fiscal.pdf",//11
+
+    ];
+
+    let ElementosFile = [
+      "p_CaaCataMandatoryDocumentToAttachId0",//1
+      "p_CaaCataMandatoryDocumentToAttachId1",//2
+      "p_CaaCataMandatoryDocumentToAttachId3",//3
+      "p_CaaCataMandatoryDocumentToAttachId4",//4
+      "p_CaaCataMandatoryDocumentToAttachId5",//5
+      "p_CaaCataMandatoryDocumentToAttachId6",//6
+      "p_CaaCataMandatoryDocumentToAttachId7",//7
+      "p_CaaCataMandatoryDocumentToAttachId8",//8
+      "p_CaaCataMandatoryDocumentToAttachId9",//9
+      "p_CaaCataMandatoryDocumentToAttachId10",//10
+      "p_CaaCataMandatoryDocumentToAttachId11",//11
+      //  "p_CaaCataMandatoryDocumentToAttachId12",//12
+    ];
+    console.log(ElementosFile.length);
+    try {
+      for (let i = 0; i < ElementosFile.length; i++) {
+        try {
+          await page.waitForSelector(`#${ElementosFile[i]}`);
+          const RutaDelArchivo = `./Documentos/${Empresa}/DocumentosReglamentarios/${Documentos[i]}`;
+          const ElementoControladorDeCarga = await page.$(
+            `#${ElementosFile[i]}`
+          );
+          await ElementoControladorDeCarga.uploadFile(RutaDelArchivo);
+
+          // Verificar si el archivo se cargó correctamente
+          console.log(`Archivo ${Documentos[i]} adjuntado correctamente.`);
+        } catch (error) {
+          console.log(`Error al cargar el archivo ${Documentos[i]}:`, error);
+
+          // Detener el bucle o manejar el error como sea necesario
+          throw new Error(`Error al cargar el archivo ${Documentos[i]}`);
+        }
+      }
+      console.log("sadas");
+    } catch (error) {
+      console.error("Error general al adjuntar archivos:", error);
+    }
+
+    console.log(
+      "================================================================"
+    );
+    console.log("FINALIZA PROCESO DE ADJUNTAR DOCUMENTOS REGLAMENTARIOS");
+
+
+  } catch (error) {
+    console.log("BOTO ERROR");
+  }
+
+}
+
+
+async function Documentos_Persona_juridica(page, Empresa) {
 
   try {
 
@@ -1630,8 +1723,13 @@ function Mineria(browser, Pin, ) {
 
 
 
-    await Documentos(page, Empresa);
+    if (Datos_Empresa.TipoUsuario === 'PJ') {
+      await Documentos_Persona_juridica(page, Empresa);
 
+    } else {
+      await Documentos_Persona_Natural(page, Empresa);
+
+    }
 
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
