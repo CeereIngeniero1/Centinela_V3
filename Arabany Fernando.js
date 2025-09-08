@@ -182,7 +182,7 @@ async function Agente_Selecion_Empresa(page) {
            el.innerText.includes(Datos_Empresa.Nombre)
          );
        },
-       { timeout: 5000 },
+       { timeout: 2500},
        Datos_Empresa
      ); // espera máximo 10s
    } catch (error) {
