@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulario de Radicación</title>
+  <style>
+    :root{font-family:Inter,system-ui,Segoe UI,Arial;margin:0;padding:0}
+    body{padding:24px;max-width:980px;margin:0 auto;background:#f7fafc;color:#111}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    form{background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(10,10,10,.06)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    label{display:block;font-size:13px;margin-bottom:6px}
+    input[type="text"], input[type="number"], select, textarea{width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
+    textarea{min-height:80px}
+    .full{grid-column:1/-1}
+    .controls{display:flex;gap:8px;margin-top:12px}
+    button{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    button.primary{background:#2563eb;color:white}
+    button.ghost{background:#eef2ff}
+    pre{background:#0f172a;color:#e6edf3;padding:12px;border-radius:8px;overflow:auto}
+    small.hint{color:#6b7280}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Formulario de Radicación de Propuesta</h1>
+    <div>
+      <small class="hint">Recopila la información en formato JSON</small>
+    </div>
+  </header>
+
+  <form id="formRadicacion" onsubmit="event.preventDefault(); mostrarSalida();">
+    <div class="row">
+      <div>
+        <label for="empresa">Empresa</label>
+        <select id="empresa" name="empresa">
+          <option value="">Seleccione la empresa</option>
+          <option value="Collective">COLLECTIVE MINING LIMITED SUCURSAL COLOMBIA</option>
+          <option value="NegoYMetales">NEGOCIOS F Y M METALES S.A.S</option>
+          <option value="Freeport">FREEPORT-MCMORAN EXPLORATION COLOMBIA SAS</option>
+          <option value="Provenza">MINERALES PROVENZA SAS</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="nombreArea">Nombre del área</label>
+        <input type="text" id="nombreArea" name="nombreArea" placeholder="Ej. Area1" />
+      </div>
+
+      <div>
+        <label for="referencia">Referencia (código SIGM)</label>
+        <input type="text" id="referencia" name="referencia" placeholder="18N05A24L21M" />
+      </div>
+
+      <div>
+        <label for="area">Área (hectáreas)</label>
+        <input type="number" id="area" name="area" placeholder="Número de hectáreas" step="0.01" />
+      </div>
+
+      <div class="full">
+        <label for="celdas">Celdas (separadas por coma)</label>
+        <textarea id="celdas" name="celdas" placeholder="18N05A24L21M, 18N05A24L21E, …"></textarea>
+      </div>
+
+      <div>
+        <label for="shapefile">Shapefile (.zip)</label>
+        <input type="file" id="shapefile" name="shapefile" accept=".zip" />
+      </div>
+
+      <div>
+        <label for="certificado">Certificado de coordenadas</label>
+        <input type="file" id="certificado" name="certificado" accept=".pdf" />
+      </div>
+
+      <div class="full">
+        <label for="documentos">Documentos de soporte (múltiples)</label>
+        <input type="file" id="documentos" name="documentos[]" multiple />
+      </div>
+
+      <div class="full">
+        <label for="correos">Correos de notificación (opcional)</label>
+        <input type="text" id="correos" name="correos" placeholder="email1@dominio.com, email2@dominio.com" />
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="ghost" onclick="resetFormulario()">Limpiar</button>
+      <button type="submit" class="primary">Generar JSON</button>
+    </div>
+
+    <section style="margin-top:12px">
+      <h3>Salida (JSON)</h3>
+      <pre id="salida">{}</pre>
+    </section>
+  </form>
+
+  <script>
+    // Recoge todos los inputs del formulario y genera un objeto con claves basadas en el atributo name
+    function collectInputsData(formElement) {
+      const data = {};
+      const formData = new FormData(formElement);
+
+      for (const [key, value] of formData.entries()) {
+        if (key.endsWith('[]')) {
+          const cleanKey = key.slice(0, -2);
+          if (!data[cleanKey]) data[cleanKey] = [];
+          data[cleanKey].push(value);
+        } else if (data.hasOwnProperty(key)) {
+          // Concatena campos repetidos
+          if (!Array.isArray(data[key])) data[key] = [data[key]];
+          data[key].push(value);
+        } else {
+          data[key] = value;
+        }
+      }
+
+      // Incluir nombres de los archivos en lugar del contenido
+      const fileFields = ['shapefile','certificado','documentos'];
+      fileFields.forEach(name => {
+        const fileInput = formElement.querySelector(`input[name="${name}"]`);
+        if (fileInput && fileInput.files && fileInput.files.length) {
+          if (name === 'documentos') {
+            data[name] = [];
+            for (const file of fileInput.files) {
+              data[name].push(file.name);
+            }
+          } else {
+            data[name] = fileInput.files[0].name;
+          }
+        }
+      });
+
+      // Metadatos
+      data._meta = {
+        timestamp: new Date().toISOString(),
+        source: 'formulario-radicacion'
+      };
+
+      return data;
+    }
+
+    function mostrarSalida() {
+      const form = document.getElementById('formRadicacion');
+      const salida = collectInputsData(form);
+      document.getElementById('salida').textContent = JSON.stringify(salida, null, 2);
+    }
+
+    // Restablece los campos del formulario
+    function resetFormulario() {
+      const form = document.getElementById('formRadicacion');
+      form.reset();
+      document.getElementById('salida').textContent = '{}';
+    }
+  </script>
+</body>
+</html>
