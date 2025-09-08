@@ -2,9 +2,9 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 require("dotenv").config();
 const colors = require("colors");
-
- const { Console } = require("console");
- const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
+const nodemailer = require("nodemailer");
+const { Console } = require("console");
+const { keyboard, mouse, Key, clipboard } = require("@nut-tree-fork/nut-js");
 
 const os = require("os");
 const { url } = require("inspector");
@@ -29,7 +29,7 @@ const EquipoActual = EquiposGenerales[NombreEquipo];
 console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "NegoYMetales"; // Collective, NegoYMetales, Freeport, Provenza
+const Empresa = "Arabany"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
 const Datos_Economicos = Informacion_Economica[Empresa];
 const Datos_Geologos = Geologos[Empresa];
@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '98908';
-const pass2 = 'Sebas2025?';
-const Agente = 1;
+const user2 = '12161';
+const pass2 = 'EEOO2024anm*';
+const Agente = 0;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "Co:") {
+    if (Pines.substring(i + 1, i + 4) == "N2:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -296,20 +296,10 @@ async function Minerales(page) {
     let Minerales = [
       "COBRE",
       "cobre",
-      "MOLIBDENO",
-      "molibdeno",
-      "NIQUEL",
-      "niquel",
-      "ORO",
-      "oro",
       "PLATA",
-      "plata",
-      "PLATINO",
-      "platino",
-      "WOLFRAMIO",
-      "wolframio",
-      "ZINC",
-      "zinc",
+      "Plata",
+      "ORO",
+      "oro"
     ];
     let elementosConMinerales = [];
 
@@ -1162,8 +1152,134 @@ async function Documentos(page, Empresa) {
   }
 }
 
+async function RECAPTCHA(page) {
 
-function Mineria(browser, Pin) {
+  try {
+    // Buscar el h2 que contenga la palabra RECAPTCHA usando XPath
+    const [tituloHandle] = await page.$x("//h2[contains(text(), 'RECAPTCHA')]");
+    if (!tituloHandle) {
+      throw new Error('No se encontró el título con texto RECAPTCHA');
+    }
+
+    console.log('✅ Título RECAPTCHA encontrado');
+
+    // Hacer click en el título
+    await tituloHandle.click();
+    console.log('✅ Hice click en el título');
+
+    // Esperar un momento para que el foco se mueva
+    // // // await page.waitForTimeout(500);
+
+    //aca comienza
+
+    console.log('✅ Título RECAPTCHA encontrado');
+
+    // Hacer click en el título
+    await tituloHandle.click();
+    console.log('✅ Hice click en el título');
+
+    // Esperar un momento para que el foco se mueva
+    await page.waitForTimeout(500);
+    await page.waitForTimeout(500);
+    await page.waitForTimeout(500);
+    //aca termina 
+    //ACA COMIENZA
+    console.log('✅ Título RECAPTCHA encontrado');
+
+    // Hacer click en el título
+    await tituloHandle.click();
+    console.log('✅ Hice click en el título');
+
+
+    //ACATERMINA
+    await page.waitForTimeout(500);
+    await page.waitForTimeout(500);
+    await page.waitForTimeout(500);
+
+    // Simular presionar Tab
+    await page.keyboard.press('Tab');
+    console.log('✅ Presioné TAB para mover el foco');
+
+    // Esperar un poco
+    await page.waitForTimeout(100);
+
+    // // Simular presionar Enter
+    await page.keyboard.press('Enter');
+    console.log('✅ Presioné ENTER para activar el reCAPTCHA');
+    return 1; // Salir del bucle si todo fue exitoso
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+    await page.waitForTimeout(500); // Esperar antes de reintentar
+    return 0;
+  }
+}
+
+async function verificarCaptchaResuelto(page, imagendeCaptcha) {
+  console.log("Chequeando si el captcha está resuelto...");
+  try {
+    // Verificar si el captcha está resuelto
+    const isCaptchaResolved = await page.evaluate(() => {
+      const responseField = document.querySelector("#g-recaptcha-response");
+      return responseField && responseField.value.length > 0;
+    });
+
+    // // Verificar si aparece el texto "Continuar"
+    // const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+    // if (posibleContinuar.length > 0) {
+    //   console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+    //   console.log([posibleContinuar]);
+    //   await posibleContinuar[1].click();
+    //   await page.waitForNavigation({
+    //     waitUntil: "networkidle0",
+    //   });
+    //   await RECAPTCHA(page);
+    // }
+
+    // Verificar si aparece el iframe de imágenes (reto del captcha)
+    // const captchaIframe = await page.$('iframe[src*="bframe"]');
+    // if (captchaIframe) {
+    //   console.log("🖼️ El reCAPTCHA está mostrando imágenes (desafío activo).");
+    //   return 2; // El captcha no está resuelto si hay un iframe de imágenes
+    // }
+    if (imagendeCaptcha == 0) {
+      const captchaIframeHandle = await page.$('iframe[src*="bframe"]');
+      if (captchaIframeHandle) {
+        console.log("🖼️ El reCAPTCHA está mostrando un desafío de imágenes.");
+
+
+        // Esperar a que el contenido del iframe esté listo
+        const captchaFrame = await captchaIframeHandle.contentFrame();
+        if (!captchaFrame) {
+          console.log("⚠️ El contenido del iframe aún no está listo. Reintentando...");
+        } else {
+          // Intentar detectar imágenes
+          const imageTiles = await captchaFrame.$$('img');
+          console.log(`Se encontraron ${imageTiles.length} imágenes en el desafío.`);
+        }
+
+        return 2; // El captcha no está resuelto si hay un iframe de imágenes
+
+      }
+    }
+
+
+    if (isCaptchaResolved) {
+      console.log("✅ El captcha ha sido resuelto.");
+
+      return 1;
+    } else {
+      console.log("❌ El captcha no ha sido resuelto aún.");
+      return 0;
+    }
+  } catch (error) {
+    console.error("❌ Error al verificar el estado del captcha:", error);
+    return 0;
+  }
+
+}
+
+
+function Mineria(browser, Pin, ) {
   (async () => {
     console.log("Esta es la vuelta " + ContadorVueltas);
     const page = await browser.newPage();
@@ -1522,14 +1638,13 @@ function Mineria(browser, Pin) {
     await continPag[1].click();
 
     clearTimeout(Radisegundo);
-    // await page.waitForTimeout(1000000);
     await page.waitForNavigation({
       waitUntil: "networkidle0",
     });
     console.log(" si navego ");
 
 
-    clearTimeout(Radisegundo);
+
 
     let RadiTercero = setTimeout(() => {
       console.log("ENTRO EN EL Radisegundo");
@@ -1537,69 +1652,66 @@ function Mineria(browser, Pin) {
       Mineria(browser, Pin);
     }, 120000);
 
-    await page.waitForTimeout(2000);
-    const HacerClicEnSpanDocumentacionDeSoporte = await page.$x(
-      '//a[contains(.,"Documentac")]'
-    );
-    await HacerClicEnSpanDocumentacionDeSoporte[0].click();
-    const AparecioCaptcha = await page.waitForSelector(
-      'iframe[title="reCAPTCHA"]'
-    );
-    if (AparecioCaptcha) {
-      console.log("EL CAPTCHA YA ESTÁ DISPONIBLE");
-      await page.waitForTimeout(500);
-    } else {
-      console.log("EL CAPTCHA NO ESTÁ DISPONIBLE");
-    }
+    //  await page.waitForTimeout(1000000);
 
-    for (let i = 0; i < 1; i += 1) {
-      // await page.keyboard.press('Tab');
-      await keyboard.pressKey(Key.Tab);
-      console.log(`PRESIONÉ LA TABULADORA EN ITERACIÓN ${i}`);
-    }
-
-    await keyboard.pressKey(Key.Enter);
-
-    // await page.waitForTimeout(1000000);
 
     while (true) {
-      await page.waitForTimeout(1000);
-      console.log("Chequeando si el captcha está resuelto...");
 
-      const isCaptchaResolved = await page.evaluate(() => {
-        const responseField = document.querySelector("#g-recaptcha-response");
-        return responseField && responseField.value.length > 0;
-      });
-
-      if (isCaptchaResolved) {
-        console.log("El captcha ha sido resuelto.");
-        clearTimeout(RadiTercero);
+      let resultado = await RECAPTCHA(page);
+      if (resultado == 1) {
         break;
-      } else {
-        console.log("El captcha no ha sido resuelto aún.");
+      }
+
+    }
+
+    var imagendeCaptcha = 0;
+    while (true) {
+      await page.waitForTimeout(1500);
+
+      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
+        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
+        if (resultado === 1) {
+          clearTimeout(RadiTercero);
+          break;
+        } else if (resultado === 2) {
+          console.log("El captcha sigue en modo reto de imagenes");
+          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
+          // lO RETIRO PORQUE NO VALE LA PENA
+          // Mineria(browser, Pin);
+          imagendeCaptcha = 1;
+        } else {
+          // await RECAPTCHA(page);
+        }
+
+      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
+        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+        if (posibleContinuar.length > 0) {
+          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+          console.log([posibleContinuar]);
+          await posibleContinuar[1].click();
+          await page.waitForNavigation({
+            waitUntil: "networkidle0",
+          });
+          await RECAPTCHA(page);
+        }
       }
     }
+
+    // await page.waitForTimeout(1000000);
 
     console.log("51. Bóton Radicar");
 
     const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
     console.log("Este es el boton radicar : " + btnRadicar1);
 
-    //await page.waitForTimeout(4000);
     console.log("Le di click");
 
-    // try {
-    //   await btnRadicar1[0].click();
-    // } catch (exepcion) {
-    //   console.log("La pos 0 No fue ");
-    // }
     try {
       await btnRadicar1[1].click();
     } catch (exepcion) {
       console.log("La 1 tampoco Y_Y");
     }
 
-    //CAPTURA DE PANTALLA
 
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
@@ -1611,39 +1723,24 @@ function Mineria(browser, Pin) {
 // FUNCIÓN PARA ENVÍO DE CORREO SEGÚN LA SITUACIÓN
 function Correo(Tipo, Area, Celda) {
   // 1. Liberada 2. radicada 3. Fecha reapertura
-  var msg = "";
-  var Color = "";
-  var Texto = "";
+  let msg = "";
+  let Color = "";
+  let Texto = "";
   //Area = "Tranquilos area de prueba";
   if (Tipo == 1) {
     msg =
-      "¡¡¡Posible Area Liberada!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
-    Color = "#4CAF50";
+      `¡¡¡Posible Area Liberada!!! ${EquipoActual} ${Area} ${Empresa}`;
+    Color = "#0eff16ff";
     Texto = "POSIBLE AREA LIBERADA";
   } else if (Tipo == 2) {
     msg =
-      "¡¡¡Posible Area Radicada!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
+      `Area Radicada  ${EquipoActual} ${Area} ${Empresa}`;
     Color = "#D4AF37";
     Texto = "POSIBLE AREA RADICADA";
   } else if (Tipo == 3) {
     msg =
-      "¡¡¡Area Con fecha de Reapertura!!! " +
-      EquipoActual +
-      " " +
-      Area +
-      " " +
-      Empresa;
-    Color = "#2196F3";
+      `¡¡¡Area Con fecha de Reapertura!!! ${EquipoActual} ${Area} ${Empresa}`;
+    Color = "#427345ff";
     Texto = "AREA CON REAPERTURA";
   } else if (Tipo == 4) {
     msg = Area + " " + Empresa + " ¡¡¡Verificar!!!!.";
@@ -1651,11 +1748,16 @@ function Correo(Tipo, Area, Celda) {
     msg = "¡¡¡Ojo Pestañas!!! " + EquipoActual;
     Color = "#fe1426";
     Texto = "Pestañas";
+  } else if (Tipo == 6) {
+    msg =
+      `Rapido aparecio un recaptcha   ${EquipoActual}`;
+    Color = "rgba(180, 33, 170, 1)";
+    Texto = "RECAPTCHA RECAPTCHA RECAPTCHA";
   }
 
-  var nodemailer = require("nodemailer");
 
-  var transporter = nodemailer.createTransport({
+
+  let transporter = nodemailer.createTransport({
     host: "mail.ceere.net", // hostname
     secureConnection: false,
     port: 465,
@@ -1667,11 +1769,11 @@ function Correo(Tipo, Area, Celda) {
       pass: "1998Ceere*",
     },
   });
-  var mensaje = msg;
-  var mailOptions = {
+
+  let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -1960,7 +2062,6 @@ function VerificarVencimientoPin(
   }
 }
 
-///////////////////////////OJO ESTE JS SI RADICA//////////////////////////////
 const Areas =
   [
     // // // /*{
@@ -1974,14 +2075,15 @@ const Areas =
     // // //   Referencia: "18N05N14M12R",
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
-    // {
-    //   NombreArea: "509896",
-    //   Referencia: "18N05E04N06T",
-    //   Celdas: ["18N05E04N06T, 18N05E04J21N, 18N05E04N01E, 18N05E04N07X, 18N05E04J21I, 18N05E04N06E, 18N05E04N01U, 18N05E04N06I, 18N05E04N06U, 18N05E04N06J, 18N05E04J21P, 18N05E04N07Y, 18N05E04J21Y, 18N05E04N01P, 18N05E04J21Z, 18N05E04J21U, 18N05E04N06N, 18N05E04J21T, 18N05E04N06P, 18N05E04N07Q, 18N05E04N07F, 18N05E04N06Y, 18N05E04N01N, 18N05E04N01Z, 18N05E04N07Z, 18N05E04N08V, 18N05E04N01T, 18N05E04N01D, 18N05E04N01J, 18N05E04N07V, 18N05E04N07K, 18N05E04N07A, 18N05E04N02V, 18N05E04N07W, 18N05E04N06D, 18N05E04N01Y, 18N05E04N01I, 18N05E04N06Z"]
-    // },
     {
-      NombreArea: "511210",
-      Referencia: "18N05E04A03C",
-      Celdas: ["18N05E04A03C, 18N05A24M13S, 18N05A24M18Z, 18N05A24M18I, 18N05A24M19V, 18N05A24M19F, 18N05A24M14Q, 18N05A24M24L, 18N05A24M24H, 18N05A24M19S, 18N05A24M19M, 18N05A24M19H, 18N05A24M24Y, 18N05A24M24D, 18N05A24M24J, 18N05A24M20R, 18N05A24M25C, 18N05A24M20X, 18N05A24M25D, 18N05A24M23X, 18N05A24M23S, 18N05A24M18H, 18N05A24M14K, 18N05A24M19L, 18N05A24M19G, 18N05A24M25Q, 18N05E04A05B, 18N05A24M23M, 18N05A24M18M, 18N05A24M13X, 18N05A24M13M, 18N05A24M23T, 18N05A24M23D, 18N05A24M18Y, 18N05A24M18P, 18N05A24M18J, 18N05A24M13U, 18N05E04A04B, 18N05A24M19Y, 18N05E04A05A, 18N05A24M20F, 18N05A24M25L, 18N05A24M20W, 18N05A24M25M, 18N05A24M25T, 18N05A24M18U, 18N05A24M18N, 18N05A24M18D, 18N05A24M18E, 18N05A24M13T, 18N05A24M24F, 18N05A24M24A, 18N05A24M14V, 18N05A24M24X, 18N05A24M19C, 18N05A24M19T, 18N05A24M24P, 18N05A24M25K, 18N05A24M23C, 18N05A24M18X, 18N05E04A03E, 18N05A24M23Y, 18N05A24M23Z, 18N05A24M23E, 18N05A24M19Q, 18N05A24M19K, 18N05A24M24B, 18N05A24M19R, 18N05E04A04D, 18N05A24M24T, 18N05A24M19Z, 18N05A24M25A, 18N05A24M20Q, 18N05A24M25B, 18N05A24M25H, 18N05A24M25I, 18N05A24M23U, 18N05A24M23I, 18N05A24M13Y, 18N05A24M24V, 18N05A24M19W, 18N05A24M14W, 18N05E04A04C, 18N05A24M24M, 18N05A24M19X, 18N05A24M19J, 18N05A24M25W, 18N05A24M25G, 18N05A24M25S, 18N05A24M20S, 18N05A24M25N, 18N05A24M23H, 18N05A24M23P, 18N05A24M23J, 18N05A24M18T, 18N05A24M13Z, 18N05A24M13P, 18N05A24M24K, 18N05A24M19A, 18N05A24M24W, 18N05A24M19B, 18N05A24M24S, 18N05A24M24C, 18N05A24M24N, 18N05A24M19I, 18N05E04A04E, 18N05A24M24Z, 18N05A24M24U, 18N05A24M19U, 18N05A24M25R, 18N05A24M25X, 18N05A24M18S, 18N05A24M18C, 18N05E04A03D, 18N05A24M23N, 18N05A24M13N, 18N05E04A04A, 18N05A24M24Q, 18N05A24M24R, 18N05A24M24G, 18N05A24M24I, 18N05A24M19N, 18N05A24M24E, 18N05A24M19P, 18N05A24M25V, 18N05A24M25F, 18N05A24M20V, 18N05A24M20K"]
+      NombreArea: "Libre11",
+      Referencia: "18P09K21D02I",
+      Celdas: ["18P09P01A06I, 18P09P01A07F, 18P09P01E02J, 18P09P01E03L, 18P09P01A23N, 18P09P01A23J, 18P09P01E09S, 18P09P01E14I, 18P09P01E14D, 18P09P01E15Q, 18P09P01A25F, 18P09P01A09Z, 18P09P01A10V, 18P09P01E20L, 18P09P01E20B, 18P09P01A25J, 18P09P01B06K, 18P09P01B21H, 18P09P01B06N, 18P09P01B06P, 18P09P01B08V, 18P09P01B18S, 18P09P01E02I, 18P09P01E02D, 18P09P01A07J, 18P09P01E03F, 18P09P01A23X, 18P09P01E09A, 18P09P01A24F, 18P09P01E09G, 18P09P01A14B, 18P09P01E09M, 18P09P01A24H, 18P09P01A24I, 18P09P01E20R, 18P09P01A10W, 18P09P01B07M, 18P09P01B08W, 18P09P01B13M, 18P09P01A06F, 18P09P01A06G, 18P09P01A06H, 18P09P01A22Z, 18P09P01A08Q, 18P09P01A08K, 18P09P01E03M, 18P09P01A23Y, 18P09P01E08E, 18P09P01A13E, 18P09P01A14A, 18P09P01A09W, 18P09P01E14U, 18P09P01A24J, 18P09P01E25B, 18P09P01A25H, 18P09P01A10P, 18P09P01B21G, 18P09P01B06L, 18P09P01B22G, 18P09P01B07L, 18P09P01A07I, 18P09P01A08F, 18P09P01A08W, 18P09P01E03T, 18P09P01A23I, 18P09P01A13D, 18P09P01E14T, 18P09P01E14N, 18P09P01A09Y, 18P09P01A25G, 18P09P01A10X, 18P09P01A10M, 18P09P01B21F, 18P09P01B21I, 18P09P01B07K, 18P09P01B13X, 18P09P01B13S, 18P09P01A22Y, 18P09P01A23W, 18P09P01E09L, 18P09P01E09T, 18P09P01E15V, 18P09P01E20W, 18P09P01E20G, 18P09P01B22F, 18P09P01B22H, 18P09P01B23B, 18P09P01B18W, 18P09P01B18C, 18P09P01A07H, 18P09P01E08D, 18P09P01E03Y, 18P09P01A23T, 18P09P01E09Y, 18P09P01A10S, 18P09P01B06M, 18P09P01B21J, 18P09P01B23A, 18P09P01B18R, 18P09P01B13C, 18P09P01E03K, 18P09P01A23V, 18P09P01A13C, 18P09P01E09F, 18P09P01A24G, 18P09P01A25I, 18P09P01B22I, 18P09P01B07T, 18P09P01B22J, 18P09P01B07U, 18P09P01B23F, 18P09P01B08Q, 18P09P01B08X, 18P09P01A06J, 18P09P01A07G, 18P09P01A08V, 18P09P01A08X, 18P09P01E03N, 18P09P01A09X, 18P09P01E15W, 18P09P01A10N, 18P09P01B07N, 18P09P01B18M, 18P09P01B18H, 18P09P01B13H"]
     }
+    // , {
+    //   NombreArea: "511210",
+    //   Referencia: "18N05E04A03C",
+    //   Celdas: ["18N05E04A03C, 18N05A24M13S, 18N05A24M18Z, 18N05A24M18I, 18N05A24M19V, 18N05A24M19F, 18N05A24M14Q, 18N05A24M24L, 18N05A24M24H, 18N05A24M19S, 18N05A24M19M, 18N05A24M19H, 18N05A24M24Y, 18N05A24M24D, 18N05A24M24J, 18N05A24M20R, 18N05A24M25C, 18N05A24M20X, 18N05A24M25D, 18N05A24M23X, 18N05A24M23S, 18N05A24M18H, 18N05A24M14K, 18N05A24M19L, 18N05A24M19G, 18N05A24M25Q, 18N05E04A05B, 18N05A24M23M, 18N05A24M18M, 18N05A24M13X, 18N05A24M13M, 18N05A24M23T, 18N05A24M23D, 18N05A24M18Y, 18N05A24M18P, 18N05A24M18J, 18N05A24M13U, 18N05E04A04B, 18N05A24M19Y, 18N05E04A05A, 18N05A24M20F, 18N05A24M25L, 18N05A24M20W, 18N05A24M25M, 18N05A24M25T, 18N05A24M18U, 18N05A24M18N, 18N05A24M18D, 18N05A24M18E, 18N05A24M13T, 18N05A24M24F, 18N05A24M24A, 18N05A24M14V, 18N05A24M24X, 18N05A24M19C, 18N05A24M19T, 18N05A24M24P, 18N05A24M25K, 18N05A24M23C, 18N05A24M18X, 18N05E04A03E, 18N05A24M23Y, 18N05A24M23Z, 18N05A24M23E, 18N05A24M19Q, 18N05A24M19K, 18N05A24M24B, 18N05A24M19R, 18N05E04A04D, 18N05A24M24T, 18N05A24M19Z, 18N05A24M25A, 18N05A24M20Q, 18N05A24M25B, 18N05A24M25H, 18N05A24M25I, 18N05A24M23U, 18N05A24M23I, 18N05A24M13Y, 18N05A24M24V, 18N05A24M19W, 18N05A24M14W, 18N05E04A04C, 18N05A24M24M, 18N05A24M19X, 18N05A24M19J, 18N05A24M25W, 18N05A24M25G, 18N05A24M25S, 18N05A24M20S, 18N05A24M25N, 18N05A24M23H, 18N05A24M23P, 18N05A24M23J, 18N05A24M18T, 18N05A24M13Z, 18N05A24M13P, 18N05A24M24K, 18N05A24M19A, 18N05A24M24W, 18N05A24M19B, 18N05A24M24S, 18N05A24M24C, 18N05A24M24N, 18N05A24M19I, 18N05E04A04E, 18N05A24M24Z, 18N05A24M24U, 18N05A24M19U, 18N05A24M25R, 18N05A24M25X, 18N05A24M18S, 18N05A24M18C, 18N05E04A03D, 18N05A24M23N, 18N05A24M13N, 18N05E04A04A, 18N05A24M24Q, 18N05A24M24R, 18N05A24M24G, 18N05A24M24I, 18N05A24M19N, 18N05A24M24E, 18N05A24M19P, 18N05A24M25V, 18N05A24M25F, 18N05A24M20V, 18N05A24M20K"]
+    // }
   ]
+
