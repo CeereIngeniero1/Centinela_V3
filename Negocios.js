@@ -2175,9 +2175,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "", // nombre del area (debe ser el mismo nombre del certificado ambiental y el shapefile)
-      Referencia: "", // celda referencia 
-      Celdas: [""] // celdas
+      NombreArea: "AreaJorge", // nombre del area (debe ser el mismo nombre del certificado ambiental y el shapefile)
+      Referencia: "18N05E04N06X", // celda referencia 
+      Celdas: ["18N05E04N01M, 18N05E04N06X, 18N05E04N06H, 18N05E04N01S, 18N05E04N01X, 18N05E04J21C, 18N05E04J16H, 18N05E04J21M, 18N05E04J16X, 18N05E04N06M, 18N05E04N01C, 18N05E04N06S, 18N05E04N06C, 18N05E04J16M, 18N05E04J21S, 18N05E04J16S, 18N05E04J16C, 18N05E04N01H, 18N05E04J21X, 18N05E04J21H"] // celdas
     }
     // , {
     //   NombreArea: "511210",
