@@ -10,7 +10,7 @@ var pass2 = 'SuperAgente86*';
 var user2 = '99401';
 var pass2 = 'JU9*-2024&';
 
-<!-- Oscar -->
+<!-- Oscar --> Bloqueado
 var user2 = '96232';
 var pass2 = 'OscarM_2025*';
 
@@ -22,7 +22,7 @@ var pass2 = 'Camilo$0307';
 var user2 = '83949';
 var pass2 = 'JorgeC2025.';
 
-<!-- Jonathan -->
+<!-- Jonathan -->bloqueado
 var user2 = '85127';
 var pass2 = 'J1026161053*';
 
@@ -30,7 +30,7 @@ var pass2 = 'J1026161053*';
 var user2 = '83955';
 var pass2 = 'wX2*dQ3*cS';
 
-<!-- Carolina -->
+<!-- Carolina -->bloqueado
 var user2 = '84928';
 var pass2 = 'C1000191991*';
 
