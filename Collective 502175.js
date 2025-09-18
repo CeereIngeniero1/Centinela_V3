@@ -2179,10 +2179,10 @@ const Areas =
     // // //   Referencia: "18N05N14M12R",
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
-    {
-      NombreArea: "",
-      Referencia: "",
-      Celdas: [""]
+   {
+      NombreArea: "502175", // nombre del area
+      Referencia: "18N05E04D06M", // celda referencia
+      Celdas: ["18N05E04D06M"] // area completa de celdas
     }
     // , {
     //   NombreArea: "511210",

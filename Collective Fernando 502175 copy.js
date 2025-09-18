@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '83949';
-const pass2 = 'JorgeC2025.';
-const Agente = 0;
+const user2 = '83955';
+const pass2 = 'wX2*dQ3*cS';
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -1717,7 +1717,7 @@ function Mineria(browser, Pin,) {
 
 
     clearTimeout(RadiPrimero);
-    
+   
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
 
