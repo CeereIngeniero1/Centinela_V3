@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "N2:") {
+    if (Pines.substring(i + 1, i + 4) == "Co:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -2180,9 +2180,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "",
-      Referencia: "",
-      Celdas: [""]
+      NombreArea: "841-17 ", // nombre del area
+      Referencia: "18N05A24P08T", // celda referencia
+      Celdas: ["18N05A24P08T,18N05A24P08R,18N05A24P07U,18N05A24P08Q,18N05A24P08S,18N05A24P07T"] // area completa de celdas
     }
     // , {
     //   NombreArea: "511210",

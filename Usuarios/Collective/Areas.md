@@ -43,8 +43,8 @@ const user2 = '76467';
 const pass2 = 'Maxamaga2025.';
 
 <!-- Provenza -->
-74025 
-Legalprovenza2025.
+const user2 = '74025'; 
+const pass2 = 'Legalprovenza2025.';
 
 <!-- nuevos -->
 70164

@@ -1,0 +1,2 @@
+
+start /d "../" git pull
