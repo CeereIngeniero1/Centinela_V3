@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '83949';
-const pass2 = 'JorgeC2025.';
-const Agente = 0;
+const user2 = '98908';
+const pass2 = 'Sebas2025?';
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -2182,7 +2182,7 @@ const Areas =
     {
       NombreArea: "841-17", // nombre del area
       Referencia: "18N05A24P08T", // celda referencia
-      Celdas: ["18N05A24P08T"] // area completa de celdas
+      Celdas: ["18N05A24P08R,18N05A24P07U,18N05A24P08Q,18N05A24P07T"] // area completa de celdas
     }
     // , {
     //   NombreArea: "511210",

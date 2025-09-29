@@ -1717,7 +1717,11 @@ function Mineria(browser, Pin,) {
 
 
     clearTimeout(RadiPrimero);
-
+    let Radisegundo = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 10000);
 
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
@@ -1735,7 +1739,82 @@ function Mineria(browser, Pin,) {
 
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-    
+    await continPag[1].click();
+
+    clearTimeout(Radisegundo);
+    await page.waitForNavigation({
+      waitUntil: "networkidle0",
+    });
+    console.log(" si navego ");
+
+
+
+
+    let RadiTercero = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 120000);
+
+    //  await page.waitForTimeout(1000000);
+
+
+    while (true) {
+
+      let resultado = await RECAPTCHA(page);
+      if (resultado == 1) {
+        break;
+      }
+
+    }
+
+    var imagendeCaptcha = 0;
+    while (true) {
+      await page.waitForTimeout(1500);
+
+      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
+        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
+        if (resultado === 1) {
+          clearTimeout(RadiTercero);
+          break;
+        } else if (resultado === 2) {
+          console.log("El captcha sigue en modo reto de imagenes");
+          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
+          // lO RETIRO PORQUE NO VALE LA PENA
+          // Mineria(browser, Pin);
+          imagendeCaptcha = 1;
+        } else {
+          // await RECAPTCHA(page);
+        }
+
+      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
+        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+        if (posibleContinuar.length > 0) {
+          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+          console.log([posibleContinuar]);
+          await posibleContinuar[1].click();
+          await page.waitForNavigation({
+            waitUntil: "networkidle0",
+          });
+          await RECAPTCHA(page);
+        }
+      }
+    }
+
+    // await page.waitForTimeout(1000000);
+
+    console.log("51. Bóton Radicar");
+
+    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
+    console.log("Este es el boton radicar : " + btnRadicar1);
+
+    console.log("Le di click");
+
+    try {
+      await btnRadicar1[1].click();
+    } catch (exepcion) {
+      console.log("La 1 tampoco Y_Y");
+    }
 
 
     //CORREO RADICACION
@@ -2101,9 +2180,9 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "18N05N14M12R",
-      Referencia: "18N05N14M12R",
-      Celdas: ["18N05N14M12R"]
+      NombreArea: "841-17", // nombre del area
+      Referencia: "18N05A24P08T", // celda referencia
+      Celdas: ["18N05A24P08R,18N05A24P07U,18N05A24P08Q,18N05A24P07T"] // area completa de celdas
     }
     // , {
     //   NombreArea: "511210",

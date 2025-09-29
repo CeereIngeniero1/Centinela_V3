@@ -2180,7 +2180,7 @@ const Areas =
     // // //   Celdas: ["18N05N14M12R"]
     // // // }*/
     {
-      NombreArea: "841-17 ", // nombre del area
+      NombreArea: "841-17", // nombre del area
       Referencia: "18N05A24P08T", // celda referencia
       Celdas: ["18N05A24P08T,18N05A24P08R,18N05A24P07U,18N05A24P08Q,18N05A24P08S,18N05A24P07T"] // area completa de celdas
     }
