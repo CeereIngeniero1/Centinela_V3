@@ -980,7 +980,7 @@ async function Profesionales(page, Eventos) {
 
 async function Informacion_financiera(page) {
 
-   await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
+  await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
   //sE MANEJA DUALIDAD DSDE EL .ENV PARA CUANDO SON PERSONAS NATURALES O EMPRESAS
   // await page.select("#personClassificationId0", "PN");
   // await page.select("#personClassificationId0", "PJ");
@@ -1372,7 +1372,7 @@ async function verificarCaptchaResuelto(page, imagendeCaptcha) {
 }
 
 
-function Mineria(browser, Pin, ) {
+function Mineria(browser, Pin,) {
   (async () => {
     console.log("Esta es la vuelta " + ContadorVueltas);
     const page = await browser.newPage();
@@ -1548,8 +1548,9 @@ function Mineria(browser, Pin, ) {
                 console.log(`["${areaFiltrado.join(', ')}"],`);
                 console.log(`===============================================================================================`.cyan.bold);
                 //Band = 80;
-
-                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, areaFiltrado);
+                let datos = areaFiltrado.join(', ');
+                let Filtrodelfriltro = [datos];
+                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Filtrodelfriltro);
                 // await page.waitForTimeout(1000);
                 await continCeldas[1].click();
                 await page.waitForFunction(
@@ -2169,11 +2170,11 @@ const Areas =
       Referencia: "18N05N14M12R", // celda referencia
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
-     {
+    {
       NombreArea: "509188",
       Referencia: "18N05A24Q18W",
       Celdas: ["18N05A24Q18W, 18N05A24Q18Y, 18N05A24Q23F, 18N05A24Q23A, 18N05A24Q23B, 18N05A24Q18X, 18N05A24Q23D, 18N05A24Q17Z, 18N05A24Q22J, 18N05A24Q18V, 18N05A24Q23H, 18N05A24Q23I, 18N05A24Q22E, 18N05A24Q23C, 18N05A24Q23G"]
-    } 
+    }
     /* {
       NombreArea: "prueba",
       Referencia: "18N05N14M12R",

@@ -1553,8 +1553,9 @@ function Mineria(browser, Pin,) {
                 console.log(`["${areaFiltrado.join(', ')}"],`);
                 console.log(`===============================================================================================`.cyan.bold);
                 //Band = 80;
-
-                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, areaFiltrado);
+                let datos = areaFiltrado.join(', ');
+                let Filtrodelfriltro = [datos];
+                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Filtrodelfriltro);
                 // await page.waitForTimeout(1000);
                 await continCeldas[1].click();
                 await page.waitForFunction(

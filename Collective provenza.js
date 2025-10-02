@@ -38,7 +38,7 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '74025'; 
+const user2 = '74025';
 const pass2 = 'Legalprovenza2025.';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
@@ -980,7 +980,7 @@ async function Profesionales(page, Eventos) {
 
 async function Informacion_financiera(page) {
 
-   await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
+  await page.select("#personClassificationId0", Datos_Empresa.TipoUsuario);
   //sE MANEJA DUALIDAD DSDE EL .ENV PARA CUANDO SON PERSONAS NATURALES O EMPRESAS
   // await page.select("#personClassificationId0", "PN");
   // await page.select("#personClassificationId0", "PJ");
@@ -1372,7 +1372,7 @@ async function verificarCaptchaResuelto(page, imagendeCaptcha) {
 }
 
 
-function Mineria(browser, Pin, ) {
+function Mineria(browser, Pin,) {
   (async () => {
     console.log("Esta es la vuelta " + ContadorVueltas);
     const page = await browser.newPage();
@@ -1548,8 +1548,9 @@ function Mineria(browser, Pin, ) {
                 console.log(`["${areaFiltrado.join(', ')}"],`);
                 console.log(`===============================================================================================`.cyan.bold);
                 //Band = 80;
-
-                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, areaFiltrado);
+                let datos = areaFiltrado.join(', ');
+                let Filtrodelfriltro = [datos];
+                await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Filtrodelfriltro);
                 // await page.waitForTimeout(1000);
                 await continCeldas[1].click();
                 await page.waitForFunction(
@@ -2169,7 +2170,7 @@ const Areas =
       Referencia: "18N05N14M12R", // celda referencia
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
-     {
+    {
       NombreArea: "Area14",
       Referencia: "18N05A25G21R",
       Celdas: ["18N05A25G21R, 18N05A25G16L, 18N05A25G21S, 18N05A25G21T, 18N05A25G21J, 18N05A25G16U, 18N05A25G22Q, 18N05A25G22A, 18N05A25G17W, 18N05A25G17S, 18N05A25G22T, 18N05A25G23F, 18N05A25G23A, 18N05A25G16P, 18N05A25G22K, 18N05A25G17V, 18N05A25G22H, 18N05A25G22C, 18N05A25G17H, 18N05A25G17Y, 18N05A25G22J, 18N05A25G22E, 18N05A25G17Z, 18N05A25G17P, 18N05A25G16X, 18N05A25G16M, 18N05A25G16Y, 18N05A25G22F, 18N05A25G22N, 18N05A25G22P, 18N05A25G23K, 18N05A25G21L, 18N05A25G16W, 18N05A25G21C, 18N05A25G16S, 18N05A25G21I, 18N05A25G16T, 18N05A25G16I, 18N05A25G21U, 18N05A25G21E, 18N05A25G17X, 18N05A25G17G, 18N05A25G17T, 18N05A25G17U, 18N05A25G18V, 18N05A25G18Q, 18N05A25G21M, 18N05A25G21P, 18N05A25G16J, 18N05A25G17K, 18N05A25G17J, 18N05A25G21H, 18N05A25G16N, 18N05A25G22R, 18N05A25G22S, 18N05A25G22B, 18N05A25G17N, 18N05A25G18K, 18N05A25G21N, 18N05A25G21D, 18N05A25G16Z, 18N05A25G17F, 18N05A25G17R, 18N05A25G17M, 18N05A25G22I, 18N05A25G22D, 18N05A25G22U, 18N05A25G18F, 18N05A25G21G, 18N05A25G21B, 18N05A25G16H, 18N05A25G17Q, 18N05A25G22L, 18N05A25G22M, 18N05A25G22G, 18N05A25G17L, 18N05A25G17I, 18N05A25G23Q"]
