@@ -78,7 +78,7 @@ async function Pagina() {
     executablePath:
       "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
     // Reemplaza con la ruta real a tu Google Chrome
-    headless: false,
+    headless: true,
     args: [
       "--start-maximized",
     ],
