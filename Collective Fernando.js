@@ -38,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '83949';
-const pass2 = 'JorgeC2025.';
-const Agente = 0;
+const user2 = '83955';
+const pass2 = 'wX2*dQ3*cS';
+const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -341,8 +341,6 @@ async function Minerales(page) {
 
 async function MonitorearAreas(page, IdArea, Celda, Area) {
   //console.log(IdArea, Aviso, Celda, Comas);
-
-  console.log(Area);
 
   const AreaCeldas = Area[0].split(',').map(celda => celda.trim());
   await page.evaluate(
@@ -1453,8 +1451,6 @@ function Mineria(browser, Pin,) {
       console.log("Bandera: " + Band);
       console.log("NombreArea: " + Areas[Band].NombreArea);
       console.log("Referencia: " + Areas[Band].Referencia);
-      console.log(Areas[Band].Celdas);
-      console.log("arriba el area");
 
 
       DetallesCompletos = await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Areas[Band].Celdas);
@@ -1525,20 +1521,14 @@ function Mineria(browser, Pin,) {
 
 
             if (Band != 81) {
-              console.log("aca tin");
 
-              console.log(celdasNoDisponibles);
 
               // Tipo, Area, Celda
               // Crear una lista de celdas no disponibles (eliminando espacios innecesarios)
               const celdasNoDisponiblesLimpias = celdasNoDisponibles[0].map(celda => celda.trim());
-              console.log(celdasNoDisponiblesLimpias);
-
 
               // Asegurarse de que 'ComparacionCeldas' esté correctamente dividido en celdas
               const areaCeldas = ComparacionCeldas;
-              console.log(areaCeldas);
-
 
               // Filtrar el arreglo 'areaCeldas' para excluir las celdas no disponibles
               areaFiltrado = areaCeldas.filter(celda => !celdasNoDisponiblesLimpias.includes(celda));
@@ -1558,16 +1548,9 @@ function Mineria(browser, Pin,) {
                 console.log(`["${areaFiltrado.join(', ')}"],`);
                 console.log(`===============================================================================================`.cyan.bold);
                 //Band = 80;
-
-                console.log(areaFiltrado.join(', '));
                 let datos = areaFiltrado.join(', ');
                 let Filtrodelfriltro = [datos];
-                console.log("ya llegamos aca");
-
                 await MonitorearAreas(page, Areas[Band].NombreArea, Areas[Band].Referencia, Filtrodelfriltro);
-
-            
-
                 // await page.waitForTimeout(1000);
                 await continCeldas[1].click();
                 await page.waitForFunction(
@@ -1590,13 +1573,9 @@ function Mineria(browser, Pin,) {
             }
             /* FIN FIN FIN */
           } catch (error) {
-
             console.log('Error al reorganizar las celdas del área:', error);
-            await page.waitForTimeout(500000);
 
           }
-
-
         }
 
 
@@ -1629,6 +1608,7 @@ function Mineria(browser, Pin,) {
 
       console.log("limpia el timer");
       clearTimeout(TimeArea);
+
     }
 
 
@@ -1732,7 +1712,11 @@ function Mineria(browser, Pin,) {
 
 
     clearTimeout(RadiPrimero);
-
+    let Radisegundo = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 10000);
 
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
@@ -1749,7 +1733,82 @@ function Mineria(browser, Pin,) {
     }
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
+    await continPag[1].click();
 
+    clearTimeout(Radisegundo);
+    await page.waitForNavigation({
+      waitUntil: "networkidle0",
+    });
+    console.log(" si navego ");
+
+
+
+
+    let RadiTercero = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 120000);
+
+    //  await page.waitForTimeout(1000000);
+
+
+    while (true) {
+
+      let resultado = await RECAPTCHA(page);
+      if (resultado == 1) {
+        break;
+      }
+
+    }
+
+    var imagendeCaptcha = 0;
+    while (true) {
+      await page.waitForTimeout(1500);
+
+      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
+        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
+        if (resultado === 1) {
+          clearTimeout(RadiTercero);
+          break;
+        } else if (resultado === 2) {
+          console.log("El captcha sigue en modo reto de imagenes");
+          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
+          // lO RETIRO PORQUE NO VALE LA PENA
+          // Mineria(browser, Pin);
+          imagendeCaptcha = 1;
+        } else {
+          // await RECAPTCHA(page);
+        }
+
+      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
+        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+        if (posibleContinuar.length > 0) {
+          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+          console.log([posibleContinuar]);
+          await posibleContinuar[1].click();
+          await page.waitForNavigation({
+            waitUntil: "networkidle0",
+          });
+          await RECAPTCHA(page);
+        }
+      }
+    }
+
+    // await page.waitForTimeout(1000000);
+
+    console.log("51. Bóton Radicar");
+
+    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
+    console.log("Este es el boton radicar : " + btnRadicar1);
+
+    console.log("Le di click");
+
+    try {
+      await btnRadicar1[1].click();
+    } catch (exepcion) {
+      console.log("La 1 tampoco Y_Y");
+    }
 
 
     //CORREO RADICACION
@@ -2111,22 +2170,11 @@ const Areas =
       Referencia: "18N05N14M12R", // celda referencia
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
-    // {//8una celdas
-    //   NombreArea: "PruebaReorganizacion", // nombre del area
-    //   Referencia: "18N05A25G21R",
-    //   Celdas: ["18N05E10E07T, 18N05E10E07X, 18N05E10E07S, 18N05E10E08W, 18N05E10E08R, 18N05E10E07Y, 18N05E10E07Z, 18N05E10E07U, 18N05E10E07W, 18N05E10E08Q, 18N05E10E07R"]
-    // }
-    {//dos celdas
-      NombreArea: "PruebaReorganizacion", // nombre del area
-      Referencia: "18N05A25G21R",
-      Celdas: ["18N05E10E07T, 18N05E10E07X, 18N05E10E07S, 18N05E10E08W, 18N05E10E08R, 18N05E10E07Y, 18N05E10E07Z, 18N05E10E07U, 18N05E10E07W, 18N05E10E08Q, 18N05E10E08V, 18N05E10E07R"]
+    {
+      NombreArea: "505577", // nombre del area
+      Referencia: "18N05E04L11C", // celda referencia
+      Celdas: ["18N05E04L11C, 18N05E04L11I, 18N05E04L12Q, 18N05E04L11P, 18N05E04L11J, 18N05E04L12F, 18N05E04L12M, 18N05E04L06H, 18N05E04L11U, 18N05E04L06U, 18N05E04L06M, 18N05E04L07V, 18N05E04L07F, 18N05E04L07S, 18N05E04L07H, 18N05E04L06N, 18N05E04L06I, 18N05E04L11E, 18N05E04L07R, 18N05E04L07G, 18N05E04L06X, 18N05E04L06S, 18N05E04L06Z, 18N05E04L07Q, 18N05E04L06P, 18N05E04L12B, 18N05E04L12H, 18N05E04L12C, 18N05E04L11D, 18N05E04L06Y, 18N05E04L06T, 18N05E04L12K, 18N05E04L07K, 18N05E04L06J, 18N05E04L07W, 18N05E04L07X, 18N05E04L07M, 18N05E04L11Y, 18N05E04L11T, 18N05E04L11N, 18N05E04L12A, 18N05E04L12L, 18N05E04L12G, 18N05E04L07L"] // area completa de celdas
     }
-
-    // {
-    //   NombreArea: "PruebaReorganizacion", // nombre del area
-    //   Referencia: "18N05A25G21R",
-    //   Celdas: ["18N05E10E12Q, 18N05E10E07V, 18N05E10E12R, 18N05E10E07G, 18N05E10E12T, 18N05E10E07T, 18N05E10E02T, 18N05E10E07J, 18N05E10E08F, 18N05E10E03V, 18N05E10E03Q, 18N05E10E08G, 18N05E10E08H, 18N05E10E08D, 18N05E10E03Y, 18N05E10E13Z, 18N05E10E08U, 18N05E10E09B, 18N05E10E09X, 18N05E10E04S, 18N05E10E14T, 18N05E10E09D, 18N05E10E14U, 18N05E10E09J, 18N05E10E15W, 18N05E10E11U, 18N05E10E11P, 18N05E10E01U, 18N05E10E12F, 18N05E10E12X, 18N05E10E12S, 18N05E10E07X, 18N05E10E07S, 18N05E10E07D, 18N05E10E12E, 18N05E10E13V, 18N05E10E13W, 18N05E10E13L, 18N05E10E08W, 18N05E10E08R, 18N05E10E13T, 18N05E10E08Y, 18N05E10E08C, 18N05E10E14Q, 18N05E10E14K, 18N05E10E04V, 18N05E10E09M, 18N05E10E09C, 18N05E10E09E, 18N05E10E05Q, 18N05E10E10R, 18N05E10E15Y, 18N05E10E07F, 18N05E10E12B, 18N05E10E02S, 18N05E10E07Y, 18N05E10E07N, 18N05E10E13A, 18N05E10E13Y, 18N05E10E13C, 18N05E10E13D, 18N05E10E03X, 18N05E10E03T, 18N05E10E13P, 18N05E10E14A, 18N05E10E09A, 18N05E10E04Q, 18N05E10E14W, 18N05E10E14R, 18N05E10E14L, 18N05E10E14S, 18N05E10E14C, 18N05E10E14E, 18N05E10E10Q, 18N05E10E05V, 18N05E10E01Z, 18N05E10E02Q, 18N05E10E12L, 18N05E10E12G, 18N05E10E12Y, 18N05E10E07Z, 18N05E10E07U, 18N05E10E13N, 18N05E10E08S, 18N05E10E08M, 18N05E10E08I, 18N05E10E03S, 18N05E10E03U, 18N05E10E14F, 18N05E10E09K, 18N05E10E09R, 18N05E10E09L, 18N05E10E04W, 18N05E10E09H, 18N05E10E14I, 18N05E10E14Z, 18N05E10E14P, 18N05E10E06Z, 18N05E10E06U, 18N05E10E06J, 18N05E10E07Q, 18N05E10E07K, 18N05E10E02V, 18N05E10E12W, 18N05E10E07W, 18N05E10E07B, 18N05E10E02R, 18N05E10E12M, 18N05E10E12H, 18N05E10E12D, 18N05E10E12U, 18N05E10E07E, 18N05E10E02Z, 18N05E10E08Q, 18N05E10E13B, 18N05E10E13M, 18N05E10E13I, 18N05E10E08E, 18N05E10E14V, 18N05E10E14B, 18N05E10E04R, 18N05E10E14X, 18N05E10E14Y, 18N05E10E09Z, 18N05E10E09U, 18N05E10E10F, 18N05E10E15X, 18N05E10E11Z, 18N05E10E11J, 18N05E10E06P, 18N05E10E06E, 18N05E10E12V, 18N05E10E12A, 18N05E10E07A, 18N05E10E02W, 18N05E10E12C, 18N05E10E07M, 18N05E10E02X, 18N05E10E12N, 18N05E10E12I, 18N05E10E02Y, 18N05E10E12P, 18N05E10E12J, 18N05E10E07P, 18N05E10E13Q, 18N05E10E08V, 18N05E10E08K, 18N05E10E08A, 18N05E10E13G, 18N05E10E08B, 18N05E10E03W, 18N05E10E13X, 18N05E10E13S, 18N05E10E08N, 18N05E10E13U, 18N05E10E13J, 18N05E10E13E, 18N05E10E09Q, 18N05E10E14G, 18N05E10E09G, 18N05E10E14H, 18N05E10E04X, 18N05E10E09N, 18N05E10E09I, 18N05E10E04Y, 18N05E10E15R, 18N05E10E15S, 18N05E10E11E, 18N05E10E12K, 18N05E10E07R, 18N05E10E07H, 18N05E10E07C, 18N05E10E02U, 18N05E10E13K, 18N05E10E13R, 18N05E10E08L, 18N05E10E13H, 18N05E10E08X, 18N05E10E08Z, 18N05E10E08P, 18N05E10E08J, 18N05E10E03Z, 18N05E10E09W, 18N05E10E14N, 18N05E10E14D, 18N05E10E09Y, 18N05E10E09T, 18N05E10E09P, 18N05E10E04U, 18N05E10E15V, 18N05E10E15Q, 18N05E10E15K, 18N05E10E10K, 18N05E10E10L, 18N05E10E07L, 18N05E10E07I, 18N05E10E12Z, 18N05E10E13F, 18N05E10E03R, 18N05E10E08T, 18N05E10E09V, 18N05E10E09F, 18N05E10E14M, 18N05E10E09S, 18N05E10E04T, 18N05E10E14J, 18N05E10E04Z, 18N05E10E10A"]
-    // }
     /* {
       NombreArea: "prueba",
       Referencia: "18N05N14M12R",
