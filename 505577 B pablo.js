@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '96233';
-const pass2 = 'SuperAgente86*';
+const user2 = '99401';
+const pass2 = 'JU9*-2024&';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "Co:") {
+    if (Pines.substring(i + 1, i + 4) == "C1:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;

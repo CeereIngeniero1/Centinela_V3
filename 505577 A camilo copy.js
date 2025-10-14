@@ -1740,83 +1740,7 @@ function Mineria(browser, Pin,) {
 
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-    await continPag[1].click();
-
-    clearTimeout(Radisegundo);
-    await page.waitForNavigation({
-      waitUntil: "networkidle0",
-    });
-    console.log(" si navego ");
-
-
-
-
-    let RadiTercero = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 120000);
-
-    //  await page.waitForTimeout(1000000);
-
-
-    while (true) {
-
-      let resultado = await RECAPTCHA(page);
-      if (resultado == 1) {
-        break;
-      }
-
-    }
-
-    var imagendeCaptcha = 0;
-    while (true) {
-      await page.waitForTimeout(1500);
-
-      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
-        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
-        if (resultado === 1) {
-          clearTimeout(RadiTercero);
-          break;
-        } else if (resultado === 2) {
-          console.log("El captcha sigue en modo reto de imagenes");
-          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
-          // lO RETIRO PORQUE NO VALE LA PENA
-          // Mineria(browser, Pin);
-          imagendeCaptcha = 1;
-        } else {
-          // await RECAPTCHA(page);
-        }
-
-      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
-        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
-        if (posibleContinuar.length > 0) {
-          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
-          console.log([posibleContinuar]);
-          await posibleContinuar[1].click();
-          await page.waitForNavigation({
-            waitUntil: "networkidle0",
-          });
-          await RECAPTCHA(page);
-        }
-      }
-    }
-
-    // await page.waitForTimeout(1000000);
-
-    console.log("51. Bóton Radicar");
-
-    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
-    console.log("Este es el boton radicar : " + btnRadicar1);
-
-    console.log("Le di click");
-
-    try {
-      await btnRadicar1[1].click();
-    } catch (exepcion) {
-      console.log("La 1 tampoco Y_Y");
-    }
-
+    
 
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
@@ -2183,7 +2107,7 @@ const Areas =
    {
       NombreArea: "505577", // nombre del area
       Referencia: "18N05E04L11C", // celda referencia
-      Celdas: ["18N05E04L11C, 18N05E04L06H, 18N05E04L06U, 18N05E04L06M, 18N05E04L06N, 18N05E04L06I, 18N05E04L11E, 18N05E04L06X, 18N05E04L06S, 18N05E04L06Z, 18N05E04L06P, 18N05E04L11D, 18N05E04L06Y, 18N05E04L06T, 18N05E04L06J"] // area completa de celdas
+      Celdas: ["18N05E04L11C, 18N05E04L06H, 18N05E04L06U, 18N05E04L06M, 18N05E04L06N, 18N05E04L06I, 18N05E04L11E, 18N05E04L06X, 18N05E04L06S, 18N05E04L06Z, 18N05E04L06P, 18N05E04L11D, 18N05E04L06Y, 18N05E04L06T, 18N05E04L06J, 18N05E05I08N, 18N05E05I08T"] // area completa de celdas
     }
     // , {
     //   NombreArea: "511210",
