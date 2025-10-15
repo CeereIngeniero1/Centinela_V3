@@ -1,2 +1,2 @@
 
-start /d "../../../../" node "505577 C collective.js"
+start /d "../../../" node "505577 C collective.js"

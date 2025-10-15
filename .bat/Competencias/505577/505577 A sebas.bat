@@ -1,2 +1,2 @@
 
-start /d "../../../../" node "505577 A sebas.js"
+start /d "../../../" node "505577 A sebas.js"
