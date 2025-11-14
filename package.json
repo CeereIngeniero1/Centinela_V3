@@ -19,6 +19,7 @@
   "homepage": "https://github.com/CeereIngeniero1/Centinela_V3#readme",
   "dependencies": {
     "@nut-tree-fork/nut-js": "^4.2.6",
+    "axios": "^1.13.1",
     "colors": "^1.4.0",
     "dotenv": "^17.2.2",
     "fs": "0.0.1-security",
