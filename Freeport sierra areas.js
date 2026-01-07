@@ -15,11 +15,7 @@ const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
 const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
 const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
-// console.log(Informacion_Empresas);
-// console.log(Informacion_Economica);
-// console.log(EquiposGenerales);
-// console.log(Geologos);
-// console.log(Contadores);
+ 
 
 
 const NombreEquipo = os.hostname();
