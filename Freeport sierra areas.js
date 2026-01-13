@@ -17,7 +17,7 @@ const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
  
 
-
+ 
 const NombreEquipo = os.hostname();
 console.log(" Nombre del equipo: ", NombreEquipo);
 

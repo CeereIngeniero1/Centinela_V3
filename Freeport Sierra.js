@@ -2174,7 +2174,7 @@ const Areas =
     // // //   NombreArea: "prueba",
     // // //   Referencia: "18N05N14M12R",
     // // //   Celdas: ["18N05N14M12R"]
-    // // // }*/
+    // // // }*/ 
 {
       NombreArea: "511759",
       Referencia: "18P09K08P09E",
