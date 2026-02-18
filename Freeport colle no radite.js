@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '76467';
-const pass2 = 'Maxamaga2025.';
+const user2 = '83949';
+const pass2 = 'JorgeC2025.';
 const Agente = 1; // 0 => Agente 1, 1 => Agente 2
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
