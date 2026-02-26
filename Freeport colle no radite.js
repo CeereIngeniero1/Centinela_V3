@@ -1033,7 +1033,7 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
     await btncenti[0].click();
 
     await page.waitForSelector(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
-    const RutadeShapefile = `./Documentos/${Empresa}/Sheips/${IdArea}.zip`;
+    const RutadeShapefile = `./Documentos/Freeport/Sheips/${IdArea}.zip`;
     const ControladorDeCargaShapefile = await page.$(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
     await ControladorDeCargaShapefile.uploadFile(RutadeShapefile);
 
@@ -1044,7 +1044,7 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
     await btncenti[0].click();
 
     await page.waitForSelector(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
-    const RutadeShapefile = `./Documentos/${Empresa}/Sheips/Sector_${Empresa}.zip`;
+    const RutadeShapefile = `./Documentos/Freeport/Sheips/Sector_Freeport.zip`;
     const ControladorDeCargaShapefile = await page.$(`#p_CaaCataEnvMandatoryDocumentToAttachId0`);
     await ControladorDeCargaShapefile.uploadFile(RutadeShapefile);
 
@@ -1054,7 +1054,7 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
 
     // Subir certificado
     let ArchivoAmbiental;
-    ArchivoAmbiental = `./Documentos/${Empresa}/CertificadoAmbiental/${IdArea}.pdf`;
+    ArchivoAmbiental = `./Documentos/Freeport/CertificadoAmbiental/${IdArea}.pdf`;
 
 
     await page.waitForSelector(`#p_CaaCataEnvMandatoryDocumentToAttachId1`);
@@ -1064,7 +1064,7 @@ async function Certificado_Shapefile(page, Empresa, IdArea) {
   } catch (error) {
     console.log("No se encontró el certificado ambiental");
     let ArchivoAmbiental;
-    ArchivoAmbiental = `./Documentos/${Empresa}/CertificadoAmbiental/Certificado_Ambiental.pdf`;
+    ArchivoAmbiental = `./Documentos/Freeport/CertificadoAmbiental/Certificado_Ambiental.pdf`;
 
 
     await page.waitForSelector(`#p_CaaCataEnvMandatoryDocumentToAttachId1`);
@@ -1130,7 +1130,7 @@ async function Documentos_Persona_Natural(page, Empresa) {
       for (let i = 0; i < ElementosFile.length; i++) {
         try {
           await page.waitForSelector(`#${ElementosFile[i]}`);
-          const RutaDelArchivo = `./Documentos/${Empresa}/DocumentosReglamentarios/${Documentos[i]}`;
+          const RutaDelArchivo = `./Documentos/Freeport/DocumentosReglamentarios/${Documentos[i]}`;
           const ElementoControladorDeCarga = await page.$(
             `#${ElementosFile[i]}`
           );
@@ -1219,7 +1219,7 @@ async function Documentos_Persona_juridica(page, Empresa) {
       for (let i = 0; i < ElementosFile.length; i++) {
         try {
           await page.waitForSelector(`#${ElementosFile[i]}`);
-          const RutaDelArchivo = `./Documentos/${Empresa}/DocumentosReglamentarios/${Documentos[i]}`;
+          const RutaDelArchivo = `./Documentos/Freeport/DocumentosReglamentarios/${Documentos[i]}`;
           const ElementoControladorDeCarga = await page.$(
             `#${ElementosFile[i]}`
           );
@@ -1752,17 +1752,17 @@ function Correo(Tipo, Area, Celda) {
   //Area = "Tranquilos area de prueba";
   if (Tipo == 1) {
     msg =
-      `¡¡¡Posible Area Liberada!!! ${EquipoActual} ${Area} ${Empresa}`;
+      `¡¡¡Posible Area Liberada!!! ${EquipoActual} ${Area} Freeport`;
     Color = "#0eff16ff";
     Texto = "POSIBLE AREA LIBERADA";
   } else if (Tipo == 2) {
     msg =
-      `Area Radicada  ${EquipoActual} ${Area} ${Empresa}`;
+      `Area Radicada  ${EquipoActual} ${Area} Freeport`;
     Color = "#D4AF37";
     Texto = "POSIBLE AREA RADICADA";
   } else if (Tipo == 3) {
     msg =
-      `¡¡¡Area Con fecha de Reapertura!!! ${EquipoActual} ${Area} ${Empresa}`;
+      `¡¡¡Area Con fecha de Reapertura!!! ${EquipoActual} ${Area} Freeport`;
     Color = "#427345ff";
     Texto = "AREA CON REAPERTURA";
   } else if (Tipo == 4) {
@@ -1839,7 +1839,7 @@ function Correo(Tipo, Area, Celda) {
                         <div class="content">
                             <p><strong>Detalles:</strong></p>
                             <ul>
-                                <li><strong>Empresa: </strong><br>${Empresa}</li>
+                                <li><strong>Empresa: </strong><br>Freeport</li>
                                 <li><strong>Area:</strong><br>${Area}</li>
                                 <li><strong>Celda:</strong><br>${Celda}</li>
                             <li><strong>Equipo Actual:</strong><br>${EquipoActual}</li>
