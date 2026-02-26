@@ -1,6 +1,6 @@
 <!-- Collective -->
 const user1 = '76966';
-const pass1 = 'Titulacion2025.';
+const pass1 = 'Colle2026.*';
 
 <!-- Santiago -->
 const user2 = '96233';
@@ -44,7 +44,7 @@ const pass2 = 'Maxamaga2025.';
 
 <!-- Provenza -->
 const user2 = '74025'; 
-const pass2 = 'Legalprovenza2025.';
+const pass2 = 'provenXa2026.*';
 
 <!-- nuevos -->
 70164
@@ -59,6 +59,10 @@ Diego123184*
 79948
 Rubengaviria2*
 
+
+Este no funciona
+63213
+Pako2026*..*/
 
 
 
