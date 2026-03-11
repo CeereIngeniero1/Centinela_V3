@@ -382,7 +382,7 @@
           </div>
           <div class="field">
             <label>Celdas (separadas por coma) <span class="req">*</span></label>
-            <textarea id="celdas-${id}" placeholder="18P09K04K05R, 18N05N14M12R, ..." oninput="autoCompletarReferencia(${id}, this.value)"></textarea>
+            <textarea id="celdas-${id}" placeholder="18P09K04K05R, 18N05N14M12R, ..." oninput="autoCompletarReferencia(${id}, this)"></textarea>
           </div>
         </div>`;
 
@@ -409,13 +409,27 @@
       document.getElementById('areas-count').textContent = cards.length;
     }
 
-    // Extrae la primera celda pegada y la pone en Referencia
-    function autoCompletarReferencia(id, valor) {
-      if (!valor) return;
-      // Separa por comas, espacios o saltos de línea y toma el primero válido
-      const celdas = valor.split(/[\s,]+/);
-      if (celdas.length > 0 && celdas[0]) {
-        document.getElementById(`referencia-${id}`).value = celdas[0];
+    // Extrae la primera celda pegada (para Referencia) y auto-formatea la caja de Celdas
+    function autoCompletarReferencia(id, el) {
+      if (!el.value) return;
+      
+      // Separamos por comas, saltos de línea, tabuladores o múltiples espacios
+      let partes = el.value.split(/[\s,;-]+/);
+      
+      // Filtramos partes vacías (por si había dobles espacios)
+      partes = partes.filter(p => p.trim() !== '');
+
+      if (partes.length > 0) {
+        // 1. Auto-completar Referencia con la primera celda (si está vacía)
+        const refField = document.getElementById(`referencia-${id}`);
+        if (!refField.value) {
+          refField.value = partes[0];
+        }
+        
+        // 2. Auto-formatear la caja de Celdas (solo si el usuario pegó más de 1 celda, para no interrumpir el tipeo normal)
+        if (partes.length > 1 || el.value.includes('\n') || el.value.includes('\t')) {
+           el.value = partes.join(', ');
+        }
       }
     }
 
