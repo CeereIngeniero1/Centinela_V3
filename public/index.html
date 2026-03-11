@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Centinela – Generador de Scripts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f1a;
+      --surface: #161929;
+      --surface2: #1e2236;
+      --surface3: #242840;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.13);
+      --accent: #5b6ef5;
+      --accent2: #7c3aed;
+      --green: #22c55e;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --text: #e8eaf6;
+      --text-muted: #8b90b0;
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; margin-bottom: 36px; }
+    .logo-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50px; padding: 8px 20px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(91,110,245,0.4);
+    }
+    .header h1 {
+      font-size: 2.2rem; font-weight: 700;
+      background: linear-gradient(135deg, #fff 20%, #8b8fd4 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .header p { margin-top: 10px; color: var(--text-muted); font-size: 0.92rem; }
+
+    /* ── Card ── */
+    .card {
+      width: 100%; max-width: 820px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+
+    /* ── Mode Selector ── */
+    .mode-bar { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+    .mode-btn {
+      background: none; border: none; padding: 20px 24px;
+      cursor: pointer; display: flex; align-items: center; gap: 12px;
+      font-family: inherit; font-size: 0.95rem; font-weight: 500;
+      color: var(--text-muted); transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .mode-btn:hover { background: var(--surface2); color: var(--text); }
+    .mode-btn.active-prueba { color: var(--amber); border-bottom-color: var(--amber); background: rgba(245,158,11,0.06); }
+    .mode-btn.active-real { color: var(--green); border-bottom-color: var(--green); background: rgba(34,197,94,0.06); }
+    .mode-icon { font-size: 1.4rem; }
+    .mode-title { display: block; font-size: 0.82rem; font-weight: 400; margin-top: 2px; }
+
+    .mode-desc {
+      display: none; padding: 12px 24px;
+      font-size: 0.82rem; border-bottom: 1px solid var(--border);
+      gap: 8px; align-items: flex-start;
+    }
+    .mode-desc.active { display: flex; }
+    .mode-desc-prueba { background: rgba(245,158,11,0.05); color: #fbbf24; }
+    .mode-desc-real { background: rgba(34,197,94,0.05); color: #86efac; }
+
+    /* ── Form Body ── */
+    .form-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Script + Output row ── */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 580px) { .field-row { grid-template-columns: 1fr; } }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    .field label .req { color: var(--accent); margin-left: 2px; }
+    .field input, .field select, .field textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 14px;
+      color: var(--text); font-family: inherit;
+      font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field select {
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%238b90b0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,110,245,0.2);
+    }
+    .field textarea { resize: vertical; min-height: 80px; font-size: 0.81rem; line-height: 1.6; }
+    .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
+    .hint { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Warning ── */
+    .warning-real {
+      display: none; background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25); border-radius: 10px;
+      padding: 13px 16px; font-size: 0.82rem; color: #fca5a5;
+      gap: 10px; align-items: flex-start;
+    }
+    .warning-real.visible { display: flex; }
+
+    /* ── Areas Section ── */
+    .areas-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .areas-header-left { display: flex; align-items: center; gap: 10px; }
+    .areas-label {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    .areas-count {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 20px; padding: 2px 9px;
+      font-size: 0.75rem; font-weight: 700; color: white;
+      min-width: 22px; text-align: center;
+    }
+    .btn-add-area {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(91,110,245,0.12);
+      border: 1px solid rgba(91,110,245,0.3);
+      border-radius: 8px; padding: 7px 14px;
+      color: #a5b0ff; font-family: inherit;
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-add-area:hover {
+      background: rgba(91,110,245,0.22);
+      border-color: rgba(91,110,245,0.5);
+      color: white;
+    }
+
+    /* ── Area Card ── */
+    #areas-container { display: flex; flex-direction: column; gap: 16px; }
+
+    .area-card {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      animation: cardIn 0.25s ease;
+    }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .area-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--surface3);
+      border-bottom: 1px solid var(--border);
+    }
+    .area-card-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.84rem; font-weight: 600; color: var(--text-muted);
+    }
+    .area-num {
+      background: var(--accent); color: white;
+      border-radius: 6px; padding: 2px 8px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .btn-remove-area {
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 1.2rem; line-height: 1;
+      padding: 2px 6px; border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .btn-remove-area:hover { background: rgba(239,68,68,0.15); color: #f87171; }
+
+    .area-card-body {
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 580px) { .area-row { grid-template-columns: 1fr; } }
+
+    /* ── Submit ── */
+    .btn-generar {
+      width: 100%; padding: 15px;
+      border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white; font-family: inherit;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(91,110,245,0.4);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-generar:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 10px 30px rgba(91,110,245,0.5); }
+    .btn-generar:active { transform: translateY(0); }
+    .btn-generar:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+    .btn-generar.loading .spinner { display: block; }
+    .btn-generar.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .toast { display: none; align-items: flex-start; gap: 14px; padding: 18px 22px; border-radius: 12px; font-size: 0.88rem; animation: slideIn 0.3s ease; }
+    .toast.success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+    .toast.error   { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
+    .toast.visible { display: flex; }
+    .toast-icon { font-size: 1.5rem; line-height: 1; }
+    .toast-title { font-weight: 600; margin-bottom: 4px; font-size: 0.93rem; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .footer { margin-top: 32px; color: var(--text-muted); font-size: 0.76rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-badge">⚡ Centinela</div>
+    <h1>Generador de Scripts</h1>
+    <p>Prepara automáticamente los archivos JS para pruebas o radicación real.</p>
+  </div>
+
+  <div class="card">
+
+    <!-- Mode Selector -->
+    <div class="mode-bar">
+      <button class="mode-btn active-prueba" id="btn-prueba" onclick="setModo('prueba')">
+        <span class="mode-icon">🧪</span>
+        <div>
+          <strong>Prueba / Monitoreo</strong>
+          <span class="mode-title">Seguro · Sin radicación · Sin correos reales</span>
+        </div>
+      </button>
+      <button class="mode-btn" id="btn-real" onclick="setModo('real')">
+        <span class="mode-icon">🚀</span>
+        <div>
+          <strong>Radicación Real</strong>
+          <span class="mode-title">Producción · Correos y radicación activos</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="mode-desc mode-desc-prueba active" id="desc-prueba">
+      <span>ℹ️</span>
+      <div>Elimina la radicación, desactiva los timers y redirige los correos únicamente a <strong>Soporte2ceere@gmail.com</strong>. Todas las áreas se inyectan al inicio del arreglo.</div>
+    </div>
+    <div class="mode-desc mode-desc-real" id="desc-real">
+      <span>ℹ️</span>
+      <div>Mantiene correos y lógica de radicación intactos. Solo inyecta las áreas. <strong>¡Úsalo solo si el bot entrará en producción!</strong></div>
+    </div>
+
+    <div class="form-body">
+
+      <!-- Warning real -->
+      <div class="warning-real" id="warning-real">
+        <span>⚠️</span>
+        <div><strong>Modo Producción activado.</strong> Este script realizará radicaciones reales y enviará correos a todos los destinatarios.</div>
+      </div>
+
+      <!-- Script + Output -->
+      <div class="field-row">
+        <div class="field">
+          <label>Script Base <span class="req">*</span></label>
+          <select id="archivoBase">
+            <option value="">Cargando scripts...</option>
+          </select>
+          <span class="hint">Script original del cual se va a partir.</span>
+        </div>
+        <div class="field">
+          <label>Nombre del Archivo Generado <span class="req">*</span></label>
+          <input type="text" id="nombreSalida" placeholder="Ej: Prueba Freeport Lunes.js"/>
+          <span class="hint">Se guardará en la carpeta del proyecto.</span>
+        </div>
+      </div>
+
+      <!-- Areas Section -->
+      <div>
+        <div class="areas-header">
+          <div class="areas-header-left">
+            <span class="areas-label">Áreas a monitorear / radicar</span>
+            <span class="areas-count" id="areas-count">1</span>
+          </div>
+          <button class="btn-add-area" onclick="agregarArea()">
+            ＋ Agregar área
+          </button>
+        </div>
+
+        <div id="areas-container" style="margin-top:16px;">
+          <!-- Area cards are injected here by JS -->
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast">
+        <span class="toast-icon" id="toast-icon"></span>
+        <div>
+          <div class="toast-title" id="toast-title"></div>
+          <div id="toast-body"></div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-generar" id="btn-generar" onclick="generar()">
+        <div class="spinner"></div>
+        <span class="btn-text">⚙️ &nbsp;Generar Script</span>
+      </button>
+
+    </div>
+  </div>
+
+  <div class="footer">Centinela Script Generator · SOP-IT-1000 · Ceere Ingenieros</div>
+
+  <script>
+    let modoActual = 'prueba';
+    let areaCount = 0;
+
+    // ── Mode ──────────────────────────────────────────
+    function setModo(modo) {
+      modoActual = modo;
+      document.getElementById('btn-prueba').className = modo === 'prueba' ? 'mode-btn active-prueba' : 'mode-btn';
+      document.getElementById('btn-real').className   = modo === 'real'   ? 'mode-btn active-real'   : 'mode-btn';
+      document.getElementById('desc-prueba').className = 'mode-desc mode-desc-prueba' + (modo === 'prueba' ? ' active' : '');
+      document.getElementById('desc-real').className   = 'mode-desc mode-desc-real'   + (modo === 'real'   ? ' active' : '');
+      document.getElementById('warning-real').className = 'warning-real' + (modo === 'real' ? ' visible' : '');
+      hideToast();
+    }
+
+    // ── Area Cards ────────────────────────────────────
+    function agregarArea() {
+      areaCount++;
+      const container = document.getElementById('areas-container');
+      const id = areaCount;
+
+      const card = document.createElement('div');
+      card.className = 'area-card';
+      card.id = `area-card-${id}`;
+      card.innerHTML = `
+        <div class="area-card-header">
+          <div class="area-card-title">
+            <span class="area-num">#${id}</span>
+            Área ${id}
+          </div>
+          ${id > 1 ? `<button class="btn-remove-area" onclick="eliminarArea(${id})" title="Eliminar esta área">✕</button>` : ''}
+        </div>
+        <div class="area-card-body">
+          <div class="area-row">
+            <div class="field">
+              <label>Nombre del Área <span class="req">*</span></label>
+              <input type="text" id="nombre-${id}" placeholder="Ej: 507531"/>
+            </div>
+            <div class="field">
+              <label>Celda de Referencia <span class="req">*</span></label>
+              <input type="text" id="referencia-${id}" placeholder="Ej: 18P09K21D02I"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Celdas (separadas por coma) <span class="req">*</span></label>
+            <textarea id="celdas-${id}" placeholder="18P09K04K05R, 18N05N14M12R, ..."></textarea>
+          </div>
+        </div>`;
+
+      container.appendChild(card);
+      actualizarContador();
+
+      // smooth scroll to new card
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function eliminarArea(id) {
+      const card = document.getElementById(`area-card-${id}`);
+      if (card) {
+        card.style.animation = 'none';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(-8px)';
+        card.style.transition = 'all 0.2s';
+        setTimeout(() => { card.remove(); actualizarContador(); }, 200);
+      }
+    }
+
+    function actualizarContador() {
+      const cards = document.querySelectorAll('.area-card');
+      document.getElementById('areas-count').textContent = cards.length;
+    }
+
+    // ── Load Scripts ──────────────────────────────────
+    async function loadScripts() {
+      const sel = document.getElementById('archivoBase');
+      try {
+        const res = await fetch('/api/scripts');
+        const scripts = await res.json();
+        sel.innerHTML = '<option value="">— Selecciona un script —</option>' +
+          scripts.map(s => `<option value="${s}">${s}</option>`).join('');
+      } catch (e) {
+        sel.innerHTML = '<option value="">Error al cargar scripts</option>';
+      }
+    }
+
+    // ── Generate ──────────────────────────────────────
+    async function generar() {
+      hideToast();
+
+      // Collect areas from cards
+      const cards = document.querySelectorAll('.area-card');
+      if (cards.length === 0) {
+        showToast('error', '⚠️ Sin áreas', 'Agrega al menos una área para continuar.');
+        return;
+      }
+
+      const areas = [];
+      for (const card of cards) {
+        const idStr = card.id.replace('area-card-', '');
+        const nombre     = document.getElementById(`nombre-${idStr}`).value.trim();
+        const referencia = document.getElementById(`referencia-${idStr}`).value.trim();
+        const celdas     = document.getElementById(`celdas-${idStr}`).value.trim();
+
+        if (!nombre || !referencia || !celdas) {
+          showToast('error', '⚠️ Campos incompletos', `El Área #${idStr} tiene campos vacíos. Por favor complétalos.`);
+          document.getElementById(`nombre-${idStr}`).focus();
+          return;
+        }
+        areas.push({ nombre, referencia, celdas });
+      }
+
+      const archivoBase  = document.getElementById('archivoBase').value;
+      const nombreSalida = document.getElementById('nombreSalida').value.trim();
+
+      if (!archivoBase)  { showToast('error', '⚠️ Falta el script base', 'Selecciona un script base.'); return; }
+      if (!nombreSalida) { showToast('error', '⚠️ Falta el nombre', 'Escribe el nombre del archivo de salida.'); return; }
+
+      const btn = document.getElementById('btn-generar');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/generar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ archivoBase, modo: modoActual, areas, nombreSalida }),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          const modoLabel = modoActual === 'prueba' ? '🧪 Modo Prueba' : '🚀 Modo Real';
+          const areaList = areas.map((a, i) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${a.nombre}</strong>`).join('');
+          showToast('success', `✅ Script generado correctamente`,
+            `Archivo: <strong>${data.archivo}</strong><br>Modo: <strong>${modoLabel}</strong><br>Áreas inyectadas (${areas.length}):${areaList}<br><br>Ejecuta con: <code>node "${data.archivo}"</code>`
+          );
+        } else {
+          showToast('error', '❌ Error al generar', data.error);
+        }
+      } catch (e) {
+        showToast('error', '❌ Error de conexión', 'No se pudo conectar con el servidor. Verifica que <code>node server.js</code> esté corriendo.');
+      }
+
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+
+    function showToast(type, title, body) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-body').innerHTML = body;
+      document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : '❌';
+      t.className = `toast ${type} visible`;
+      t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideToast() { document.getElementById('toast').className = 'toast'; }
+
+    // ── Init ──────────────────────────────────────────
+    loadScripts();
+    agregarArea(); // Start with one area by default
+  </script>
+</body>
+</html>

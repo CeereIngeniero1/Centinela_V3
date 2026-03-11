@@ -22,8 +22,10 @@
     "axios": "^1.13.1",
     "colors": "^1.4.0",
     "dotenv": "^17.2.2",
+    "express": "^4.22.1",
     "fs": "0.0.1-security",
     "nodemailer": "^7.0.5",
+    "pnpm": "^10.32.1",
     "puppeteer": "^6.0.0"
   }
 }
