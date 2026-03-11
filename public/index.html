@@ -67,19 +67,20 @@
     }
 
     /* ── Mode Selector ── */
-    .mode-bar { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+    .mode-bar { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
     .mode-btn {
-      background: none; border: none; padding: 20px 24px;
-      cursor: pointer; display: flex; align-items: center; gap: 12px;
+      background: none; border: none; padding: 20px 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
       font-family: inherit; font-size: 0.95rem; font-weight: 500;
       color: var(--text-muted); transition: all 0.2s;
-      border-bottom: 3px solid transparent;
+      border-bottom: 3px solid transparent; text-align: left;
     }
     .mode-btn:hover { background: var(--surface2); color: var(--text); }
     .mode-btn.active-prueba { color: var(--amber); border-bottom-color: var(--amber); background: rgba(245,158,11,0.06); }
     .mode-btn.active-real { color: var(--green); border-bottom-color: var(--green); background: rgba(34,197,94,0.06); }
+    .mode-btn.active-consulta { color: var(--accent); border-bottom-color: var(--accent); background: rgba(91,110,245,0.06); }
     .mode-icon { font-size: 1.4rem; }
-    .mode-title { display: block; font-size: 0.82rem; font-weight: 400; margin-top: 2px; }
+    .mode-title { display: block; font-size: 0.78rem; font-weight: 400; margin-top: 2px; }
 
     .mode-desc {
       display: none; padding: 12px 24px;
@@ -89,6 +90,7 @@
     .mode-desc.active { display: flex; }
     .mode-desc-prueba { background: rgba(245,158,11,0.05); color: #fbbf24; }
     .mode-desc-real { background: rgba(34,197,94,0.05); color: #86efac; }
+    .mode-desc-consulta { background: rgba(91,110,245,0.05); color: #a5b0ff; }
 
     /* ── Form Body ── */
     .form-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
@@ -236,6 +238,14 @@
     .toast-title { font-weight: 600; margin-bottom: 4px; font-size: 0.93rem; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* ── Results Table ── */
+    .results-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.88rem; text-align: left; }
+    .results-table th { background: var(--surface3); color: var(--text-muted); padding: 10px 14px; font-weight: 600; border-bottom: 1px solid var(--border); }
+    .results-table td { padding: 12px 14px; border-bottom: 1px solid var(--border2); color: var(--text); }
+    .results-table tr:last-child td { border-bottom: none; }
+    .badge-found { background: rgba(34,197,94,0.15); color: #86efac; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin: 2px; }
+    .badge-missing { background: rgba(239,68,68,0.15); color: #fca5a5; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+
     .footer { margin-top: 32px; color: var(--text-muted); font-size: 0.76rem; text-align: center; }
   </style>
 </head>
@@ -254,15 +264,22 @@
       <button class="mode-btn active-prueba" id="btn-prueba" onclick="setModo('prueba')">
         <span class="mode-icon">🧪</span>
         <div>
-          <strong>Prueba / Monitoreo</strong>
-          <span class="mode-title">Seguro · Sin radicación · Sin correos reales</span>
+          <strong>Monitoreo</strong>
+          <span class="mode-title">Seguro · Sin radicar</span>
         </div>
       </button>
       <button class="mode-btn" id="btn-real" onclick="setModo('real')">
         <span class="mode-icon">🚀</span>
         <div>
           <strong>Radicación Real</strong>
-          <span class="mode-title">Producción · Correos y radicación activos</span>
+          <span class="mode-title">Correos activos</span>
+        </div>
+      </button>
+      <button class="mode-btn" id="btn-consulta" onclick="setModo('consulta')">
+        <span class="mode-icon">🔎</span>
+        <div>
+          <strong>Consulta</strong>
+          <span class="mode-title">Busca en JS</span>
         </div>
       </button>
     </div>
@@ -275,62 +292,88 @@
       <span>ℹ️</span>
       <div>Mantiene correos y lógica de radicación intactos. Solo inyecta las áreas. <strong>¡Úsalo solo si el bot entrará en producción!</strong></div>
     </div>
+    <div class="mode-desc mode-desc-consulta" id="desc-consulta">
+      <span>ℹ️</span>
+      <div>Pega celdas o nombres de áreas para buscar en todos los scripts del repositorio y saber si ya existen en algún lado.</div>
+    </div>
 
     <div class="form-body">
 
-      <!-- Warning real -->
-      <div class="warning-real" id="warning-real">
-        <span>⚠️</span>
-        <div><strong>Modo Producción activado.</strong> Este script realizará radicaciones reales y enviará correos a todos los destinatarios.</div>
-      </div>
-
-      <!-- Script + Output -->
-      <div class="field-row">
-        <div class="field">
-          <label>Script Base <span class="req">*</span></label>
-          <select id="archivoBase">
-            <option value="">Cargando scripts...</option>
-          </select>
-          <span class="hint">Script original del cual se va a partir.</span>
+      <!-- ================= FORMULARIO GENERADOR ================= -->
+      <div id="form-generador">
+        <!-- Warning real -->
+        <div class="warning-real" id="warning-real">
+          <span>⚠️</span>
+          <div><strong>Modo Producción activado.</strong> Este script realizará radicaciones reales y enviará correos a todos los destinatarios.</div>
         </div>
-        <div class="field">
-          <label>Nombre del Archivo Generado <span class="req">*</span></label>
-          <input type="text" id="nombreSalida" placeholder="Ej: Prueba Freeport Lunes.js"/>
-          <span class="hint">Se guardará en la carpeta del proyecto.</span>
-        </div>
-      </div>
 
-      <!-- Areas Section -->
-      <div>
-        <div class="areas-header">
-          <div class="areas-header-left">
-            <span class="areas-label">Áreas a monitorear / radicar</span>
-            <span class="areas-count" id="areas-count">1</span>
+        <!-- Script + Output -->
+        <div class="field-row" style="margin-top: 24px;">
+          <div class="field">
+            <label>Script Base <span class="req">*</span></label>
+            <select id="archivoBase">
+              <option value="">Cargando scripts...</option>
+            </select>
+            <span class="hint">Script original del cual se va a partir.</span>
           </div>
-          <button class="btn-add-area" onclick="agregarArea()">
-            ＋ Agregar área
-          </button>
+          <div class="field">
+            <label>Nombre del Archivo Generado <span class="req">*</span></label>
+            <input type="text" id="nombreSalida" placeholder="Ej: Prueba Freeport Lunes.js"/>
+            <span class="hint">Se guardará en la carpeta del proyecto.</span>
+          </div>
         </div>
 
-        <div id="areas-container" style="margin-top:16px;">
-          <!-- Area cards are injected here by JS -->
+        <!-- Areas Section -->
+        <div style="margin-top: 24px;">
+          <div class="areas-header">
+            <div class="areas-header-left">
+              <span class="areas-label">Áreas a monitorear / radicar</span>
+              <span class="areas-count" id="areas-count">1</span>
+            </div>
+            <button class="btn-add-area" onclick="agregarArea()">
+              ＋ Agregar área
+            </button>
+          </div>
+
+          <div id="areas-container" style="margin-top:16px;">
+            <!-- Area cards are injected here by JS -->
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-generar" id="btn-generar" onclick="generar()" style="margin-top: 24px;">
+          <div class="spinner"></div>
+          <span class="btn-text">⚙️ &nbsp;Generar Script</span>
+        </button>
+      </div>
+      
+      <!-- ================= FORMULARIO CONSULTA ================= -->
+      <div id="form-consulta" style="display: none;">
+        <div class="field">
+          <label>Términos a buscar <span class="req">*</span></label>
+          <textarea id="consulta-input" style="min-height: 150px;" placeholder="Pega aquí las celdas, números de áreas, o cualquier término que desees buscar. Puedes separarlos por comas o saltos de línea."></textarea>
+          <span class="hint">Se buscará cada término individualmente dentro del contenido de todos los archivos .js</span>
+        </div>
+        
+        <button class="btn-generar" id="btn-consultar" onclick="consultar()" style="margin-top: 24px; background: linear-gradient(135deg, var(--accent2), #4f46e5);">
+          <div class="spinner"></div>
+          <span class="btn-text">🔎 &nbsp;Buscar en Repositorio</span>
+        </button>
+
+        <div id="consulta-results-container" style="display: none; margin-top: 24px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+          <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text);">Resultados de Búsqueda</h3>
+          <div id="consulta-results-body"></div>
         </div>
       </div>
 
-      <!-- Toast -->
-      <div class="toast" id="toast">
+      <!-- Toast (Shared) -->
+      <div class="toast" id="toast" style="margin-top: 24px;">
         <span class="toast-icon" id="toast-icon"></span>
         <div>
           <div class="toast-title" id="toast-title"></div>
           <div id="toast-body"></div>
         </div>
       </div>
-
-      <!-- Submit -->
-      <button class="btn-generar" id="btn-generar" onclick="generar()">
-        <div class="spinner"></div>
-        <span class="btn-text">⚙️ &nbsp;Generar Script</span>
-      </button>
 
     </div>
   </div>
@@ -346,9 +389,23 @@
       modoActual = modo;
       document.getElementById('btn-prueba').className = modo === 'prueba' ? 'mode-btn active-prueba' : 'mode-btn';
       document.getElementById('btn-real').className   = modo === 'real'   ? 'mode-btn active-real'   : 'mode-btn';
+      document.getElementById('btn-consulta').className = modo === 'consulta' ? 'mode-btn active-consulta' : 'mode-btn';
+      
       document.getElementById('desc-prueba').className = 'mode-desc mode-desc-prueba' + (modo === 'prueba' ? ' active' : '');
       document.getElementById('desc-real').className   = 'mode-desc mode-desc-real'   + (modo === 'real'   ? ' active' : '');
+      document.getElementById('desc-consulta').className = 'mode-desc mode-desc-consulta' + (modo === 'consulta' ? ' active' : '');
+      
       document.getElementById('warning-real').className = 'warning-real' + (modo === 'real' ? ' visible' : '');
+      
+      // Toggle views
+      if (modo === 'consulta') {
+        document.getElementById('form-generador').style.display = 'none';
+        document.getElementById('form-consulta').style.display = 'block';
+      } else {
+        document.getElementById('form-generador').style.display = 'block';
+        document.getElementById('form-consulta').style.display = 'none';
+      }
+      
       hideToast();
     }
 
@@ -511,12 +568,83 @@
       const t = document.getElementById('toast');
       document.getElementById('toast-title').textContent = title;
       document.getElementById('toast-body').innerHTML = body;
-      document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : '❌';
-      t.className = `toast ${type} visible`;
+      document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : (type === 'search' ? '🔎' : '❌');
+      t.className = `toast ${type === 'search' ? 'success' : type} visible`;
       t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function hideToast() { document.getElementById('toast').className = 'toast'; }
+
+    // ── Search (Consulta) ─────────────────────────────
+    async function consultar() {
+      hideToast();
+      const input = document.getElementById('consulta-input').value;
+      if (!input.trim()) {
+        showToast('error', '⚠️ Campo vacío', 'Pega al menos una celda para buscar.');
+        return;
+      }
+      
+      // Parse query terms
+      let queries = input.split(/[\s,;-]+/);
+      queries = queries.filter(q => q.trim() !== '');
+      // Deduplicate queries
+      queries = [...new Set(queries)];
+
+      if (queries.length === 0) return;
+
+      const btn = document.getElementById('btn-consultar');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      document.getElementById('consulta-results-container').style.display = 'none';
+
+      try {
+        const res = await fetch('/api/consultar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ queries }),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          showToast('search', `Búsqueda Completada`, `Se procesaron ${queries.length} términos.`);
+          renderizarResultados(data.resultados);
+        } else {
+          showToast('error', '❌ Error al consultar', data.error);
+        }
+      } catch (e) {
+        showToast('error', '❌ Error de conexión', 'No se pudo conectar con el servidor.');
+      }
+
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+
+    function renderizarResultados(resultados) {
+      const container = document.getElementById('consulta-results-container');
+      const body = document.getElementById('consulta-results-body');
+      
+      let html = '<table class="results-table">';
+      html += '<tr><th style="width: 30%">Término</th><th>Archivos Encontrados</th></tr>';
+      
+      for (const [query, files] of Object.entries(resultados)) {
+        html += '<tr>';
+        html += `<td><strong>${query}</strong></td>`;
+        html += '<td>';
+        if (files.length === 0) {
+          html += '<span class="badge-missing">No encontrado</span>';
+        } else {
+          files.forEach(f => {
+            html += `<span class="badge-found">${f}</span>`;
+          });
+        }
+        html += '</td>';
+        html += '</tr>';
+      }
+      html += '</table>';
+      
+      body.innerHTML = html;
+      container.style.display = 'block';
+    }
 
     // ── Init ──────────────────────────────────────────
     loadScripts();

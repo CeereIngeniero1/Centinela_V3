@@ -108,6 +108,44 @@ app.post('/api/generar', (req, res) => {
   }
 });
 
+// Endpoint to search for cells/areas across all .js files in the project
+app.post('/api/consultar', (req, res) => {
+  const { queries } = req.body;
+
+  if (!queries || !Array.isArray(queries) || queries.length === 0) {
+    return res.status(400).json({ ok: false, error: 'Debes proporcionar una lista de celdas o áreas a buscar.' });
+  }
+
+  try {
+    const excluded = ['server.js', 'Menu.js', 'read_pdf.js', 'V4.js'];
+    const files = fs.readdirSync(PROJECT_DIR)
+      .filter(f => f.endsWith('.js') && !excluded.includes(f));
+
+    const resultados = {};
+    for (const q of queries) {
+      resultados[q] = []; // Initialize empty array for this query
+    }
+
+    // Search through all files
+    for (const file of files) {
+      const filePath = path.join(PROJECT_DIR, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+
+      for (const q of queries) {
+        if (content.includes(q)) {
+          resultados[q].push(file);
+        }
+      }
+    }
+
+    res.json({ ok: true, resultados });
+
+  } catch (err) {
+    console.error('Error en /api/consultar:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`\n✅ Centinela Script Generator corriendo en: http://localhost:${PORT}\n`);
