@@ -1,0 +1,404 @@
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const xlsx = require('xlsx');
+
+const app = express();
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+const PROJECT_DIR = __dirname;
+const HISTORIAL_FILE = path.join(PROJECT_DIR, 'historial.json');
+
+// --- Historical Data Management ---
+function getClienteGuessed(filename) {
+  const f = filename.toLowerCase();
+  if (f.includes('freeport')) return 'Freeport';
+  if (f.includes('collective')) return 'Collective';
+  if (f.includes('arabany')) return 'Arabany';
+  if (f.includes('operadora')) return 'OPERADORA';
+  if (f.includes('negoymetales')) return 'NegoYMetales';
+  return 'Desconocido';
+}
+
+function inicializarHistorial() {
+  if (fs.existsSync(HISTORIAL_FILE)) {
+    try {
+      return JSON.parse(fs.readFileSync(HISTORIAL_FILE, 'utf-8'));
+    } catch(e) { /* fallback clean */ }
+  }
+  
+  // Excluir archivos irrelevantes
+  const excluded = ['server.js', 'Menu.js', 'read_pdf.js', 'V4.js'];
+  const files = fs.readdirSync(PROJECT_DIR).filter(f => f.endsWith('.js') && !excluded.includes(f));
+  
+  const historial = [];
+  
+  for (const file of files) {
+    const filePath = path.join(PROJECT_DIR, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    
+    // Buscar áreas (limitado a las creadas en el arreglo Areas)
+    const areaRegex = /\{\s*NombreArea:\s*"([^"]+)"/g;
+    let match;
+    const areasFound = [];
+    while ((match = areaRegex.exec(content)) !== null) {
+      if (match[1] !== 'prueba' && match[1] !== '1111') { // Omitir dummy data
+        if (!areasFound.includes(match[1])) areasFound.push(match[1]);
+      }
+    }
+    
+    if (areasFound.length > 0) {
+      const stats = fs.statSync(filePath);
+      historial.push({
+        id: Date.now() + Math.random().toString(36).substr(2, 5),
+        fecha: stats.mtime.toISOString(),
+        archivoBase: "N/A (Lega)",
+        nombreSalida: file,
+        modo: "Importado",
+        cliente: getClienteGuessed(file),
+        areas: areasFound,
+        estado: "Existente"
+      });
+    }
+  }
+  
+  // Ordenar de más reciente a más antiguo
+  historial.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  fs.writeFileSync(HISTORIAL_FILE, JSON.stringify(historial, null, 2), 'utf-8');
+  return historial;
+}
+
+const historialGlobal = inicializarHistorial();
+
+function agregarRegistroHistorial(datos) {
+  historialGlobal.unshift({ id: Date.now().toString(), ...datos, fecha: new Date().toISOString() });
+  fs.writeFileSync(HISTORIAL_FILE, JSON.stringify(historialGlobal, null, 2), 'utf-8');
+}
+
+// Returns list of available .js scripts (excluding server.js, Menu.js, etc.)
+app.get('/api/scripts', (req, res) => {
+  const excluded = ['server.js', 'Menu.js', 'read_pdf.js', 'V4.js'];
+  const files = fs.readdirSync(PROJECT_DIR)
+    .filter(f => f.endsWith('.js') && !excluded.includes(f))
+    .sort();
+  res.json(files);
+});
+
+// Main endpoint: generates a modified copy of a script
+app.post('/api/generar', (req, res) => {
+  const { archivoBase, modo, areas, nombreSalida } = req.body;
+
+  // --- Validation ---
+  if (!archivoBase || !modo || !areas || !Array.isArray(areas) || areas.length === 0 || !nombreSalida) {
+    return res.status(400).json({ ok: false, error: 'Todos los campos son obligatorios y debe haber al menos un área.' });
+  }
+
+  for (let i = 0; i < areas.length; i++) {
+    const a = areas[i];
+    if (!a.nombre || !a.referencia || !a.celdas) {
+      return res.status(400).json({ ok: false, error: `El Área #${i + 1} tiene campos incompletos.` });
+    }
+  }
+
+  const archivoBasePath = path.join(PROJECT_DIR, archivoBase);
+  if (!fs.existsSync(archivoBasePath)) {
+    return res.status(400).json({ ok: false, error: `El archivo base "${archivoBase}" no existe.` });
+  }
+
+  let nombreSalidaFinal = nombreSalida.trim();
+  if (!nombreSalidaFinal.endsWith('.js')) nombreSalidaFinal += '.js';
+
+  const outputPath = path.join(PROJECT_DIR, nombreSalidaFinal);
+
+  try {
+    let code = fs.readFileSync(archivoBasePath, 'utf-8');
+
+    // =====================================================================
+    // REGLA 4 (ambos modos): Inyectar todas las áreas al inicio de const Areas
+    // =====================================================================
+    const areasMarker = 'const Areas =\n  [';
+    const areasMarkerAlt = 'const Areas =\r\n  [';
+    let idx = code.indexOf(areasMarker);
+    if (idx === -1) idx = code.indexOf(areasMarkerAlt);
+
+    if (idx === -1) {
+      return res.status(500).json({ ok: false, error: 'No se encontró el array "const Areas" en el archivo base. Verifica que el script seleccionado es correcto.' });
+    }
+
+    const insertPos = idx + (code.indexOf('[', idx) - idx) + 1;
+    const nuevasAreas = areas.map(a =>
+      `\n    {\n      NombreArea: "${a.nombre}",\n      Referencia: "${a.referencia}",\n      Celdas: ["${a.celdas.trim()}"]\n    },`
+    ).join('');
+    code = code.slice(0, insertPos) + nuevasAreas + code.slice(insertPos);
+
+    // =====================================================================
+    // MODO PRUEBA: aplicar reglas 1, 2 y 3
+    // =====================================================================
+    if (modo === 'prueba') {
+
+      // --- REGLA 1: Cambiar correos en mailOptions ---
+      // Replace the `to:` line inside mailOptions with only the test email
+      code = code.replace(
+        /to:\s*["'].*?["']\s*,?\s*\r?\n(\s*\/\/to[^\n]*\n)?/g,
+        `to: 'Soporte2ceere@gmail.com',\n`
+      );
+
+      // --- REGLA 3: Eliminar bloque clearTimeout(RadiPrimero) + Radisegundo ---
+      // Pattern: clearTimeout(RadiPrimero); ... }, 10000);
+      const radiPrimeroPattern = /clearTimeout\(RadiPrimero\);[\s\S]*?},\s*10000\s*\);/m;
+      code = code.replace(radiPrimeroPattern, '// [PRUEBA] Bloque RadiPrimero/Radisegundo eliminado');
+
+      // --- REGLA 2: Eliminar bloque de radicación (continPag hasta //CORREO RADICACION) ---
+      // Find "const continPag" and "//CORREO RADICACION" and remove everything between them (and including the correo call after)
+      const continPagIdx = code.indexOf("const continPag = await page.$x('//span[contains(.,\"Continuar\")]');");
+      const correoRadicacionIdx = code.indexOf('//CORREO RADICACION');
+
+      if (continPagIdx !== -1 && correoRadicacionIdx !== -1 && correoRadicacionIdx > continPagIdx) {
+        // Find the end of the CORREO RADICACION block (the line after the comment usually has function calls)
+        // We'll remove from continPag up to and including the comment line
+        const endOfComment = code.indexOf('\n', correoRadicacionIdx) + 1;
+        const blockToRemove = code.slice(continPagIdx, endOfComment);
+        code = code.replace(blockToRemove, 
+          `// [PRUEBA] Bloque de radicación eliminado (continPag -> CORREO RADICACION)\n`
+        );
+      }
+    }
+
+    // Write the output file
+    fs.writeFileSync(outputPath, code, 'utf-8');
+
+    // Mantenemos la información de áreas para el historial
+    const userInfoHistorial = {
+       archivoBase: archivoBase,
+       nombreSalida: nombreSalidaFinal,
+       modo: modo === 'prueba' ? 'Prueba de Radiación' : 'Radicación Real',
+       cliente: req.body.clienteHistorial || "No asignado",
+       areas: areas.map(a => a.nombre),
+       estado: "Generado OK" // Esto se actualizará si hay subidas de documentos
+    };
+
+    // Note: the /api/subir-documentos endpoint handles document uploading and error recording separately 
+    // but the basic script generation event starts here.
+    agregarRegistroHistorial(userInfoHistorial);
+
+    res.json({ ok: true, archivo: nombreSalidaFinal });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Endpoint to search for cells/areas across all .js files in the project
+app.post('/api/consultar', (req, res) => {
+  const { queries } = req.body;
+
+  if (!queries || !Array.isArray(queries) || queries.length === 0) {
+    return res.status(400).json({ ok: false, error: 'Debes proporcionar una lista de celdas o áreas a buscar.' });
+  }
+
+  try {
+    const excluded = ['server.js', 'Menu.js', 'read_pdf.js', 'V4.js'];
+    const files = fs.readdirSync(PROJECT_DIR)
+      .filter(f => f.endsWith('.js') && !excluded.includes(f));
+
+    const resultados = {};
+    for (const q of queries) {
+      resultados[q] = []; // Initialize empty array for this query
+    }
+
+    // Search through all files
+    for (const file of files) {
+      const filePath = path.join(PROJECT_DIR, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+
+      for (const q of queries) {
+        // If query is found anywhere in the file
+        if (content.includes(q)) {
+          // Try to find if it's inside a specific Area block
+          // Regex to find blocks like { NombreArea: "...", ..., Celdas: [...] }
+          const areaRegex = /\{\s*NombreArea:\s*"([^"]+)"[\s\S]*?Celdas:\s*\[([\s\S]*?)\]/g;
+          let match;
+          let foundInArea = false;
+
+          while ((match = areaRegex.exec(content)) !== null) {
+            const nombreArea = match[1];
+            const celdasString = match[2];
+            
+            if (nombreArea === q || celdasString.includes(q)) {
+              resultados[q].push(`${file} (Área: ${nombreArea})`);
+              foundInArea = true;
+            }
+          }
+
+          // If it was found in the file but not specifically matched to an area block, just add the file
+          if (!foundInArea) {
+            resultados[q].push(file);
+          }
+        }
+      }
+    }
+
+    res.json({ ok: true, resultados });
+
+  } catch (err) {
+    console.error('Error en /api/consultar:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// --- Historial Endpoints ---
+app.get('/api/historial', (req, res) => {
+  res.json({ ok: true, historial: historialGlobal });
+});
+
+app.get('/api/historial/exportar', (req, res) => {
+  const formato = req.query.formato || 'csv';
+  
+  if (historialGlobal.length === 0) {
+    return res.status(404).send("No hay historial para exportar.");
+  }
+
+  // Prepara los datos aplanados
+  const exportData = historialGlobal.map(row => ({
+    'Fecha': new Date(row.fecha).toLocaleString(),
+    'Archivo Generado': row.nombreSalida,
+    'Modo': row.modo,
+    'Cliente': row.cliente,
+    'Áreas Procesadas': Array.isArray(row.areas) ? row.areas.join(', ') : '',
+    'Archivo Base': row.archivoBase,
+    'Estado': row.estado
+  }));
+
+  if (formato === 'xlsx') {
+    const ws = xlsx.utils.json_to_sheet(exportData);
+    const wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, "Auditoria Generales");
+    const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="Auditoria_Radicaciones.xlsx"');
+    res.send(buffer);
+
+  } else {
+    // CSV
+    const ws = xlsx.utils.json_to_sheet(exportData);
+    const csvStr = xlsx.utils.sheet_to_csv(ws);
+    
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="Auditoria_Radicaciones.csv"');
+    // Prepend UTF-8 BOM
+    res.send('\uFEFF' + csvStr);
+  }
+});
+
+// Endpoint to upload and read an Excel file
+const upload = multer({ storage: multer.memoryStorage() });
+app.post('/api/leer-excel', upload.single('excel'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ ok: false, error: 'No se proporcionó ningún archivo.' });
+    }
+
+    // El nombre del área es el nombre del archivo sin la extensión .xlsx
+    const nombreArea = path.parse(req.file.originalname).name;
+
+    // Leer el contenido del Excel desde el buffer cargado en memoria
+    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+    
+    // Tomar la primera hoja
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Convertir a un arreglo de arreglos (cada fila es un arreglo de celdas)
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+
+    const celdas = [];
+    // La fila 0 es el encabezado (B1). Iteramos desde la fila 1 (B2) en adelante.
+    // La columna B corresponde al índice 1 (A=0, B=1)
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (row && row[1]) {
+        const val = String(row[1]).trim();
+        if (val) {
+          celdas.push(val);
+        }
+      }
+    }
+
+    if (celdas.length === 0) {
+       return res.status(400).json({ ok: false, error: 'Se leyó el archivo pero no se encontraron celdas en la Columna B (a partir de B2).' });
+    }
+
+    res.json({ ok: true, nombreArea, celdas });
+
+  } catch (err) {
+    console.error('Error leyendo Excel:', err);
+    res.status(500).json({ ok: false, error: 'Ocurrió un error procesando el archivo Excel.' });
+  }
+});
+
+// Endpoint to verify if a regulatory document exists
+app.post('/api/verificar-documento', (req, res) => {
+  const { cliente, fileName } = req.body;
+  if (!cliente || !fileName) {
+    return res.status(400).json({ ok: false, error: 'Faltan datos de verificación.' });
+  }
+  
+  const docPath = path.join(PROJECT_DIR, 'Documentos', cliente, 'DocumentosReglamentarios', fileName);
+  const existe = fs.existsSync(docPath);
+  res.json({ ok: true, existe });
+});
+
+// Endpoint to process and save documents in bulk
+app.post('/api/subir-documentos', upload.any(), (req, res) => {
+  const { cliente } = req.body;
+  if (!cliente) return res.status(400).json({ ok: false, error: 'Falta especificar el cliente.' });
+
+  try {
+    const docBase = path.join(PROJECT_DIR, 'Documentos', cliente);
+
+    const ensureDir = (subDir) => {
+      const p = path.join(docBase, subDir);
+      if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
+      return p;
+    };
+
+    let savedFiles = 0;
+
+    for (const file of req.files) {
+      if (file.fieldname === 'reglamentario') {
+        const destDir = ensureDir('DocumentosReglamentarios');
+        const destPath = path.join(destDir, file.originalname);
+        fs.writeFileSync(destPath, file.buffer);
+        savedFiles++;
+      } else if (file.fieldname.startsWith('certificado-')) {
+        const areaName = file.fieldname.replace('certificado-', '');
+        const ext = path.extname(file.originalname) || '.pdf';
+        const destDir = ensureDir('CertificadoAmbiental');
+        const destPath = path.join(destDir, areaName + ext);
+        fs.writeFileSync(destPath, file.buffer);
+        savedFiles++;
+      } else if (file.fieldname.startsWith('sheips-')) {
+        const areaName = file.fieldname.replace('sheips-', '');
+        const ext = path.extname(file.originalname) || '.zip';
+        const destDir = ensureDir('Sheips');
+        const destPath = path.join(destDir, areaName + ext);
+        fs.writeFileSync(destPath, file.buffer);
+        savedFiles++;
+      }
+    }
+
+    res.json({ ok: true, count: savedFiles });
+  } catch (err) {
+    console.error('Error guardando documentos:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`\n✅ Centinela Script Generator corriendo en: http://localhost:${PORT}\n`);
+});
