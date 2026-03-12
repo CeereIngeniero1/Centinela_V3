@@ -398,6 +398,145 @@ app.post('/api/subir-documentos', upload.any(), (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// ── Editor de JS: Endpoints para gestionar áreas en archivos .js ──
+// ═══════════════════════════════════════════════════════════════════
+
+// Lista todos los .js disponibles que contienen un bloque "const Areas"
+app.get('/api/editor/list-js', (req, res) => {
+  const excluded = ['server.js', 'Menu.js', 'read_pdf.js'];
+  try {
+    const files = fs.readdirSync(PROJECT_DIR)
+      .filter(f => f.endsWith('.js') && !excluded.includes(f))
+      .filter(f => {
+        try {
+          const content = fs.readFileSync(path.join(PROJECT_DIR, f), 'utf-8');
+          return /const\s+Areas\s*=\s*\[/.test(content);
+        } catch { return false; }
+      })
+      .sort();
+    res.json({ ok: true, files });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Extrae las áreas del bloque "const Areas = [...]" de un archivo
+app.get('/api/editor/get-areas/:filename', (req, res) => {
+  const filename = req.params.filename;
+  // Seguridad: solo permitir archivos .js en la raíz del proyecto
+  if (!filename.endsWith('.js') || filename.includes('/') || filename.includes('\\')) {
+    return res.status(400).json({ ok: false, error: 'Nombre de archivo inválido.' });
+  }
+  const filePath = path.join(PROJECT_DIR, filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ ok: false, error: 'Archivo no encontrado.' });
+  }
+
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Encontrar el bloque "const Areas = [ ... ]" completo
+    const areasStartMatch = content.match(/const\s+Areas\s*=\s*\n?\s*\[/);
+    if (!areasStartMatch) {
+      return res.json({ ok: true, areas: [], raw: '' });
+    }
+
+    const startIdx = areasStartMatch.index;
+    // Encontrar el cierre del array (buscar el ] que cierra el bloque)
+    let bracketCount = 0;
+    let endIdx = -1;
+    for (let i = content.indexOf('[', startIdx); i < content.length; i++) {
+      if (content[i] === '[') bracketCount++;
+      if (content[i] === ']') bracketCount--;
+      if (bracketCount === 0) { endIdx = i + 1; break; }
+    }
+
+    if (endIdx === -1) {
+      return res.json({ ok: true, areas: [], raw: '' });
+    }
+
+    const areasBlock = content.substring(startIdx, endIdx);
+
+    // Extraer cada objeto { NombreArea: "...", Referencia: "...", Celdas: [...] }
+    const areaRegex = /\{\s*NombreArea:\s*"([^"]+)"\s*,\s*(?:\/\/[^\n]*\n\s*)?Referencia:\s*"([^"]+)"\s*,\s*(?:\/\/[^\n]*\n\s*)?Celdas:\s*\[([^\]]*)\]/g;
+    const areas = [];
+    let match;
+    while ((match = areaRegex.exec(areasBlock)) !== null) {
+      const nombre = match[1];
+      const referencia = match[2];
+      // Limpiar celdas: quitar comillas y espacios
+      const celdasRaw = match[3];
+      const celdas = celdasRaw.replace(/["']/g, '').trim();
+      areas.push({ nombre, referencia, celdas });
+    }
+
+    res.json({ ok: true, areas });
+  } catch (err) {
+    console.error('Error leyendo áreas:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Guarda las áreas modificadas en el archivo, reemplazando solo el bloque "const Areas = [...]"
+app.post('/api/editor/save-areas', (req, res) => {
+  const { filename, areas } = req.body;
+
+  if (!filename || !areas || !Array.isArray(areas)) {
+    return res.status(400).json({ ok: false, error: 'Datos inválidos. Se requiere filename y areas.' });
+  }
+  if (!filename.endsWith('.js') || filename.includes('/') || filename.includes('\\')) {
+    return res.status(400).json({ ok: false, error: 'Nombre de archivo inválido.' });
+  }
+
+  const filePath = path.join(PROJECT_DIR, filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ ok: false, error: 'Archivo no encontrado.' });
+  }
+
+  try {
+    let content = fs.readFileSync(filePath, 'utf-8');
+
+    const areasStartMatch = content.match(/const\s+Areas\s*=\s*\n?\s*\[/);
+    if (!areasStartMatch) {
+      return res.status(400).json({ ok: false, error: 'No se encontró el bloque "const Areas" en el archivo.' });
+    }
+
+    const startIdx = areasStartMatch.index;
+    let bracketCount = 0;
+    let endIdx = -1;
+    for (let i = content.indexOf('[', startIdx); i < content.length; i++) {
+      if (content[i] === '[') bracketCount++;
+      if (content[i] === ']') bracketCount--;
+      if (bracketCount === 0) { endIdx = i + 1; break; }
+    }
+
+    if (endIdx === -1) {
+      return res.status(400).json({ ok: false, error: 'No se pudo encontrar el cierre del array Areas.' });
+    }
+
+    // Construir el nuevo bloque de Areas
+    const areasStr = areas.map(a => {
+      return `    {\n      NombreArea: "${a.nombre}",\n      Referencia: "${a.referencia}",\n      Celdas: ["${a.celdas.trim()}"]\n    }`;
+    }).join(',\n');
+
+    const newBlock = `const Areas =\n  [\n${areasStr}\n  ]`;
+
+    // Crear backup antes de guardar
+    const backupPath = filePath + '.bak';
+    fs.writeFileSync(backupPath, content, 'utf-8');
+
+    // Reemplazar el bloque viejo con el nuevo
+    content = content.substring(0, startIdx) + newBlock + content.substring(endIdx);
+    fs.writeFileSync(filePath, content, 'utf-8');
+
+    res.json({ ok: true, mensaje: `Se guardaron ${areas.length} áreas en ${filename}. Backup creado en ${filename}.bak` });
+  } catch (err) {
+    console.error('Error guardando áreas:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`\n✅ Centinela Script Generator corriendo en: http://localhost:${PORT}\n`);
