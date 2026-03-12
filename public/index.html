@@ -202,6 +202,16 @@
     }
     .btn-remove-area:hover { background: rgba(239,68,68,0.15); color: #f87171; }
 
+    .btn-excel {
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+      color: #86efac; cursor: pointer;
+      font-size: 0.8rem; line-height: 1; font-weight: 600; font-family: inherit;
+      padding: 5px 8px; border-radius: 6px;
+      transition: all 0.15s;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .btn-excel:hover { background: rgba(34,197,94,0.22); }
+
     .area-card-body {
       padding: 16px;
       display: flex; flex-direction: column; gap: 14px;
@@ -424,7 +434,13 @@
             <span class="area-num">#${id}</span>
             Área ${id}
           </div>
-          ${id > 1 ? `<button class="btn-remove-area" onclick="eliminarArea(${id})" title="Eliminar esta área">✕</button>` : ''}
+          <div style="display:flex; gap: 8px; align-items: center;">
+            <input type="file" id="excel-file-${id}" accept=".xlsx,.xls" style="display:none;" onchange="procesarExcel(${id}, this)" />
+            <button class="btn-excel" onclick="document.getElementById('excel-file-${id}').click()" title="Autocompletar área desde archivo Excel">
+              📊 Excel
+            </button>
+            ${id > 1 ? `<button class="btn-remove-area" onclick="eliminarArea(${id})" title="Eliminar esta área">✕</button>` : ''}
+          </div>
         </div>
         <div class="area-card-body">
           <div class="area-row">
@@ -488,6 +504,39 @@
            el.value = partes.join(', ');
         }
       }
+    }
+
+    // ── Excel Import ──────────────────────────────────
+    async function procesarExcel(id, inputEl) {
+      if (!inputEl.files || inputEl.files.length === 0) return;
+      const file = inputEl.files[0];
+      const formData = new FormData();
+      formData.append('excel', file);
+
+      showToast('search', '⏳ Cargando Excel', `Procesando ${file.name}...`);
+      
+      try {
+        const res = await fetch('/api/leer-excel', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        
+        if (data.ok) {
+          document.getElementById(`nombre-${id}`).value = data.nombreArea;
+          document.getElementById(`celdas-${id}`).value = data.celdas.join(', ');
+          if (data.celdas.length > 0) {
+            document.getElementById(`referencia-${id}`).value = data.celdas[0];
+          }
+          showToast('success', '✅ Excel importado', `Se cargaron ${data.celdas.length} celdas en el Área ${id}.`);
+        } else {
+          showToast('error', '❌ Error en Excel', data.error);
+        }
+      } catch (e) {
+        showToast('error', '❌ Error de conexión', 'No se pudo leer el archivo Excel. Verifica el servidor.');
+      }
+      
+      inputEl.value = ''; // Reset for re-upload if needed
     }
 
     // ── Load Scripts ──────────────────────────────────

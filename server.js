@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
+const xlsx = require('xlsx');
 
 const app = express();
 app.use(express.json());
@@ -143,6 +145,52 @@ app.post('/api/consultar', (req, res) => {
   } catch (err) {
     console.error('Error en /api/consultar:', err);
     res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Endpoint to upload and read an Excel file
+const upload = multer({ storage: multer.memoryStorage() });
+app.post('/api/leer-excel', upload.single('excel'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ ok: false, error: 'No se proporcionó ningún archivo.' });
+    }
+
+    // El nombre del área es el nombre del archivo sin la extensión .xlsx
+    const nombreArea = path.parse(req.file.originalname).name;
+
+    // Leer el contenido del Excel desde el buffer cargado en memoria
+    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+    
+    // Tomar la primera hoja
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Convertir a un arreglo de arreglos (cada fila es un arreglo de celdas)
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+
+    const celdas = [];
+    // La fila 0 es el encabezado (B1). Iteramos desde la fila 1 (B2) en adelante.
+    // La columna B corresponde al índice 1 (A=0, B=1)
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (row && row[1]) {
+        const val = String(row[1]).trim();
+        if (val) {
+          celdas.push(val);
+        }
+      }
+    }
+
+    if (celdas.length === 0) {
+       return res.status(400).json({ ok: false, error: 'Se leyó el archivo pero no se encontraron celdas en la Columna B (a partir de B2).' });
+    }
+
+    res.json({ ok: true, nombreArea, celdas });
+
+  } catch (err) {
+    console.error('Error leyendo Excel:', err);
+    res.status(500).json({ ok: false, error: 'Ocurrió un error procesando el archivo Excel.' });
   }
 });
 
