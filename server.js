@@ -5,7 +5,6 @@ const { exec, execFile } = require('child_process');
 const { promisify } = require('util');
 const multer = require('multer');
 const xlsx = require('xlsx');
-
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,6 +14,14 @@ const HISTORIAL_FILE = path.join(PROJECT_DIR, 'historial.json');
 const GIT_CREDENTIALS_FILE = path.join(PROJECT_DIR, 'config', 'git-credentials.txt');
 const execAsync = promisify(exec);
 const execFileAsync = promisify(execFile);
+
+const {
+  safeBasenameNoExt,
+  getDesktopDir,
+  resolveTarget,
+  buildBatContent,
+  writeBatFile
+} = require('./tools/bat-generator');
 
 function toCommandOutput(err) {
   return {
@@ -181,6 +188,44 @@ app.get('/api/git/status', async (req, res) => {
       stdout: out.stdout,
       stderr: out.stderr
     });
+  }
+});
+
+// --- BAT generator endpoint (Web tool) ---
+app.post('/api/tools/bat', (req, res) => {
+  try {
+    const body = req.body || {};
+    const target = typeof body.target === 'string' ? body.target.trim() : 'server.js';
+    const nameRaw = typeof body.name === 'string' ? body.name.trim() : '';
+    const action = body.action === 'download' ? 'download' : 'desktop';
+    const pause = body.pause === false ? false : true;
+
+    // Seguridad: solo permitir archivos .js en la raíz del proyecto (sin rutas).
+    if (!target || !target.toLowerCase().endsWith('.js') || target.includes('/') || target.includes('\\')) {
+      return res.status(400).json({ ok: false, error: 'Target inválido. Selecciona un archivo .js válido.' });
+    }
+
+    const projectDir = PROJECT_DIR;
+    const targetAbs = resolveTarget(projectDir, target);
+    if (!fs.existsSync(targetAbs)) {
+      return res.status(404).json({ ok: false, error: `No existe el archivo: ${target}` });
+    }
+
+    const batName = nameRaw || `Run_${safeBasenameNoExt(targetAbs)}`;
+    const content = buildBatContent({ projectDir, targetAbs, nodeCmd: 'node', pause });
+
+    if (action === 'download') {
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${batName}.bat"`);
+      return res.send(content);
+    }
+
+    const outDir = getDesktopDir();
+    const outPath = writeBatFile({ outDir, batName, content });
+    return res.json({ ok: true, outPath, desktop: outDir, file: `${batName}.bat` });
+  } catch (err) {
+    console.error('Error creando BAT:', err);
+    res.status(500).json({ ok: false, error: err.message });
   }
 });
 

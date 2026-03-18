@@ -10,6 +10,7 @@ function setModo(modo) {
   modoActual = modo;
   document.getElementById('btn-prueba').className    = modo === 'prueba'    ? 'mode-btn active-prueba'    : 'mode-btn';
   document.getElementById('btn-real').className      = modo === 'real'      ? 'mode-btn active-real'      : 'mode-btn';
+  document.getElementById('btn-bat').className       = modo === 'bat'       ? 'mode-btn active-bat'       : 'mode-btn';
   document.getElementById('btn-consulta').className  = modo === 'consulta'  ? 'mode-btn active-consulta'  : 'mode-btn';
   document.getElementById('btn-historial').className = modo === 'historial' ? 'mode-btn active-historial' : 'mode-btn';
   document.getElementById('btn-editor').className    = modo === 'editor'    ? 'mode-btn active-editor'    : 'mode-btn';
@@ -17,6 +18,7 @@ function setModo(modo) {
 
   document.getElementById('desc-prueba').className    = 'mode-desc mode-desc-prueba'    + (modo === 'prueba'    ? ' active' : '');
   document.getElementById('desc-real').className      = 'mode-desc mode-desc-real'      + (modo === 'real'      ? ' active' : '');
+  document.getElementById('desc-bat').className       = 'mode-desc mode-desc-bat'       + (modo === 'bat'       ? ' active' : '');
   document.getElementById('desc-consulta').className  = 'mode-desc mode-desc-consulta'  + (modo === 'consulta'  ? ' active' : '');
   document.getElementById('desc-historial').className = 'mode-desc mode-desc-historial' + (modo === 'historial' ? ' active' : '');
   document.getElementById('desc-editor').className    = 'mode-desc mode-desc-editor'    + (modo === 'editor'    ? ' active' : '');
@@ -24,10 +26,13 @@ function setModo(modo) {
 
   document.getElementById('warning-real').className = 'warning-real' + (modo === 'real' ? ' visible' : '');
 
-  const allForms = ['form-generador', 'form-consulta', 'form-historial', 'form-editor', 'form-git'];
+  const allForms = ['form-generador', 'form-bat', 'form-consulta', 'form-historial', 'form-editor', 'form-git'];
   allForms.forEach(f => document.getElementById(f).style.display = 'none');
 
-  if (modo === 'consulta') {
+  if (modo === 'bat') {
+    document.getElementById('form-bat').style.display = 'block';
+    if (typeof batLoadScripts === 'function') batLoadScripts();
+  } else if (modo === 'consulta') {
     document.getElementById('form-consulta').style.display = 'block';
   } else if (modo === 'historial') {
     document.getElementById('form-historial').style.display = 'block';

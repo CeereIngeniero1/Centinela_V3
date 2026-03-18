@@ -31,6 +31,10 @@
       </button>
 
       <div class="menu-label">Herramientas</div>
+        <button class="mode-btn" id="btn-bat" onclick="setModo('bat')">
+          <span class="mode-icon">🧷</span>
+          <div>Crear BAT</div>
+        </button>
       <button class="mode-btn" id="btn-consulta" onclick="setModo('consulta')">
         <span class="mode-icon">🔎</span>
         <div>Buscador / Consulta</div>
@@ -70,6 +74,10 @@
       <div class="mode-desc mode-desc-consulta" id="desc-consulta">
         <span>ℹ️</span>
         <div>Pega celdas o nombres de áreas para buscar en todos los scripts del repositorio y saber si ya existen en algún lado.</div>
+      </div>
+      <div class="mode-desc mode-desc-bat" id="desc-bat">
+        <span>ℹ️</span>
+        <div>Crea un archivo <strong>.bat</strong> para ejecutar un script <strong>.js</strong>. Puedes <strong>guardarlo en el Escritorio</strong> de este equipo o <strong>descargarlo</strong>.</div>
       </div>
       <div class="mode-desc mode-desc-historial" id="desc-historial">
         <span>ℹ️</span>
@@ -165,6 +173,33 @@
           <div id="consulta-results-container" style="display: none; margin-top: 24px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
             <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text);">Resultados de Búsqueda</h3>
             <div id="consulta-results-body"></div>
+          </div>
+        </div>
+
+        <!-- ================= HERRAMIENTA BAT ================= -->
+        <div id="form-bat" style="display: none;">
+          <div class="field-row" style="margin-top: 10px;">
+            <div class="field">
+              <label>Script a ejecutar <span class="req">*</span></label>
+              <select id="bat-target">
+                <option value="">Cargando scripts...</option>
+              </select>
+              <span class="hint">Se generará un .bat que ejecuta <code>node &lt;script&gt;</code>.</span>
+            </div>
+            <div class="field">
+              <label>Nombre del BAT (opcional)</label>
+              <input type="text" id="bat-name" placeholder="Ej: Correr Centinela" />
+              <span class="hint">Si lo dejas vacío, se usará <code>Run_&lt;archivo&gt;</code>.</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2));" onclick="batCrear('desktop')">
+              🖥️ &nbsp;Crear en Escritorio
+            </button>
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; background: linear-gradient(135deg, #0ea5e9, #2563eb);" onclick="batCrear('download')">
+              ⬇️ &nbsp;Descargar .bat
+            </button>
           </div>
         </div>
 
@@ -333,6 +368,7 @@
   </div>
 
   <script src="/js/app-core.js"></script>
+  <script src="/js/app-bat.js"></script>
   <script src="/js/app-generador.js"></script>
   <script src="/js/app-consulta.js"></script>
   <script src="/js/app-historial.js"></script>

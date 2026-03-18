@@ -116,6 +116,7 @@ body {
 .mode-btn.active-historial { color: #fff; background: rgba(16,185,129,0.15);  border-color: rgba(16,185,129,0.3); }
 .mode-btn.active-editor    { color: #fff; background: rgba(236,72,153,0.15);  border-color: rgba(236,72,153,0.3); }
 .mode-btn.active-git       { color: #fff; background: rgba(14,165,233,0.15);  border-color: rgba(14,165,233,0.3); }
+.mode-btn.active-bat       { color: #fff; background: rgba(124,58,237,0.12);  border-color: rgba(124,58,237,0.25); }
 .mode-icon { font-size: 1.2rem; }
 
 .mode-desc {
@@ -127,6 +128,7 @@ body {
 .mode-desc-prueba  { background: rgba(245,158,11,0.05); color: #fbbf24; }
 .mode-desc-real    { background: rgba(34,197,94,0.05);  color: #86efac; }
 .mode-desc-consulta { background: rgba(91,110,245,0.05); color: #a5b0ff; }
+.mode-desc-bat     { background: rgba(124,58,237,0.06); color: #c4b5fd; }
 .mode-desc-editor  { background: rgba(236,72,153,0.05); color: #f9a8d4; }
 .mode-desc-git     { background: rgba(14,165,233,0.05); color: #7dd3fc; }
 
