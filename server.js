@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { exec, execFile } = require('child_process');
+const { promisify } = require('util');
 const multer = require('multer');
 const xlsx = require('xlsx');
 
@@ -10,6 +12,51 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PROJECT_DIR = __dirname;
 const HISTORIAL_FILE = path.join(PROJECT_DIR, 'historial.json');
+const GIT_CREDENTIALS_FILE = path.join(PROJECT_DIR, 'config', 'git-credentials.txt');
+const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
+
+function toCommandOutput(err) {
+  return {
+    stdout: err && err.stdout ? err.stdout : '',
+    stderr: err && err.stderr ? err.stderr : (err && err.message ? err.message : '')
+  };
+}
+
+async function runCommand(command, options = {}) {
+  return execAsync(command, {
+    cwd: PROJECT_DIR,
+    maxBuffer: 10 * 1024 * 1024,
+    ...options
+  });
+}
+
+async function runGit(args, options = {}) {
+  return execFileAsync('git', args, {
+    cwd: PROJECT_DIR,
+    maxBuffer: 10 * 1024 * 1024,
+    ...options
+  });
+}
+
+function readGitCredentials() {
+  try {
+    if (!fs.existsSync(GIT_CREDENTIALS_FILE)) return null;
+    const firstLine = fs.readFileSync(GIT_CREDENTIALS_FILE, 'utf-8')
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .find(Boolean);
+    return firstLine || null;
+  } catch (err) {
+    console.warn('No se pudieron leer credenciales Git opcionales:', err.message);
+    return null;
+  }
+}
+
+async function getCurrentBranch() {
+  const { stdout } = await runGit(['rev-parse', '--abbrev-ref', 'HEAD']);
+  return stdout.trim();
+}
 
 // --- Historical Data Management ---
 function getClienteGuessed(filename) {
@@ -26,19 +73,19 @@ function inicializarHistorial() {
   if (fs.existsSync(HISTORIAL_FILE)) {
     try {
       return JSON.parse(fs.readFileSync(HISTORIAL_FILE, 'utf-8'));
-    } catch(e) { /* fallback clean */ }
+    } catch (e) { /* fallback clean */ }
   }
-  
+
   // Excluir archivos irrelevantes
   const excluded = ['server.js', 'Menu.js', 'read_pdf.js', 'V4.js'];
   const files = fs.readdirSync(PROJECT_DIR).filter(f => f.endsWith('.js') && !excluded.includes(f));
-  
+
   const historial = [];
-  
+
   for (const file of files) {
     const filePath = path.join(PROJECT_DIR, file);
     const content = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Buscar áreas (limitado a las creadas en el arreglo Areas)
     const areaRegex = /\{\s*NombreArea:\s*"([^"]+)"/g;
     let match;
@@ -48,7 +95,7 @@ function inicializarHistorial() {
         if (!areasFound.includes(match[1])) areasFound.push(match[1]);
       }
     }
-    
+
     if (areasFound.length > 0) {
       const stats = fs.statSync(filePath);
       historial.push({
@@ -63,7 +110,7 @@ function inicializarHistorial() {
       });
     }
   }
-  
+
   // Ordenar de más reciente a más antiguo
   historial.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   fs.writeFileSync(HISTORIAL_FILE, JSON.stringify(historial, null, 2), 'utf-8');
@@ -84,6 +131,160 @@ app.get('/api/scripts', (req, res) => {
     .filter(f => f.endsWith('.js') && !excluded.includes(f))
     .sort();
   res.json(files);
+});
+
+// Returns list of client folders inside Documentos/
+app.get('/api/clientes', (req, res) => {
+  const docsBase = path.join(PROJECT_DIR, 'Documentos');
+  try {
+    if (!fs.existsSync(docsBase)) {
+      return res.json({ ok: true, clientes: [] });
+    }
+    const clientes = fs.readdirSync(docsBase)
+      .filter(name => {
+        try { return fs.statSync(path.join(docsBase, name)).isDirectory(); }
+        catch { return false; }
+      })
+      .sort();
+    res.json({ ok: true, clientes });
+  } catch (err) {
+    console.error('Error listando clientes:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// --- Git helper endpoints ---
+app.get('/api/git/status', async (req, res) => {
+  try {
+    const [{ stdout: branchRaw }, { stdout: commitRaw }, { stdout: statusRaw }] = await Promise.all([
+      runGit(['rev-parse', '--abbrev-ref', 'HEAD']),
+      runGit(['log', '-1', '--oneline']),
+      runGit(['status', '--short'])
+    ]);
+
+    const statusLines = statusRaw
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    res.json({
+      ok: true,
+      branch: branchRaw.trim(),
+      lastCommit: commitRaw.trim(),
+      statusLines
+    });
+  } catch (err) {
+    const out = toCommandOutput(err);
+    res.status(500).json({
+      ok: false,
+      error: out.stderr || 'No fue posible obtener el estado de Git.',
+      stdout: out.stdout,
+      stderr: out.stderr
+    });
+  }
+});
+
+app.post('/api/git/pull', async (req, res) => {
+  const force = Boolean(req.body && req.body.force);
+
+  try {
+    const branch = await getCurrentBranch();
+    if (!force) {
+      const { stdout, stderr } = await runGit(['pull', '--ff-only']);
+      return res.json({ ok: true, stdout, stderr, branch, force: false });
+    }
+
+    const { stdout: fetchOut, stderr: fetchErr } = await runGit(['fetch', 'origin']);
+
+    const targetRef = `origin/${branch}`;
+    const { stdout: resetOut, stderr: resetErr } = await runGit(['reset', '--hard', targetRef]);
+
+    return res.json({
+      ok: true,
+      stdout: `${fetchOut}${resetOut}`,
+      stderr: `${fetchErr}${resetErr}`,
+      branch,
+      force: true
+    });
+  } catch (err) {
+    const out = toCommandOutput(err);
+    res.json({
+      ok: false,
+      error: out.stderr || 'No fue posible ejecutar git pull.',
+      stdout: out.stdout,
+      stderr: out.stderr,
+      force
+    });
+  }
+});
+
+app.post('/api/git/push', async (req, res) => {
+  const messageRaw = req.body && typeof req.body.message === 'string'
+    ? req.body.message.trim()
+    : '';
+  const message = messageRaw || `Actualizacion desde Centinela Web (${new Date().toISOString()})`;
+
+  try {
+    const outputs = [];
+    const { stdout: statusRaw } = await runGit(['status', '--short']);
+    const hasLocalChanges = Boolean(statusRaw.trim());
+    const branch = await getCurrentBranch();
+
+    outputs.push('== git status --short ==\n' + statusRaw);
+
+    if (hasLocalChanges) {
+      const addRes = await runGit(['add', '.']);
+      outputs.push('== git add . ==\n' + addRes.stdout + addRes.stderr);
+
+      const commitRes = await runGit(['commit', '-m', message]);
+      outputs.push('== git commit ==\n' + commitRes.stdout + commitRes.stderr);
+    } else {
+      outputs.push('No hay cambios locales para commit. Se intentara push por si hay commits pendientes.');
+    }
+
+    const creds = readGitCredentials();
+    let pushRes;
+    if (creds && /^https?:\/\//i.test(creds)) {
+      pushRes = await runGit(['push', creds, `HEAD:${branch}`]);
+      outputs.push('Push usando URL de credenciales local.');
+    } else {
+      pushRes = await runGit(['push']);
+      outputs.push('Push usando credenciales del sistema.');
+    }
+
+    outputs.push('== git push ==\n' + pushRes.stdout + pushRes.stderr);
+
+    res.json({
+      ok: true,
+      stdout: outputs.join('\n\n'),
+      stderr: '',
+      branch,
+      committed: hasLocalChanges
+    });
+  } catch (err) {
+    const out = toCommandOutput(err);
+    res.json({
+      ok: false,
+      error: out.stderr || 'No fue posible ejecutar git push.',
+      stdout: out.stdout,
+      stderr: out.stderr
+    });
+  }
+});
+
+app.post('/api/git/install-deps', async (req, res) => {
+  try {
+    const { stdout, stderr } = await runCommand('npm install');
+    res.json({ ok: true, stdout, stderr });
+  } catch (err) {
+    const out = toCommandOutput(err);
+    res.json({
+      ok: false,
+      error: out.stderr || 'No fue posible instalar dependencias.',
+      stdout: out.stdout,
+      stderr: out.stderr
+    });
+  }
 });
 
 // Main endpoint: generates a modified copy of a script
@@ -160,7 +361,7 @@ app.post('/api/generar', (req, res) => {
         // We'll remove from continPag up to and including the comment line
         const endOfComment = code.indexOf('\n', correoRadicacionIdx) + 1;
         const blockToRemove = code.slice(continPagIdx, endOfComment);
-        code = code.replace(blockToRemove, 
+        code = code.replace(blockToRemove,
           `// [PRUEBA] Bloque de radicación eliminado (continPag -> CORREO RADICACION)\n`
         );
       }
@@ -171,12 +372,12 @@ app.post('/api/generar', (req, res) => {
 
     // Mantenemos la información de áreas para el historial
     const userInfoHistorial = {
-       archivoBase: archivoBase,
-       nombreSalida: nombreSalidaFinal,
-       modo: modo === 'prueba' ? 'Prueba de Radiación' : 'Radicación Real',
-       cliente: req.body.clienteHistorial || "No asignado",
-       areas: areas.map(a => a.nombre),
-       estado: "Generado OK" // Esto se actualizará si hay subidas de documentos
+      archivoBase: archivoBase,
+      nombreSalida: nombreSalidaFinal,
+      modo: modo === 'prueba' ? 'Prueba de Radiación' : 'Radicación Real',
+      cliente: req.body.clienteHistorial || "No asignado",
+      areas: areas.map(a => a.nombre),
+      estado: "Generado OK" // Esto se actualizará si hay subidas de documentos
     };
 
     // Note: the /api/subir-documentos endpoint handles document uploading and error recording separately 
@@ -226,7 +427,7 @@ app.post('/api/consultar', (req, res) => {
           while ((match = areaRegex.exec(content)) !== null) {
             const nombreArea = match[1];
             const celdasString = match[2];
-            
+
             if (nombreArea === q || celdasString.includes(q)) {
               resultados[q].push(`${file} (Área: ${nombreArea})`);
               foundInArea = true;
@@ -256,7 +457,7 @@ app.get('/api/historial', (req, res) => {
 
 app.get('/api/historial/exportar', (req, res) => {
   const formato = req.query.formato || 'csv';
-  
+
   if (historialGlobal.length === 0) {
     return res.status(404).send("No hay historial para exportar.");
   }
@@ -277,7 +478,7 @@ app.get('/api/historial/exportar', (req, res) => {
     const wb = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, "Auditoria Generales");
     const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
-    
+
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename="Auditoria_Radicaciones.xlsx"');
     res.send(buffer);
@@ -286,7 +487,7 @@ app.get('/api/historial/exportar', (req, res) => {
     // CSV
     const ws = xlsx.utils.json_to_sheet(exportData);
     const csvStr = xlsx.utils.sheet_to_csv(ws);
-    
+
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="Auditoria_Radicaciones.csv"');
     // Prepend UTF-8 BOM
@@ -307,7 +508,7 @@ app.post('/api/leer-excel', upload.single('excel'), (req, res) => {
 
     // Leer el contenido del Excel desde el buffer cargado en memoria
     const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-    
+
     // Tomar la primera hoja
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
@@ -329,7 +530,7 @@ app.post('/api/leer-excel', upload.single('excel'), (req, res) => {
     }
 
     if (celdas.length === 0) {
-       return res.status(400).json({ ok: false, error: 'Se leyó el archivo pero no se encontraron celdas en la Columna B (a partir de B2).' });
+      return res.status(400).json({ ok: false, error: 'Se leyó el archivo pero no se encontraron celdas en la Columna B (a partir de B2).' });
     }
 
     res.json({ ok: true, nombreArea, celdas });
@@ -346,7 +547,7 @@ app.post('/api/verificar-documento', (req, res) => {
   if (!cliente || !fileName) {
     return res.status(400).json({ ok: false, error: 'Faltan datos de verificación.' });
   }
-  
+
   const docPath = path.join(PROJECT_DIR, 'Documentos', cliente, 'DocumentosReglamentarios', fileName);
   const existe = fs.existsSync(docPath);
   res.json({ ok: true, existe });
@@ -436,19 +637,26 @@ app.get('/api/editor/get-areas/:filename', (req, res) => {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
 
-    // Encontrar el bloque "const Areas = [ ... ]" completo
-    const areasStartMatch = content.match(/const\s+Areas\s*=\s*\n?\s*\[/);
+    // Pre-procesar el contenido para ignorar TODO lo comentado (bloque y línea)
+    // Usamos espacios para mantener los índices originales si fuera necesario, 
+    // pero aquí lo usamos para buscar el bloque Areas sin interferencia de comentarios.
+    const ghostContent = content
+      .replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length))
+      .replace(/\/\/.*/g, (m) => ' '.repeat(m.length));
+
+    // Encontrar el bloque "const Areas = [ ... ]" en el contenido limpio
+    const areasStartMatch = ghostContent.match(/const\s+Areas\s*=\s*\n?\s*\[/);
     if (!areasStartMatch) {
       return res.json({ ok: true, areas: [], raw: '' });
     }
 
     const startIdx = areasStartMatch.index;
-    // Encontrar el cierre del array (buscar el ] que cierra el bloque)
     let bracketCount = 0;
     let endIdx = -1;
-    for (let i = content.indexOf('[', startIdx); i < content.length; i++) {
-      if (content[i] === '[') bracketCount++;
-      if (content[i] === ']') bracketCount--;
+    // Buscamos el cierre del array en el ghostContent
+    for (let i = ghostContent.indexOf('[', startIdx); i < ghostContent.length; i++) {
+      if (ghostContent[i] === '[') bracketCount++;
+      if (ghostContent[i] === ']') bracketCount--;
       if (bracketCount === 0) { endIdx = i + 1; break; }
     }
 
@@ -456,16 +664,16 @@ app.get('/api/editor/get-areas/:filename', (req, res) => {
       return res.json({ ok: true, areas: [], raw: '' });
     }
 
-    const areasBlock = content.substring(startIdx, endIdx);
+    // El bloque que vamos a parsear es el del ghostContent (ya sin comentarios)
+    const cleanedBlock = ghostContent.substring(startIdx, endIdx);
 
     // Extraer cada objeto { NombreArea: "...", Referencia: "...", Celdas: [...] }
-    const areaRegex = /\{\s*NombreArea:\s*"([^"]+)"\s*,\s*(?:\/\/[^\n]*\n\s*)?Referencia:\s*"([^"]+)"\s*,\s*(?:\/\/[^\n]*\n\s*)?Celdas:\s*\[([^\]]*)\]/g;
+    const areaRegex = /\{\s*NombreArea:\s*["']([^"']+)["']\s*,\s*Referencia:\s*["']([^"']+)["']\s*,\s*Celdas:\s*\[([^\]]*)\]/g;
     const areas = [];
     let match;
-    while ((match = areaRegex.exec(areasBlock)) !== null) {
+    while ((match = areaRegex.exec(cleanedBlock)) !== null) {
       const nombre = match[1];
       const referencia = match[2];
-      // Limpiar celdas: quitar comillas y espacios
       const celdasRaw = match[3];
       const celdas = celdasRaw.replace(/["']/g, '').trim();
       areas.push({ nombre, referencia, celdas });

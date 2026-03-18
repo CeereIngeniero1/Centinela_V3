@@ -1704,12 +1704,7 @@ function Mineria(browser, Pin,) {
 
 
 
-    clearTimeout(RadiPrimero);
-    let Radisegundo = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 10000);
+    // [PRUEBA] Bloque RadiPrimero/Radisegundo eliminado
 
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
@@ -1725,86 +1720,7 @@ function Mineria(browser, Pin,) {
 
     }
 
-    const continPag = await page.$x('//span[contains(.,"Continuar")]');
-    await continPag[1].click();
-
-    clearTimeout(Radisegundo);
-    await page.waitForNavigation({
-      waitUntil: "networkidle0",
-    });
-    console.log(" si navego ");
-
-
-
-
-    let RadiTercero = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 120000);
-
-    //  await page.waitForTimeout(1000000);
-
-
-    while (true) {
-
-      let resultado = await RECAPTCHA(page);
-      if (resultado == 1) {
-        break;
-      }
-
-    }
-
-    var imagendeCaptcha = 0;
-    while (true) {
-      await page.waitForTimeout(1500);
-
-      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
-        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
-        if (resultado === 1) {
-          clearTimeout(RadiTercero);
-          break;
-        } else if (resultado === 2) {
-          console.log("El captcha sigue en modo reto de imagenes");
-          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
-          // lO RETIRO PORQUE NO VALE LA PENA
-          // Mineria(browser, Pin);
-          imagendeCaptcha = 1;
-        } else {
-          // await RECAPTCHA(page);
-        }
-
-      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
-        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
-        if (posibleContinuar.length > 0) {
-          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
-          console.log([posibleContinuar]);
-          await posibleContinuar[1].click();
-          await page.waitForNavigation({
-            waitUntil: "networkidle0",
-          });
-          await RECAPTCHA(page);
-        }
-      }
-    }
-
-    // await page.waitForTimeout(1000000);
-
-    console.log("51. Bóton Radicar");
-
-    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
-    console.log("Este es el boton radicar : " + btnRadicar1);
-
-    console.log("Le di click");
-
-    try {
-      await btnRadicar1[1].click();
-    } catch (exepcion) {
-      console.log("La 1 tampoco Y_Y");
-    }
-
-
-    //CORREO RADICACION
+    // [PRUEBA] Bloque de radicación eliminado (continPag -> CORREO RADICACION)
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
     await page.waitForTimeout(180000);
     Mineria(browser, Pin);
@@ -1863,8 +1779,7 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+    to: 'Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -2157,6 +2072,11 @@ function VerificarVencimientoPin(
 
 const Areas =
   [
+    {
+      NombreArea: "511666 (1)",
+      Referencia: "18P09K04B10N",
+      Celdas: ["18P09K04B10N, 18P09K04B20E, 18P09K04C06V, 18P09K04C11S, 18P09K04C11T, 18P09K04C11D, 18P09K04C06N, 18P09K04B10T, 18P09K04C06F, 18P09K04C06G, 18P09K04C16D, 18P09K04C06T, 18P09K04B15N, 18P09K04C11K, 18P09K04B10Z, 18P09K04C06K, 18P09K04C16B, 18P09K04C11R, 18P09K04C06W, 18P09K04C16C, 18P09K04C06X, 18P09K04B10Y, 18P09K04B15E, 18P09K04C06Q, 18P09K04B10J, 18P09K04C11G, 18P09K04C11B, 18P09K04C06S, 18P09K04C11Y, 18P09K04C11N, 18P09K04C06I, 18P09K04B20I, 18P09K04B20D, 18P09K04B15T, 18P09K04B15Z, 18P09K04C11Q, 18P09K04C11A, 18P09K04C11W, 18P09K04C11L, 18P09K04C06L, 18P09K04C11M, 18P09K04C11I, 18P09K04B15I, 18P09K04B10I, 18P09K04B20J, 18P09K04B10P, 18P09K04C06M, 18P09K04C16I, 18P09K04B15Y, 18P09K04C16F, 18P09K04C11V, 18P09K04B15U, 18P09K04C11F, 18P09K04B10U, 18P09K04C11X, 18P09K04B15D, 18P09K04C16A, 18P09K04B15P, 18P09K04B15J, 18P09K04C16G, 18P09K04C06R, 18P09K04C16H, 18P09K04C11H, 18P09K04C11C, 18P09K04C06H, 18P09K04C06Y"]
+    },
     {
       NombreArea: "prueba",
       Referencia: "18N05N14M12R",
