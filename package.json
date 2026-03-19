@@ -4,7 +4,8 @@
   "description": "",
   "main": "V2.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "make-bat": "node make-bat.js"
   },
   "repository": {
     "type": "git",

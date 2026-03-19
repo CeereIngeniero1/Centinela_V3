@@ -7,324 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0d0f1a;
-      --surface: #161929;
-      --surface2: #1e2236;
-      --surface3: #242840;
-      --border: rgba(255,255,255,0.08);
-      --border2: rgba(255,255,255,0.13);
-      --accent: #5b6ef5;
-      --accent2: #7c3aed;
-      --green: #22c55e;
-      --red: #ef4444;
-      --amber: #f59e0b;
-      --text: #e8eaf6;
-      --text-muted: #8b90b0;
-      --radius: 14px;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      height: 100vh;
-      display: flex;
-      flex-direction: row;
-      overflow: hidden;
-    }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 280px;
-      background: var(--surface2);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 24px 16px;
-      flex-shrink: 0;
-      z-index: 10;
-    }
-
-    .sidebar-header {
-      margin-bottom: 32px;
-      padding: 0 8px;
-    }
-
-    .logo-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 50px; padding: 6px 14px;
-      font-size: 11px; font-weight: 700; letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 4px 15px rgba(91,110,245,0.3);
-    }
-    
-    .sidebar-header h1 {
-      font-size: 1.4rem; font-weight: 700;
-      background: linear-gradient(135deg, #fff 20%, #8b8fd4 100%);
-      -webkit-background-clip: text; 
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-top: 14px; line-height: 1.2;
-    }
-    
-    .sidebar-header p {
-      margin-top: 6px; color: var(--text-muted); font-size: 0.8rem;
-    }
-
-    .sidebar-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .menu-label {
-      font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted);
-      font-weight: 700; margin: 16px 8px 4px; letter-spacing: 0.5px;
-    }
-
-    /* ── Main Content ── */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      padding: 40px;
-      background: var(--bg);
-    }
-
-    /* ── Card ── */
-    .card {
-      width: 100%; max-width: 900px;
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-      overflow: hidden;
-      margin: 0 auto;
-    }
-
-    /* ── Mode Selector (Sidebar) ── */
-    .mode-btn {
-      background: transparent; border: 1px solid transparent; padding: 10px 14px;
-      cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 12px;
-      font-family: inherit; font-size: 0.9rem; font-weight: 500;
-      color: var(--text-muted); transition: all 0.2s;
-      border-radius: 10px; text-align: left;
-    }
-    .mode-btn:hover { background: rgba(255,255,255,0.03); color: var(--text); }
-    .mode-btn.active-prueba { color: #fff; background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.3); }
-    .mode-btn.active-real { color: #fff; background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); }
-    .mode-btn.active-consulta { color: #fff; background: rgba(91,110,245,0.15); border-color: rgba(91,110,245,0.3); }
-    .mode-btn.active-historial { color: #fff; background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); }
-    .mode-icon { font-size: 1.2rem; }
-
-    .mode-desc {
-      display: none; padding: 12px 24px;
-      font-size: 0.82rem; border-bottom: 1px solid var(--border);
-      gap: 8px; align-items: flex-start;
-    }
-    .mode-desc.active { display: flex; }
-    .mode-desc-prueba { background: rgba(245,158,11,0.05); color: #fbbf24; }
-    .mode-desc-real { background: rgba(34,197,94,0.05); color: #86efac; }
-    .mode-desc-consulta { background: rgba(91,110,245,0.05); color: #a5b0ff; }
-
-    /* ── Form Body ── */
-    .form-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
-
-    /* ── Script + Output row ── */
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 580px) { .field-row { grid-template-columns: 1fr; } }
-
-    .field { display: flex; flex-direction: column; gap: 7px; }
-    .field label {
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
-      color: var(--text-muted); text-transform: uppercase;
-    }
-    .field label .req { color: var(--accent); margin-left: 2px; }
-    .field input, .field select, .field textarea {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px; padding: 11px 14px;
-      color: var(--text); font-family: inherit;
-      font-size: 0.88rem; outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .field select {
-      cursor: pointer; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%238b90b0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px;
-    }
-    .field input:focus, .field select:focus, .field textarea:focus {
-      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,110,245,0.2);
-    }
-    .field textarea { resize: vertical; min-height: 80px; font-size: 0.81rem; line-height: 1.6; }
-    .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
-    .hint { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
-
-    /* ── Warning ── */
-    .warning-real {
-      display: none; background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.25); border-radius: 10px;
-      padding: 13px 16px; font-size: 0.82rem; color: #fca5a5;
-      gap: 10px; align-items: flex-start;
-    }
-    .warning-real.visible { display: flex; }
-
-    /* ── Areas Section ── */
-    .areas-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .areas-header-left { display: flex; align-items: center; gap: 10px; }
-    .areas-label {
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
-      color: var(--text-muted); text-transform: uppercase;
-    }
-    .areas-count {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 20px; padding: 2px 9px;
-      font-size: 0.75rem; font-weight: 700; color: white;
-      min-width: 22px; text-align: center;
-    }
-    .btn-add-area {
-      display: flex; align-items: center; gap: 7px;
-      background: rgba(91,110,245,0.12);
-      border: 1px solid rgba(91,110,245,0.3);
-      border-radius: 8px; padding: 7px 14px;
-      color: #a5b0ff; font-family: inherit;
-      font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-add-area:hover {
-      background: rgba(91,110,245,0.22);
-      border-color: rgba(91,110,245,0.5);
-      color: white;
-    }
-
-    /* ── Area Card ── */
-    #areas-container { display: flex; flex-direction: column; gap: 16px; }
-
-    .area-card {
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-radius: 12px;
-      overflow: hidden;
-      animation: cardIn 0.25s ease;
-    }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .area-card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px;
-      background: var(--surface3);
-      border-bottom: 1px solid var(--border);
-    }
-    .area-card-title {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 0.84rem; font-weight: 600; color: var(--text-muted);
-    }
-    .area-num {
-      background: var(--accent); color: white;
-      border-radius: 6px; padding: 2px 8px;
-      font-size: 0.75rem; font-weight: 700;
-    }
-    .btn-remove-area {
-      background: none; border: none;
-      color: var(--text-muted); cursor: pointer;
-      font-size: 1.2rem; line-height: 1;
-      padding: 2px 6px; border-radius: 6px;
-      transition: all 0.15s;
-    }
-    .btn-remove-area:hover { background: rgba(239,68,68,0.15); color: #f87171; }
-
-    .btn-excel {
-      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
-      color: #86efac; cursor: pointer;
-      font-size: 0.8rem; line-height: 1; font-weight: 600; font-family: inherit;
-      padding: 5px 8px; border-radius: 6px;
-      transition: all 0.15s;
-      display: flex; align-items: center; gap: 5px;
-    }
-    .btn-excel:hover { background: rgba(34,197,94,0.22); }
-
-    .area-card-body {
-      padding: 16px;
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 580px) { .area-row { grid-template-columns: 1fr; } }
-
-    /* ── Submit ── */
-    .btn-generar {
-      width: 100%; padding: 15px;
-      border: none; border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white; font-family: inherit;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 6px 24px rgba(91,110,245,0.4);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
-    .btn-generar:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 10px 30px rgba(91,110,245,0.5); }
-    .btn-generar:active { transform: translateY(0); }
-    .btn-generar:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-    .btn-generar.loading .spinner { display: block; }
-    .btn-generar.loading .btn-text { display: none; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Toast ── */
-    .toast { display: none; align-items: flex-start; gap: 14px; padding: 18px 22px; border-radius: 12px; font-size: 0.88rem; animation: slideIn 0.3s ease; }
-    .toast.success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
-    .toast.error   { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
-    .toast.visible { display: flex; }
-    .toast-icon { font-size: 1.5rem; line-height: 1; }
-    .toast-title { font-weight: 600; margin-bottom: 4px; font-size: 0.93rem; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ── Results Table ── */
-    .results-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.88rem; text-align: left; }
-    .results-table th { background: var(--surface3); color: var(--text-muted); padding: 10px 14px; font-weight: 600; border-bottom: 1px solid var(--border); }
-    .results-table td { padding: 12px 14px; border-bottom: 1px solid var(--border2); color: var(--text); }
-    .results-table tr:last-child td { border-bottom: none; }
-    .badge-found { background: rgba(34,197,94,0.15); color: #86efac; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin: 2px; }
-    .badge-missing { background: rgba(239,68,68,0.15); color: #fca5a5; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-
-    .footer { margin-top: 32px; color: var(--text-muted); font-size: 0.76rem; text-align: center; }
-
-    /* ── Floating File List ── */
-    .file-list {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .file-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      animation: cardIn 0.2s ease;
-    }
-    .file-item-remove {
-      color: #fca5a5;
-      cursor: pointer;
-      font-weight: bold;
-      transition: color 0.15s;
-    }
-    .file-item-remove:hover { color: #f87171; }
-  </style>
+  <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
 
@@ -348,6 +31,10 @@
       </button>
 
       <div class="menu-label">Herramientas</div>
+        <button class="mode-btn" id="btn-bat" onclick="setModo('bat')">
+          <span class="mode-icon">🧷</span>
+          <div>Crear BAT</div>
+        </button>
       <button class="mode-btn" id="btn-consulta" onclick="setModo('consulta')">
         <span class="mode-icon">🔎</span>
         <div>Buscador / Consulta</div>
@@ -355,6 +42,14 @@
       <button class="mode-btn" id="btn-historial" onclick="setModo('historial')">
         <span class="mode-icon">📜</span>
         <div>Historial de Auditoría</div>
+      </button>
+      <button class="mode-btn" id="btn-editor" onclick="setModo('editor')">
+        <span class="mode-icon">✏️</span>
+        <div>Editor de JS</div>
+      </button>
+      <button class="mode-btn" id="btn-git" onclick="setModo('git')">
+        <span class="mode-icon">🔀</span>
+        <div>Git</div>
       </button>
     </div>
 
@@ -367,6 +62,7 @@
   <div class="main-content">
     <div class="card">
 
+      <!-- Mode Descriptions -->
       <div class="mode-desc mode-desc-prueba active" id="desc-prueba">
         <span>ℹ️</span>
         <div>Elimina la radicación, desactiva los timers y redirige los correos únicamente a <strong>Soporte2ceere@gmail.com</strong>. Todas las áreas se inyectan al inicio del arreglo.</div>
@@ -379,646 +75,305 @@
         <span>ℹ️</span>
         <div>Pega celdas o nombres de áreas para buscar en todos los scripts del repositorio y saber si ya existen en algún lado.</div>
       </div>
+      <div class="mode-desc mode-desc-bat" id="desc-bat">
+        <span>ℹ️</span>
+        <div>Crea un archivo <strong>.bat</strong> para ejecutar un script <strong>.js</strong>. Puedes <strong>guardarlo en el Escritorio</strong> de este equipo o <strong>descargarlo</strong>.</div>
+      </div>
       <div class="mode-desc mode-desc-historial" id="desc-historial">
         <span>ℹ️</span>
         <div>Revisa el historial de generaciones, áreas procesadas, y descarga los reportes de auditoría en Excel o CSV.</div>
+      </div>
+      <div class="mode-desc mode-desc-editor" id="desc-editor">
+        <span>ℹ️</span>
+        <div>Selecciona un archivo <strong>.js</strong> para ver, editar, agregar o eliminar las áreas definidas en su bloque <code>const Areas</code>. Se crea un backup antes de guardar.</div>
+      </div>
+      <div class="mode-desc mode-desc-git" id="desc-git">
+        <span>ℹ️</span>
+        <div>Administra Git desde la web: verifica estado, baja cambios (con opción de forzar), sube commits y ejecuta <code>npm install</code> cuando sea necesario.</div>
       </div>
 
       <div class="form-body">
 
         <!-- ================= FORMULARIO GENERADOR ================= -->
-      <div id="form-generador">
-        <!-- Warning real -->
-        <div class="warning-real" id="warning-real">
-          <span>⚠️</span>
-          <div><strong>Modo Producción activado.</strong> Este script realizará radicaciones reales y enviará correos a todos los destinatarios.</div>
-        </div>
+        <div id="form-generador">
 
-        <!-- Global Settings (Script & Client) -->
-        <div class="field-row" style="margin-top: 24px;">
-          <div class="field">
-            <label>Script Base <span class="req">*</span></label>
-            <select id="archivoBase">
-              <option value="">Cargando scripts...</option>
-            </select>
-            <span class="hint">Script original del cual se va a partir.</span>
+          <div class="warning-real" id="warning-real">
+            <span>⚠️</span>
+            <div><strong>Modo Producción activado.</strong> Este script realizará radicaciones reales y enviará correos a todos los destinatarios.</div>
           </div>
-          <div class="field">
-            <label>Nombre del Archivo Generado <span class="req">*</span></label>
-            <input type="text" id="nombreSalida" placeholder="Ej: Prueba Freeport Lunes.js"/>
-            <span class="hint">Se guardará en la carpeta del proyecto.</span>
-          </div>
-        </div>
 
-        <div class="field-row" style="margin-top: 16px; background: rgba(91,110,245,0.05); border: 1px solid rgba(91,110,245,0.15); border-radius: 12px; padding: 16px;">
-          <div class="field">
-            <label>Cliente (Para Documentos) <span style="font-weight:400; text-transform:none;">(Opcional)</span></label>
-            <select id="clienteSeleccionado">
-              <option value="">— Selecciona un cliente —</option>
-              <option value="Arabany">Arabany</option>
-              <option value="Collective">Collective</option>
-              <option value="Freeport">Freeport</option>
-              <option value="NegoYMetales">NegoYMetales</option>
-              <option value="OPERADORA">OPERADORA</option>
-              <option value="Nuevo">Otro / Crear Nuevo...</option>
-            </select>
-            <input type="text" id="clienteNuevo" placeholder="Nombre exacto del cliente" style="display: none; margin-top: 8px;"/>
-            <span class="hint">Usado para archivar documentos automáticamente.</span>
-          </div>
-          <div class="field">
-            <label>Documentos Reglamentarios</label>
-            <input type="file" id="docsReglamentarios" multiple onchange="verificarDocumentosReglamentarios(this)" />
-            <span class="hint">RUT, ID, etc. Irán a la carpeta principal del cliente.</span>
-            <div id="reglamentarios-list" class="file-list"></div>
-          </div>
-        </div>
-
-        <!-- Areas Section -->
-        <div style="margin-top: 24px;">
-          <div class="areas-header">
-            <div class="areas-header-left">
-              <span class="areas-label">Áreas a monitorear / radicar</span>
-              <span class="areas-count" id="areas-count">1</span>
+          <div class="field-row" style="margin-top: 24px;">
+            <div class="field">
+              <label>Script Base <span class="req">*</span></label>
+              <select id="archivoBase">
+                <option value="">Cargando scripts...</option>
+              </select>
+              <span class="hint">Script original del cual se va a partir.</span>
             </div>
-            <button class="btn-add-area" onclick="agregarArea()">
-              ＋ Agregar área
+            <div class="field">
+              <label>Nombre del Archivo Generado <span class="req">*</span></label>
+              <input type="text" id="nombreSalida" placeholder="Ej: Prueba Freeport Lunes.js"/>
+              <span class="hint">Se guardará en la carpeta del proyecto.</span>
+            </div>
+          </div>
+
+          <div class="field-row" style="margin-top: 16px; background: rgba(91,110,245,0.05); border: 1px solid rgba(91,110,245,0.15); border-radius: 12px; padding: 16px;">
+            <div class="field">
+              <label>Cliente (Para Documentos) <span style="font-weight:400; text-transform:none;">(Opcional)</span></label>
+              <select id="clienteSeleccionado">
+                <option value="">— Selecciona un cliente —</option>
+                <option value="Nuevo">Otro / Crear Nuevo...</option>
+              </select>
+              <input type="text" id="clienteNuevo" placeholder="Nombre exacto del cliente" style="display: none; margin-top: 8px;"/>
+              <span class="hint">Usado para archivar documentos automáticamente.</span>
+            </div>
+            <div class="field">
+              <label>Documentos Reglamentarios</label>
+              <input type="file" id="docsReglamentarios" multiple onchange="verificarDocumentosReglamentarios(this)" />
+              <span class="hint">RUT, ID, etc. Irán a la carpeta principal del cliente.</span>
+              <div id="reglamentarios-list" class="file-list"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div class="areas-header">
+              <div class="areas-header-left">
+                <span class="areas-label">Áreas a monitorear / radicar</span>
+                <span class="areas-count" id="areas-count">1</span>
+              </div>
+              <button class="btn-add-area" onclick="agregarArea()">
+                ＋ Agregar área
+              </button>
+            </div>
+
+            <div id="areas-container" style="margin-top:16px;">
+              <!-- Area cards are injected here by JS -->
+            </div>
+          </div>
+
+          <button class="btn-generar" id="btn-generar" onclick="generar()" style="margin-top: 24px;">
+            <div class="spinner"></div>
+            <span class="btn-text">⚙️ &nbsp;Generar Script</span>
+          </button>
+        </div>
+
+        <!-- ================= FORMULARIO CONSULTA ================= -->
+        <div id="form-consulta" style="display: none;">
+          <div class="field">
+            <label>Términos a buscar <span class="req">*</span></label>
+            <textarea id="consulta-input" style="min-height: 150px;" placeholder="Pega aquí las celdas, números de áreas, o cualquier término que desees buscar. Puedes separarlos por comas o saltos de línea."></textarea>
+            <span class="hint">Se buscará cada término individualmente dentro del contenido de todos los archivos .js</span>
+          </div>
+
+          <button class="btn-generar" id="btn-consultar" onclick="consultar()" style="margin-top: 24px; background: linear-gradient(135deg, var(--accent2), #4f46e5);">
+            <div class="spinner"></div>
+            <span class="btn-text">🔎 &nbsp;Buscar en Repositorio</span>
+          </button>
+
+          <div id="consulta-results-container" style="display: none; margin-top: 24px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+            <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text);">Resultados de Búsqueda</h3>
+            <div id="consulta-results-body"></div>
+          </div>
+        </div>
+
+        <!-- ================= HERRAMIENTA BAT ================= -->
+        <div id="form-bat" style="display: none;">
+          <div class="field-row" style="margin-top: 10px;">
+            <div class="field">
+              <label>Script a ejecutar <span class="req">*</span></label>
+              <select id="bat-target">
+                <option value="">Cargando scripts...</option>
+              </select>
+              <span class="hint">Se generará un .bat que ejecuta <code>node &lt;script&gt;</code>.</span>
+            </div>
+            <div class="field">
+              <label>Nombre del BAT (opcional)</label>
+              <input type="text" id="bat-name" placeholder="Ej: Correr Centinela" />
+              <span class="hint">Si lo dejas vacío, se usará <code>Run_&lt;archivo&gt;</code>.</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2));" onclick="batCrear('desktop')">
+              🖥️ &nbsp;Crear en Escritorio
+            </button>
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; background: linear-gradient(135deg, #0ea5e9, #2563eb);" onclick="batCrear('download')">
+              ⬇️ &nbsp;Descargar .bat
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= FORMULARIO HISTORIAL ================= -->
+        <div id="form-historial" style="display: none;">
+          <div style="display: flex; gap: 12px; margin-bottom: 24px; align-items: center;">
+            <h3 style="margin: 0; flex: 1; color: var(--text);">Bitácora de Generación</h3>
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; font-size: 0.85rem; background: #10b981;" onclick="window.location.href='/api/historial/exportar?formato=xlsx'">
+              📊 Descargar Excel
+            </button>
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; font-size: 0.85rem; background: #6366f1;" onclick="window.location.href='/api/historial/exportar?formato=csv'">
+              📄 Descargar CSV
             </button>
           </div>
 
-          <div id="areas-container" style="margin-top:16px;">
-            <!-- Area cards are injected here by JS -->
+          <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto;">
+            <table class="results-table" id="tabla-historial">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Archivo</th>
+                  <th>Cliente</th>
+                  <th>Áreas</th>
+                  <th>Modo</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="historial-body">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Cargando historial...</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- Submit -->
-        <button class="btn-generar" id="btn-generar" onclick="generar()" style="margin-top: 24px;">
-          <div class="spinner"></div>
-          <span class="btn-text">⚙️ &nbsp;Generar Script</span>
-        </button>
+        <!-- ================= EDITOR DE JS ================= -->
+        <div id="form-editor" style="display: none;">
+          <div class="editor-file-select">
+            <div class="field" style="flex: 1;">
+              <label>Archivo JS <span class="req">*</span></label>
+              <select id="editor-file-select">
+                <option value="">Cargando archivos...</option>
+              </select>
+            </div>
+            <button class="editor-load-btn" id="btn-editor-load" onclick="editorCargarAreas()">📂 Cargar Áreas</button>
+          </div>
+
+          <div id="editor-client-row" style="display: none; margin-top: 16px; background: rgba(236,72,153,0.05); border: 1px solid rgba(236,72,153,0.15); border-radius: 12px; padding: 16px;">
+            <div class="field">
+              <label>Cliente (Para Documentos)</label>
+              <select id="editor-cliente-select">
+                <option value="">— Ninguno (No subir documentos) —</option>
+              </select>
+              <span class="hint">Si seleccionas un cliente, los documentos que subas en cada área se guardarán en su respectiva carpeta.</span>
+            </div>
+          </div>
+
+          <div id="editor-summary" style="display: none; margin-top: 20px;"></div>
+          <div id="editor-areas-container" style="margin-top: 16px;"></div>
+
+          <div id="editor-controls" style="display: none; margin-top: 20px;">
+            <div class="editor-actions">
+              <button class="btn-editor-add" onclick="editorAgregarArea()">＋ Agregar Área</button>
+              <button class="btn-editor-save" id="btn-editor-save" onclick="editorGuardar()">💾 Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= GIT ================= -->
+        <div id="form-git" style="display: none;">
+          <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: center;">
+            <h3 style="margin: 0; flex: 1; color: var(--text);">Gestión Git</h3>
+            <button class="btn-generar" style="width: auto; padding: 10px 16px; font-size: 0.85rem;" onclick="gitCargarStatus()">
+              🔄 Actualizar estado
+            </button>
+          </div>
+
+          <div id="git-status-panel" class="git-panel">
+            <div class="git-panel-title">Estado del repositorio</div>
+            <div id="git-branch" class="git-panel-line">Rama: —</div>
+            <div id="git-commit" class="git-panel-line">Último commit: —</div>
+            <div id="git-files" class="git-panel-line">Cambios locales: —</div>
+          </div>
+
+          <div class="git-actions">
+            <button class="btn-generar" style="background: linear-gradient(135deg, #0ea5e9, #2563eb);" onclick="gitSolicitarPull()">
+              ⬇️ Bajar cambios
+            </button>
+            <div class="field">
+              <label>Mensaje de commit para subir</label>
+              <input type="text" id="git-commit-message" placeholder="Ej: Ajuste de areas y documentos" />
+            </div>
+            <button class="btn-generar" style="background: linear-gradient(135deg, #22c55e, #16a34a);" onclick="gitSolicitarPush()">
+              ⬆️ Subir cambios
+            </button>
+          </div>
+
+          <div class="git-install-wrap">
+            <div class="hint">Usa este botón después de bajar cambios cuando se actualicen librerías del proyecto.</div>
+            <button class="btn-generar" id="btn-git-install" style="margin-top: 10px; background: linear-gradient(135deg, #7c3aed, #5b21b6);" onclick="gitSolicitarInstallDeps()">
+              📦 Instalar dependencias (npm install)
+            </button>
+          </div>
+
+          <div class="git-panel" style="margin-top: 20px;">
+            <div class="git-panel-title">Resultado</div>
+            <pre id="git-result" class="git-result">Aún no hay ejecuciones.</pre>
+          </div>
+
+          <!-- Modales Git -->
+          <div id="git-modal-pull" class="git-modal-overlay">
+            <div class="git-modal">
+              <h4>Confirmar bajar cambios</h4>
+              <p>Se ejecutará <code>git pull --ff-only</code>. ¿Deseas continuar?</p>
+              <div class="git-modal-actions">
+                <button type="button" class="git-modal-btn secondary" onclick="gitCerrarModal('git-modal-pull')">Cancelar</button>
+                <button type="button" class="git-modal-btn primary" onclick="gitConfirmarPull()">Confirmar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="git-modal-force-pull" class="git-modal-overlay">
+            <div class="git-modal">
+              <h4>Forzar actualización</h4>
+              <p>Hay conflictos o cambios locales. Si continúas, se descartarán los cambios locales y este equipo quedará exactamente como el repositorio remoto.</p>
+              <div class="git-modal-actions">
+                <button type="button" class="git-modal-btn secondary" onclick="gitCerrarModal('git-modal-force-pull')">Cancelar</button>
+                <button type="button" class="git-modal-btn danger" onclick="gitConfirmarPullForzado()">Sí, forzar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="git-modal-push" class="git-modal-overlay">
+            <div class="git-modal">
+              <h4>Confirmar subida</h4>
+              <p id="git-push-confirm-text">Se hará add, commit y push.</p>
+              <div class="git-modal-actions">
+                <button type="button" class="git-modal-btn secondary" onclick="gitCerrarModal('git-modal-push')">Cancelar</button>
+                <button type="button" class="git-modal-btn primary" onclick="gitConfirmarPush()">Confirmar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="git-modal-install" class="git-modal-overlay">
+            <div class="git-modal">
+              <h4>Confirmar instalación</h4>
+              <p>Se ejecutará <code>npm install</code> en este equipo. Esto puede tardar varios minutos. ¿Deseas continuar?</p>
+              <div class="git-modal-actions">
+                <button type="button" class="git-modal-btn secondary" onclick="gitCerrarModal('git-modal-install')">Cancelar</button>
+                <button type="button" class="git-modal-btn primary" onclick="gitConfirmarInstallDeps()">Confirmar instalación</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast (Shared) -->
+        <div class="toast" id="toast" style="margin-top: 24px;">
+          <span class="toast-icon" id="toast-icon"></span>
+          <div>
+            <div class="toast-title" id="toast-title"></div>
+            <div id="toast-body"></div>
+          </div>
+        </div>
+
       </div>
-      
-      <!-- ================= FORMULARIO CONSULTA ================= -->
-      <div id="form-consulta" style="display: none;">
-        <div class="field">
-          <label>Términos a buscar <span class="req">*</span></label>
-          <textarea id="consulta-input" style="min-height: 150px;" placeholder="Pega aquí las celdas, números de áreas, o cualquier término que desees buscar. Puedes separarlos por comas o saltos de línea."></textarea>
-          <span class="hint">Se buscará cada término individualmente dentro del contenido de todos los archivos .js</span>
-        </div>
-        
-        <button class="btn-generar" id="btn-consultar" onclick="consultar()" style="margin-top: 24px; background: linear-gradient(135deg, var(--accent2), #4f46e5);">
-          <div class="spinner"></div>
-          <span class="btn-text">🔎 &nbsp;Buscar en Repositorio</span>
-        </button>
-
-        <div id="consulta-results-container" style="display: none; margin-top: 24px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
-          <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text);">Resultados de Búsqueda</h3>
-          <div id="consulta-results-body"></div>
-        </div>
-      </div>
-
-      <!-- ================= FORMULARIO HISTORIAL ================= -->
-      <div id="form-historial" style="display: none;">
-        <div style="display: flex; gap: 12px; margin-bottom: 24px; align-items: center;">
-          <h3 style="margin: 0; flex: 1; color: var(--text);">Bitácora de Generación</h3>
-          <button class="btn-generar" style="width: auto; padding: 10px 16px; font-size: 0.85rem; background: #10b981;" onclick="window.location.href='/api/historial/exportar?formato=xlsx'">
-            📊 Descargar Excel
-          </button>
-          <button class="btn-generar" style="width: auto; padding: 10px 16px; font-size: 0.85rem; background: #6366f1;" onclick="window.location.href='/api/historial/exportar?formato=csv'">
-            📄 Descargar CSV
-          </button>
-        </div>
-
-        <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto;">
-          <table class="results-table" id="tabla-historial">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Archivo</th>
-                <th>Cliente</th>
-                <th>Áreas</th>
-                <th>Modo</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="historial-body">
-              <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Cargando historial...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Toast (Shared) -->
-      <div class="toast" id="toast" style="margin-top: 24px;">
-        <span class="toast-icon" id="toast-icon"></span>
-        <div>
-          <div class="toast-title" id="toast-title"></div>
-          <div id="toast-body"></div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <script>
-    let modoActual = 'prueba';
-    let areaCount = 0;
-    let reglamentariosFiles = []; // Persistent list for many-by-many uploads
-
-    // ── Mode ──────────────────────────────────────────
-    function setModo(modo) {
-      modoActual = modo;
-      document.getElementById('btn-prueba').className = modo === 'prueba' ? 'mode-btn active-prueba' : 'mode-btn';
-      document.getElementById('btn-real').className   = modo === 'real'   ? 'mode-btn active-real'   : 'mode-btn';
-      document.getElementById('btn-consulta').className = modo === 'consulta' ? 'mode-btn active-consulta' : 'mode-btn';
-      document.getElementById('btn-historial').className = modo === 'historial' ? 'mode-btn active-historial' : 'mode-btn';
-      
-      document.getElementById('desc-prueba').className = 'mode-desc mode-desc-prueba' + (modo === 'prueba' ? ' active' : '');
-      document.getElementById('desc-real').className   = 'mode-desc mode-desc-real'   + (modo === 'real'   ? ' active' : '');
-      document.getElementById('desc-consulta').className = 'mode-desc mode-desc-consulta' + (modo === 'consulta' ? ' active' : '');
-      document.getElementById('desc-historial').className = 'mode-desc mode-desc-historial' + (modo === 'historial' ? ' active' : '');
-      
-      document.getElementById('warning-real').className = 'warning-real' + (modo === 'real' ? ' visible' : '');
-      
-      // Toggle views
-      if (modo === 'consulta') {
-        document.getElementById('form-generador').style.display = 'none';
-        document.getElementById('form-historial').style.display = 'none';
-        document.getElementById('form-consulta').style.display = 'block';
-      } else if (modo === 'historial') {
-        document.getElementById('form-generador').style.display = 'none';
-        document.getElementById('form-consulta').style.display = 'none';
-        document.getElementById('form-historial').style.display = 'block';
-        cargarHistorial(); // Load history when viewing the tab
-      } else {
-        document.getElementById('form-consulta').style.display = 'none';
-        document.getElementById('form-historial').style.display = 'none';
-        document.getElementById('form-generador').style.display = 'block';
-      }
-      
-      hideToast();
-    }
-
-    // ── Area Cards ────────────────────────────────────
-    function agregarArea() {
-      areaCount++;
-      const container = document.getElementById('areas-container');
-      const id = areaCount;
-
-      const card = document.createElement('div');
-      card.className = 'area-card';
-      card.id = `area-card-${id}`;
-      card.innerHTML = `
-        <div class="area-card-header">
-          <div class="area-card-title">
-            <span class="area-num">#${id}</span>
-            Área ${id}
-          </div>
-          <div style="display:flex; gap: 8px; align-items: center;">
-            <input type="file" id="excel-file-${id}" accept=".xlsx,.xls" style="display:none;" onchange="procesarExcel(${id}, this)" />
-            <button class="btn-excel" onclick="document.getElementById('excel-file-${id}').click()" title="Autocompletar área desde archivo Excel">
-              📊 Excel
-            </button>
-            ${id > 1 ? `<button class="btn-remove-area" onclick="eliminarArea(${id})" title="Eliminar esta área">✕</button>` : ''}
-          </div>
-        </div>
-        <div class="area-card-body">
-          <div class="area-row">
-            <div class="field">
-              <label>Nombre del Área <span class="req">*</span></label>
-              <input type="text" id="nombre-${id}" placeholder="Ej: 507531"/>
-            </div>
-            <div class="field">
-              <label>Celda de Referencia <span class="req">*</span></label>
-              <input type="text" id="referencia-${id}" placeholder="Ej: 18P09K21D02I"/>
-            </div>
-          </div>
-          <div class="field">
-            <label>Celdas (separadas por coma) <span class="req">*</span></label>
-            <textarea id="celdas-${id}" placeholder="18P09K04K05R, 18N05N14M12R, ..." oninput="autoCompletarReferencia(${id}, this)"></textarea>
-          </div>
-          <!-- Upload section for Area -->
-          <div class="area-row" style="margin-top: 4px; border-top: 1px dashed var(--border); padding-top: 12px;">
-            <div class="field">
-              <label>Certificado Ambiental (.pdf)</label>
-              <input type="file" id="certificado-${id}" accept=".pdf" />
-            </div>
-            <div class="field">
-              <label>Sheips (.zip)</label>
-              <input type="file" id="sheips-${id}" accept=".zip" />
-            </div>
-          </div>
-        </div>`;
-
-      container.appendChild(card);
-      actualizarContador();
-
-      // smooth scroll to new card
-      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function eliminarArea(id) {
-      const card = document.getElementById(`area-card-${id}`);
-      if (card) {
-        card.style.animation = 'none';
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(-8px)';
-        card.style.transition = 'all 0.2s';
-        setTimeout(() => { card.remove(); actualizarContador(); }, 200);
-      }
-    }
-
-    function actualizarContador() {
-      const cards = document.querySelectorAll('.area-card');
-      document.getElementById('areas-count').textContent = cards.length;
-    }
-
-    // Extrae la primera celda pegada (para Referencia) y auto-formatea la caja de Celdas
-    function autoCompletarReferencia(id, el) {
-      if (!el.value) return;
-      
-      // Separamos por comas, saltos de línea, tabuladores o múltiples espacios
-      let partes = el.value.split(/[\s,;-]+/);
-      
-      // Filtramos partes vacías (por si había dobles espacios)
-      partes = partes.filter(p => p.trim() !== '');
-
-      if (partes.length > 0) {
-        // 1. Auto-completar Referencia con la primera celda (si está vacía)
-        const refField = document.getElementById(`referencia-${id}`);
-        if (!refField.value) {
-          refField.value = partes[0];
-        }
-        
-        // 2. Auto-formatear la caja de Celdas (solo si el usuario pegó más de 1 celda, para no interrumpir el tipeo normal)
-        if (partes.length > 1 || el.value.includes('\n') || el.value.includes('\t')) {
-           el.value = partes.join(', ');
-        }
-      }
-    }
-
-    // ── Excel Import ──────────────────────────────────
-    async function procesarExcel(id, inputEl) {
-      if (!inputEl.files || inputEl.files.length === 0) return;
-      const file = inputEl.files[0];
-      const formData = new FormData();
-      formData.append('excel', file);
-
-      showToast('search', '⏳ Cargando Excel', `Procesando ${file.name}...`);
-      
-      try {
-        const res = await fetch('/api/leer-excel', {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        
-        if (data.ok) {
-          document.getElementById(`nombre-${id}`).value = data.nombreArea;
-          document.getElementById(`celdas-${id}`).value = data.celdas.join(', ');
-          if (data.celdas.length > 0) {
-            document.getElementById(`referencia-${id}`).value = data.celdas[0];
-          }
-          showToast('success', '✅ Excel importado', `Se cargaron ${data.celdas.length} celdas en el Área ${id}.`);
-        } else {
-          showToast('error', '❌ Error en Excel', data.error);
-        }
-      } catch (e) {
-        showToast('error', '❌ Error de conexión', 'No se pudo leer el archivo Excel. Verifica el servidor.');
-      }
-      
-      inputEl.value = ''; // Reset for re-upload if needed
-    }
-
-    // ── Document Automation ───────────────────────────
-    document.getElementById('clienteSeleccionado').addEventListener('change', (e) => {
-      const inputNuevo = document.getElementById('clienteNuevo');
-      if (e.target.value === 'Nuevo') {
-        inputNuevo.style.display = 'block';
-      } else {
-        inputNuevo.style.display = 'none';
-        inputNuevo.value = '';
-      }
-    });
-
-    function getClienteNombre() {
-      const sel = document.getElementById('clienteSeleccionado').value;
-      if (sel === 'Nuevo') return document.getElementById('clienteNuevo').value.trim();
-      return sel;
-    }
-
-    async function verificarDocumentosReglamentarios(inputEl) {
-      if (!inputEl.files || inputEl.files.length === 0) return;
-      const cliente = getClienteNombre();
-      
-      if (!cliente) {
-        alert("⚠️ Por favor selecciona o escribe el nombre del cliente primero para verificar los documentos.");
-        inputEl.value = '';
-        return;
-      }
-
-      for (const file of inputEl.files) {
-        // Evitaremos duplicados en la lista local antes de verificar el servidor
-        if (reglamentariosFiles.some(f => f.name === file.name)) continue;
-
-        try {
-          const res = await fetch('/api/verificar-documento', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cliente, fileName: file.name })
-          });
-          const data = await res.json();
-          
-          let proceed = true;
-          if (data.ok && data.existe) {
-            proceed = confirm(`⚠️ El documento "${file.name}" ya existe para el cliente ${cliente}.\n\n¿Desea cargarlo? El anterior será reemplazado.`);
-          }
-          
-          if (proceed) {
-            reglamentariosFiles.push(file);
-          }
-        } catch (e) {
-          console.error("Error verificando documento:", e);
-          reglamentariosFiles.push(file); // Fallback to add anyway
-        }
-      }
-      
-      inputEl.value = ''; // Reset input to allow adding same file again if desired (though list handles dupes)
-      renderizarListaReglamentarios();
-    }
-
-    function renderizarListaReglamentarios() {
-      const container = document.getElementById('reglamentarios-list');
-      container.innerHTML = reglamentariosFiles.map((file, idx) => `
-        <div class="file-item">
-          <span>📄 ${file.name}</span>
-          <span class="file-item-remove" onclick="removerArchivoReg(${idx})">✕</span>
-        </div>
-      `).join('');
-    }
-
-    function removerArchivoReg(index) {
-      reglamentariosFiles.splice(index, 1);
-      renderizarListaReglamentarios();
-    }
-
-    // ── Load Scripts ──────────────────────────────────
-    async function loadScripts() {
-      const sel = document.getElementById('archivoBase');
-      try {
-        const res = await fetch('/api/scripts');
-        const scripts = await res.json();
-        sel.innerHTML = '<option value="">— Selecciona un script —</option>' +
-          scripts.map(s => `<option value="${s}">${s}</option>`).join('');
-      } catch (e) {
-        sel.innerHTML = '<option value="">Error al cargar scripts</option>';
-      }
-    }
-
-    // ── Generate ──────────────────────────────────────
-    async function generar() {
-      hideToast();
-
-      // Collect areas from cards
-      const cards = document.querySelectorAll('.area-card');
-      if (cards.length === 0) {
-        showToast('error', '⚠️ Sin áreas', 'Agrega al menos una área para continuar.');
-        return;
-      }
-
-      const areas = [];
-      for (const card of cards) {
-        const idStr = card.id.replace('area-card-', '');
-        const nombre     = document.getElementById(`nombre-${idStr}`).value.trim();
-        const referencia = document.getElementById(`referencia-${idStr}`).value.trim();
-        const celdas     = document.getElementById(`celdas-${idStr}`).value.trim();
-
-        if (!nombre || !referencia || !celdas) {
-          showToast('error', '⚠️ Campos incompletos', `El Área #${idStr} tiene campos vacíos. Por favor complétalos.`);
-          document.getElementById(`nombre-${idStr}`).focus();
-          return;
-        }
-        areas.push({ nombre, referencia, celdas });
-      }
-
-      const archivoBase  = document.getElementById('archivoBase').value;
-      const nombreSalida = document.getElementById('nombreSalida').value.trim();
-
-      if (!archivoBase)  { showToast('error', '⚠️ Falta el script base', 'Selecciona un script base.'); return; }
-      if (!nombreSalida) { showToast('error', '⚠️ Falta el nombre', 'Escribe el nombre del archivo de salida.'); return; }
-
-      const btn = document.getElementById('btn-generar');
-      btn.classList.add('loading');
-      btn.disabled = true;
-
-      try {
-        const res = await fetch('/api/generar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ archivoBase, modo: modoActual, areas, nombreSalida }),
-        });
-        const data = await res.json();
-
-        if (data.ok) {
-          // --- Process Documents if a client is selected ---
-          const cliente = getClienteNombre();
-          let docsMensaje = '';
-          if (cliente) {
-            const formData = new FormData();
-            formData.append('cliente', cliente);
-            let hasFiles = false;
-
-            // Docs Reglamentarios Globales (from persistent list)
-            if (reglamentariosFiles.length > 0) {
-              for (const file of reglamentariosFiles) {
-                formData.append('reglamentario', file);
-                hasFiles = true;
-              }
-            }
-
-            // Docs por Área
-            for (const area of areas) {
-              // We need the internal ID for dom lookup. It's stored implicitly via querySelector order, 
-              // but safer to look up using the value. We built areas array reading the original IDs.
-              // We refactored loop to read area properties from DOM directly above.
-              // Let's re-query to match names strictly.
-            }
-            
-            // Re-Iterate to append area documents
-            const cards = document.querySelectorAll('.area-card');
-            for (const card of cards) {
-               const idStr = card.id.replace('area-card-', '');
-               const nombreArea = document.getElementById(`nombre-${idStr}`).value.trim();
-               
-               const certInput = document.getElementById(`certificado-${idStr}`);
-               if (certInput && certInput.files.length > 0) {
-                 formData.append(`certificado-${nombreArea}`, certInput.files[0]);
-                 hasFiles = true;
-               }
-
-               const sheipsInput = document.getElementById(`sheips-${idStr}`);
-               if (sheipsInput && sheipsInput.files.length > 0) {
-                 formData.append(`sheips-${nombreArea}`, sheipsInput.files[0]);
-                 hasFiles = true;
-               }
-            }
-
-            if (hasFiles) {
-               try {
-                 const dRes = await fetch('/api/subir-documentos', {
-                   method: 'POST',
-                   body: formData
-                 });
-                 const dData = await dRes.json();
-                 if (dData.ok) {
-                   docsMensaje = `<br><br>📂 <strong>Documentos:</strong> Se guardaron ${dData.count} archivos correctamente en la carpeta de ${cliente}.`;
-                 } else {
-                   docsMensaje = `<br><br>⚠️ <strong>Documentos:</strong> Hubo un error guardándolos (${dData.error})`;
-                 }
-               } catch (e) {
-                 docsMensaje = `<br><br>⚠️ <strong>Documentos:</strong> Falló la conexión al subir documentos.`;
-               }
-            }
-          }
-
-          const modoLabel = modoActual === 'prueba' ? '🧪 Modo Prueba' : '🚀 Modo Real';
-          const areaList = areas.map((a, i) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${a.nombre}</strong>`).join('');
-          showToast('success', `✅ Proceso completado exitosamente`,
-            `Archivo generado: <strong>${data.archivo}</strong><br>Modo: <strong>${modoLabel}</strong><br>Áreas inyectadas (${areas.length}):${areaList}${docsMensaje}<br><br>Ejecuta el script con: <code>node "${data.archivo}"</code>`
-          );
-          
-          // Reset file inputs automatically after success
-          reglamentariosFiles = [];
-          renderizarListaReglamentarios();
-          document.querySelectorAll('.area-card input[type="file"]').forEach(f => f.value = '');
-
-        } else {
-          showToast('error', '❌ Error al generar', data.error);
-        }
-      } catch (e) {
-        showToast('error', '❌ Error de conexión', 'No se pudo conectar con el servidor. Verifica que <code>node server.js</code> esté corriendo.');
-      }
-
-      btn.classList.remove('loading');
-      btn.disabled = false;
-    }
-
-    function showToast(type, title, body) {
-      const t = document.getElementById('toast');
-      document.getElementById('toast-title').textContent = title;
-      document.getElementById('toast-body').innerHTML = body;
-      document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : (type === 'search' ? '🔎' : '❌');
-      t.className = `toast ${type === 'search' ? 'success' : type} visible`;
-      t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function hideToast() { document.getElementById('toast').className = 'toast'; }
-
-    // ── Search (Consulta) ─────────────────────────────
-    async function consultar() {
-      hideToast();
-      const input = document.getElementById('consulta-input').value;
-      if (!input.trim()) {
-        showToast('error', '⚠️ Campo vacío', 'Pega al menos una celda para buscar.');
-        return;
-      }
-      
-      // Parse query terms
-      let queries = input.split(/[\s,;-]+/);
-      queries = queries.filter(q => q.trim() !== '');
-      // Deduplicate queries
-      queries = [...new Set(queries)];
-
-      if (queries.length === 0) return;
-
-      const btn = document.getElementById('btn-consultar');
-      btn.classList.add('loading');
-      btn.disabled = true;
-      document.getElementById('consulta-results-container').style.display = 'none';
-
-      try {
-        const res = await fetch('/api/consultar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ queries }),
-        });
-        const data = await res.json();
-
-        if (data.ok) {
-          showToast('search', `Búsqueda Completada`, `Se procesaron ${queries.length} términos.`);
-          renderizarResultados(data.resultados);
-        } else {
-          showToast('error', '❌ Error al consultar', data.error);
-        }
-      } catch (e) {
-        showToast('error', '❌ Error de conexión', 'No se pudo conectar con el servidor.');
-      }
-
-      btn.classList.remove('loading');
-      btn.disabled = false;
-    }
-
-    function renderizarResultados(resultados) {
-      const container = document.getElementById('consulta-results-container');
-      const body = document.getElementById('consulta-results-body');
-      
-      let html = '<table class="results-table">';
-      html += '<tr><th style="width: 30%">Término</th><th>Archivos Encontrados</th></tr>';
-      
-      for (const [query, files] of Object.entries(resultados)) {
-        html += '<tr>';
-        html += `<td><strong>${query}</strong></td>`;
-        html += '<td>';
-        if (files.length === 0) {
-          html += '<span class="badge-missing">No encontrado</span>';
-        } else {
-          files.forEach(f => {
-            html += `<span class="badge-found">${f}</span>`;
-          });
-        }
-        html += '</td>';
-        html += '</tr>';
-      }
-      html += '</table>';
-      
-      body.innerHTML = html;
-      container.style.display = 'block';
-    }
-
-    // ── Historial ─────────────────────────────────────
-    async function cargarHistorial() {
-      const tbody = document.getElementById('historial-body');
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Cargando historial...</td></tr>';
-      try {
-        const res = await fetch('/api/historial');
-        const data = await res.json();
-        
-        if (data.ok && data.historial.length > 0) {
-          tbody.innerHTML = data.historial.map(row => {
-            const fechaRow = new Date(row.fecha).toLocaleString();
-            const badgeClass = row.modo.includes('Importado') ? 'badge-missing' : 'badge-found';
-            const areasStr = Array.isArray(row.areas) ? row.areas.join(', ') : '';
-            return `
-              <tr>
-                <td style="white-space:nowrap; font-size:0.8rem;">${fechaRow}</td>
-                <td><strong>${row.nombreSalida}</strong></td>
-                <td>${row.cliente}</td>
-                <td><span style="font-size: 0.75rem; max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${areasStr}">${areasStr}</span></td>
-                <td><span class="${badgeClass}">${row.modo}</span></td>
-                <td>${row.estado}</td>
-              </tr>
-            `;
-          }).join('');
-        } else {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No hay registros en el historial aún.</td></tr>';
-        }
-      } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #fca5a5;">Error cargando historial de servidor.</td></tr>';
-      }
-    }
-
-    // ── Init ──────────────────────────────────────────
-    loadScripts();
-    agregarArea(); // Start with one area by default
-  </script>
+  <script src="/js/app-core.js"></script>
+  <script src="/js/app-bat.js"></script>
+  <script src="/js/app-generador.js"></script>
+  <script src="/js/app-consulta.js"></script>
+  <script src="/js/app-historial.js"></script>
+  <script src="/js/app-editor.js"></script>
+  <script src="/js/app-git.js"></script>
+  <script src="/js/app-init.js"></script>
 </body>
 </html>
