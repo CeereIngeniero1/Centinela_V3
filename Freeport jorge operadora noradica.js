@@ -29,7 +29,7 @@ const EquipoActual = EquiposGenerales[NombreEquipo];
 console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "Freeport"; // Collective, NegoYMetales, Freeport, Provenza
+const Empresa = "Operadora"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
 const Datos_Economicos = Informacion_Economica[Empresa];
 const Datos_Geologos = Geologos[Empresa];
