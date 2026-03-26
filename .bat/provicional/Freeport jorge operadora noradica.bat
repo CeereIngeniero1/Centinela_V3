@@ -1,3 +1,3 @@
 
 
-start /d "../../../../" node "Freeport jorge operadora noradica.js"
+start /d "../../../" node "Freeport jorge operadora noradica.js"
