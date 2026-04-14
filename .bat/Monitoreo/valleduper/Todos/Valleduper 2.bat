@@ -1,1 +1,0 @@
-start /d "../../../../" node "Valleduper 2.js"

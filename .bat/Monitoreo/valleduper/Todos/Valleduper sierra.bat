@@ -1,1 +1,0 @@
-start /d "../../../../" node "Valleduper sierra.js"

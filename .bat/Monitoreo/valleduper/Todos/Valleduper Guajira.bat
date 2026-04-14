@@ -1,0 +1,1 @@
+start /d "../../../../" node "Valleduper Guajira.js"
