@@ -15,9 +15,13 @@ const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
 const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
 const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
- 
+// console.log(Informacion_Empresas);
+// console.log(Informacion_Economica);
+// console.log(EquiposGenerales);
+// console.log(Geologos);
+// console.log(Contadores);
 
- 
+
 const NombreEquipo = os.hostname();
 console.log(" Nombre del equipo: ", NombreEquipo);
 
@@ -34,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '77008';
-const pass2 = 'S13rra4zul202505#';
-const Agente = 1;
+const user2 = '83949';
+const pass2 = 'JorgeC2025.';
+const Agente = 0;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -1651,7 +1655,7 @@ function Mineria(browser, Pin,) {
       await Detalles_de_area(page);
     }
 
-
+    
     Pasolotecnico = await Informacion_tecnica(page);
     if (Pasolotecnico) {
     } else {
@@ -1736,6 +1740,82 @@ function Mineria(browser, Pin,) {
 
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
+    await continPag[1].click();
+
+    clearTimeout(Radisegundo);
+    await page.waitForNavigation({
+      waitUntil: "networkidle0",
+    });
+    console.log(" si navego ");
+
+
+
+
+    let RadiTercero = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 120000);
+
+    //  await page.waitForTimeout(1000000);
+
+
+    while (true) {
+
+      let resultado = await RECAPTCHA(page);
+      if (resultado == 1) {
+        break;
+      }
+
+    }
+
+    var imagendeCaptcha = 0;
+    while (true) {
+      await page.waitForTimeout(1500);
+
+      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
+        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
+        if (resultado === 1) {
+          clearTimeout(RadiTercero);
+          break;
+        } else if (resultado === 2) {
+          console.log("El captcha sigue en modo reto de imagenes");
+          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
+          // lO RETIRO PORQUE NO VALE LA PENA
+          // Mineria(browser, Pin);
+          imagendeCaptcha = 1;
+        } else {
+          // await RECAPTCHA(page);
+        }
+
+      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
+        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+        if (posibleContinuar.length > 0) {
+          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+          console.log([posibleContinuar]);
+          await posibleContinuar[1].click();
+          await page.waitForNavigation({
+            waitUntil: "networkidle0",
+          });
+          await RECAPTCHA(page);
+        }
+      }
+    }
+
+    // await page.waitForTimeout(1000000);
+
+    console.log("51. Bóton Radicar");
+
+    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
+    console.log("Este es el boton radicar : " + btnRadicar1);
+
+    console.log("Le di click");
+
+    try {
+      await btnRadicar1[1].click();
+    } catch (exepcion) {
+      console.log("La 1 tampoco Y_Y");
+    }
 
 
     //CORREO RADICACION
@@ -1797,8 +1877,8 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    to: '  Soporte2ceere@gmail.com',
+    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    //to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -2099,739 +2179,20 @@ const Areas =
     // // //   NombreArea: "prueba",
     // // //   Referencia: "18N05N14M12R",
     // // //   Celdas: ["18N05N14M12R"]
-    // // // }*/
-    {
-      "NombreArea": "500935",
-      "Referencia": "18P09N21P08R",
-      "Celdas": [
-        "18P09N21P08R"
-      ]
-    },
-    {
-      "NombreArea": "500936",
-      "Referencia": "18P12A05H02M",
-      "Celdas": [
-        "18P12A05H02M"
-      ]
-    },
-    {
-      "NombreArea": "501050",
-      "Referencia": "18P09N22K13A",
-      "Celdas": [
-        "18P09N22K13A"
-      ]
-    },
-    {
-      "NombreArea": "501132",
-      "Referencia": "18P12B22C17F",
-      "Celdas": [
-        "18P12B22C17F"
-      ]
-    },
-    {
-      "NombreArea": "501134",
-      "Referencia": "18P12E15D04Y",
-      "Celdas": [
-        "18P12E15D04Y"
-      ]
-    },
-    {
-      "NombreArea": "501136",
-      "Referencia": "18P12F06A18D",
-      "Celdas": [
-        "18P12F06A18D"
-      ]
-    },
-    {
-      "NombreArea": "501139",
-      "Referencia": "18P12F11I07Y",
-      "Celdas": [
-        "18P12F11I07Y"
-      ]
-    },
-    {
-      "NombreArea": "501246",
-      "Referencia": "18P09N07G19J",
-      "Celdas": [
-        "18P09N07G19J"
-      ]
-    },
-    {
-      "NombreArea": "501247",
-      "Referencia": "18P09N03E24H",
-      "Celdas": [
-        "18P09N03E24H"
-      ]
-    },
-    {
-      "NombreArea": "501250",
-      "Referencia": "18P09J24L01W",
-      "Celdas": [
-        "18P09J24L01W"
-      ]
-    },
-    {
-      "NombreArea": "501258",
-      "Referencia": "18P09N07J03M",
-      "Celdas": [
-        "18P09N07J03M"
-      ]
-    },
-    {
-      "NombreArea": "501243",
-      "Referencia": "18P09N11K10Y",
-      "Celdas": [
-        "18P09N11K10Y"
-      ]
-    },
-    {
-      "NombreArea": "501282",
-      "Referencia": "18P09J19M23Y",
-      "Celdas": [
-        "18P09J19M23Y"
-      ]
-    },
-    {
-      "NombreArea": "501316",
-      "Referencia": "18P09K13E23R",
-      "Celdas": [
-        "18P09K13E23R"
-      ]
-    },
-    {
-      "NombreArea": "501605",
-      "Referencia": "18P09K08J23Y",
-      "Celdas": [
-        "18P09K08J23Y"
-      ]
-    },
-    {
-      "NombreArea": "501865",
-      "Referencia": "18P12F01P04T",
-      "Celdas": [
-        "18P12F01P04T"
-      ]
-    },
-    {
-      "NombreArea": "501997",
-      "Referencia": "18P09J25Q21W",
-      "Celdas": [
-        "18P09J25Q21W"
-      ]
-    },
-    {
-      "NombreArea": "503304",
-      "Referencia": "18P09K17M11E",
-      "Celdas": [
-        "18P09K17M11E"
-      ]
-    },
-    {
-      "NombreArea": "503307",
-      "Referencia": "18P09P01A24K",
-      "Celdas": [
-        "18P09P01A24K"
-      ]
-    },
-    {
-      "NombreArea": "503310",
-      "Referencia": "18P09K16Q24W",
-      "Celdas": [
-        "18P09K16Q24W"
-      ]
-    },
-    {
-      "NombreArea": "503311",
-      "Referencia": "18P09K21P04F",
-      "Celdas": [
-        "18P09K21P04F"
-      ]
-    },
-    {
-      "NombreArea": "503797",
-      "Referencia": "18P09K13M04J",
-      "Celdas": [
-        "18P09K13M04J"
-      ]
-    },
-    {
-      "NombreArea": "503812",
-      "Referencia": "18P09K08P23S",
-      "Celdas": [
-        "18P09K08P23S"
-      ]
-    },
-    {
-      "NombreArea": "503813",
-      "Referencia": "18P09G24P15F",
-      "Celdas": [
-        "18P09G24P15F"
-      ]
-    },
-    {
-      "NombreArea": "503814",
-      "Referencia": "18P09K08D10V",
-      "Celdas": [
-        "18P09K08D10V"
-      ]
-    },
-    {
-      "NombreArea": "503925",
-      "Referencia": "18P09K12Q20S",
-      "Celdas": [
-        "18P09K12Q20S"
-      ]
-    },
-    {
-      "NombreArea": "503926",
-      "Referencia": "18P09K13F21H",
-      "Celdas": [
-        "18P09K13F21H"
-      ]
-    },
-    {
-      "NombreArea": "503928",
-      "Referencia": "18P09K05A23W",
-      "Celdas": [
-        "18P09K05A23W"
-      ]
-    },
-    {
-      "NombreArea": "503931",
-      "Referencia": "18P09J25L22T",
-      "Celdas": [
-        "18P09J25L22T"
-      ]
-    },
-    {
-      "NombreArea": "503932",
-      "Referencia": "18P09K21P09Z",
-      "Celdas": [
-        "18P09K21P09Z"
-      ]
-    },
-    {
-      "NombreArea": "503998",
-      "Referencia": "18P09G25F12D",
-      "Celdas": [
-        "18P09G25F12D"
-      ]
-    },
-    {
-      "NombreArea": "504000",
-      "Referencia": "18P09K05I18C",
-      "Celdas": [
-        "18P09K05I18C"
-      ]
-    },
-    {
-      "NombreArea": "504150",
-      "Referencia": "18P09K17I21W",
-      "Celdas": [
-        "18P09K17I21W"
-      ]
-    },
-    {
-      "NombreArea": "504346",
-      "Referencia": "18P09N08H03C",
-      "Celdas": [
-        "18P09N08H03C"
-      ]
-    },
-    {
-      "NombreArea": "504629",
-      "Referencia": "18P09K04L04G",
-      "Celdas": [
-        "18P09K04L04G"
-      ]
-    },
-    {
-      "NombreArea": "504740",
-      "Referencia": "18P09K17N10W",
-      "Celdas": [
-        "18P09K17N10W"
-      ]
-    },
-    {
-      "NombreArea": "504741",
-      "Referencia": "18P09K22A12F",
-      "Celdas": [
-        "18P09K22A12F"
-      ]
-    },
-    {
-      "NombreArea": "504743",
-      "Referencia": "18P09K16Q07P",
-      "Celdas": [
-        "18P09K16Q07P"
-      ]
-    },
-    {
-      "NombreArea": "504746",
-      "Referencia": "18P09K21C19J",
-      "Celdas": [
-        "18P09K21C19J"
-      ]
-    },
-    {
-      "NombreArea": "504777",
-      "Referencia": "18P09K21H04J",
-      "Celdas": [
-        "18P09K21H04J"
-      ]
-    },
-    {
-      "NombreArea": "504779",
-      "Referencia": "18P09K09A18U",
-      "Celdas": [
-        "18P09K09A18U"
-      ]
-    },
-    {
-      "NombreArea": "504780",
-      "Referencia": "18P09K21D21J",
-      "Celdas": [
-        "18P09K21D21J"
-      ]
-    },
-    {
-      "NombreArea": "504781",
-      "Referencia": "18P09K18F06X",
-      "Celdas": [
-        "18P09K18F06X"
-      ]
-    },
-    {
-      "NombreArea": "504782",
-      "Referencia": "18P09K13G11U",
-      "Celdas": [
-        "18P09K13G11U"
-      ]
-    },
-    {
-      "NombreArea": "504783",
-      "Referencia": "18P09K04I23G",
-      "Celdas": [
-        "18P09K04I23G"
-      ]
-    },
-    {
-      "NombreArea": "504784",
-      "Referencia": "18P09K04J01F",
-      "Celdas": [
-        "18P09K04J01F"
-      ]
-    },
-    {
-      "NombreArea": "504910",
-      "Referencia": "18P09K17M22N",
-      "Celdas": [
-        "18P09K17M22N"
-      ]
-    },
-    {
-      "NombreArea": "505338",
-      "Referencia": "18P09K21D09J",
-      "Celdas": [
-        "18P09K21D09J"
-      ]
-    },
-    {
-      "NombreArea": "505339",
-      "Referencia": "18P09K16J13S",
-      "Celdas": [
-        "18P09K16J13S"
-      ]
-    },
-    {
-      "NombreArea": "505341",
-      "Referencia": "18P09K22B08V",
-      "Celdas": [
-        "18P09K22B08V"
-      ]
-    },
-    {
-      "NombreArea": "505342",
-      "Referencia": "18P09K22C01A",
-      "Celdas": [
-        "18P09K22C01A"
-      ]
-    },
-    {
-      "NombreArea": "505343",
-      "Referencia": "18P09K21D16A",
-      "Celdas": [
-        "18P09K21D16A"
-      ]
-    },
-    {
-      "NombreArea": "505344",
-      "Referencia": "18P09K17Q01A",
-      "Celdas": [
-        "18P09K17Q01A"
-      ]
-    },
-    {
-      "NombreArea": "505345",
-      "Referencia": "18P09K21D12C",
-      "Celdas": [
-        "18P09K21D12C"
-      ]
-    },
-    {
-      "NombreArea": "505346",
-      "Referencia": "18P09K22E01A",
-      "Celdas": [
-        "18P09K22E01A"
-      ]
-    },
-    {
-      "NombreArea": "505356",
-      "Referencia": "18P09K04K12B",
-      "Celdas": [
-        "18P09K04K12B"
-      ]
-    },
-    {
-      "NombreArea": "505357",
-      "Referencia": "18P09K12L11G",
-      "Celdas": [
-        "18P09K12L11G"
-      ]
-    },
-    {
-      "NombreArea": "505432",
-      "Referencia": "18P09K04I24T",
-      "Celdas": [
-        "18P09K04I24T"
-      ]
-    },
-    {
-      "NombreArea": "505433",
-      "Referencia": "18P09K04I09Q",
-      "Celdas": [
-        "18P09K04I09Q"
-      ]
-    },
-    {
-      "NombreArea": "505469",
-      "Referencia": "18P09K12H19K",
-      "Celdas": [
-        "18P09K12H19K"
-      ]
-    },
-    {
-      "NombreArea": "505578",
-      "Referencia": "18P09K04L21I",
-      "Celdas": [
-        "18P09K04L21I"
-      ]
-    },
-    {
-      "NombreArea": "505581",
-      "Referencia": "18P09K04E24A",
-      "Celdas": [
-        "18P09K04E24A"
-      ]
-    },
-    {
-      "NombreArea": "505589",
-      "Referencia": "18P09K08G19Z",
-      "Celdas": [
-        "18P09K08G19Z"
-      ]
-    },
-    {
-      "NombreArea": "505754",
-      "Referencia": "18P09K18A21B",
-      "Celdas": [
-        "18P09K18A21B"
-      ]
-    },
-    {
-      "NombreArea": "505774",
-      "Referencia": "18P09K13G02J",
-      "Celdas": [
-        "18P09K13G02J"
-      ]
-    },
-    {
-      "NombreArea": "505905",
-      "Referencia": "18P09N04P01F",
-      "Celdas": [
-        "18P09N04P01F"
-      ]
-    },
-    {
-      "NombreArea": "505949",
-      "Referencia": "18P09N05G11M",
-      "Celdas": [
-        "18P09N05G11M"
-      ]
-    },
-    {
-      "NombreArea": "506210",
-      "Referencia": "18P09K12Q03I",
-      "Celdas": [
-        "18P09K12Q03I"
-      ]
-    },
-    {
-      "NombreArea": "506793",
-      "Referencia": "18P09J25H25J",
-      "Celdas": [
-        "18P09J25H25J"
-      ]
-    },
-    {
-      "NombreArea": "506931",
-      "Referencia": "18P09K21G06G",
-      "Celdas": [
-        "18P09K21G06G"
-      ]
-    },
-    {
-      "NombreArea": "507529",
-      "Referencia": "18P09K04G16U",
-      "Celdas": [
-        "18P09K04G16U"
-      ]
-    },
-    {
-      "NombreArea": "507530",
-      "Referencia": "18P09K04H13G",
-      "Celdas": [
-        "18P09K04H13G"
-      ]
-    },
-    {
-      "NombreArea": "507532",
-      "Referencia": "18P09K04G09L",
-      "Celdas": [
-        "18P09K04G09L"
-      ]
-    },
-    {
-      "NombreArea": "507535",
-      "Referencia": "18P09K04Q23H",
-      "Celdas": [
-        "18P09K04Q23H"
-      ]
-    },
-    {
-      "NombreArea": "507540",
-      "Referencia": "18P09K04D14L",
-      "Celdas": [
-        "18P09K04D14L"
-      ]
-    },
-    {
-      "NombreArea": "507941",
-      "Referencia": "18P09G24L17N",
-      "Celdas": [
-        "18P09G24L17N"
-      ]
-    },
-    {
-      "NombreArea": "507942",
-      "Referencia": "18P09G24Q20F",
-      "Celdas": [
-        "18P09G24Q20F"
-      ]
-    },
-    {
-      "NombreArea": "507944",
-      "Referencia": "18P09K04I10F",
-      "Celdas": [
-        "18P09K04I10F"
-      ]
-    },
-    {
-      "NombreArea": "507945",
-      "Referencia": "18P09K04N16K",
-      "Celdas": [
-        "18P09K04N16K"
-      ]
-    },
-    {
-      "NombreArea": "508388",
-      "Referencia": "18P09K04J02N",
-      "Celdas": [
-        "18P09K04J02N"
-      ]
-    },
-    {
-      "NombreArea": "508389",
-      "Referencia": "18P09K21H03C",
-      "Celdas": [
-        "18P09K21H03C"
-      ]
-    },
-    {
-      "NombreArea": "508391",
-      "Referencia": "18P09K04N20S",
-      "Celdas": [
-        "18P09K04N20S"
-      ]
-    },
-    {
-      "NombreArea": "508393",
-      "Referencia": "18P09K17Q11R",
-      "Celdas": [
-        "18P09K17Q11R"
-      ]
-    },
-    {
-      "NombreArea": "508394",
-      "Referencia": "18P09K22B22G",
-      "Celdas": [
-        "18P09K22B22G"
-      ]
-    },
-    {
-      "NombreArea": "508396",
-      "Referencia": "18P09K21Q15T",
-      "Celdas": [
-        "18P09K21Q15T"
-      ]
-    },
-    {
-      "NombreArea": "508397",
-      "Referencia": "18P09J25G19V",
-      "Celdas": [
-        "18P09J25G19V"
-      ]
-    },
-    {
-      "NombreArea": "508408",
-      "Referencia": "18P09P01J01M",
-      "Celdas": [
-        "18P09P01J01M"
-      ]
-    },
-    {
-      "NombreArea": "508678",
-      "Referencia": "18P09K04F21R",
-      "Celdas": [
-        "18P09K04F21R"
-      ]
-    },
-    {
-      "NombreArea": "509139",
-      "Referencia": "18P09K13D03H",
-      "Celdas": [
-        "18P09K13D03H"
-      ]
-    },
-    {
-      "NombreArea": "509356",
-      "Referencia": "18P09G24Q08A",
-      "Celdas": [
-        "18P09G24Q08A"
-      ]
-    },
-    {
-      "NombreArea": "509388",
-      "Referencia": "18P09N04Q20J",
-      "Celdas": [
-        "18P09N04Q20J"
-      ]
-    },
-    {
-      "NombreArea": "509432",
-      "Referencia": "18P09G24P05B",
-      "Celdas": [
-        "18P09G24P05B"
-      ]
-    },
-    {
-      "NombreArea": "510021",
-      "Referencia": "18P09J25H10J",
-      "Celdas": [
-        "18P09J25H10J"
-      ]
-    },
-    {
-      "NombreArea": "511586",
-      "Referencia": "18P09K21L21G",
-      "Celdas": [
-        "18P09K21L21G"
-      ]
-    },
-    {
-      "NombreArea": "511596",
-      "Referencia": "18P09K21D02N",
-      "Celdas": [
-        "18P09K21D02N"
-      ]
-    },
-    {
-      "NombreArea": "511597",
-      "Referencia": "18P09K21D01U",
-      "Celdas": [
-        "18P09K21D01U"
-      ]
-    },
-    {
-      "NombreArea": "511598",
-      "Referencia": "18P09K21D01Y",
-      "Celdas": [
-        "18P09K21D01Y"
-      ]
-    },
-    {
-      "NombreArea": "511599",
-      "Referencia": "18P09K21H14S",
-      "Celdas": [
-        "18P09K21H14S"
-      ]
-    },
-    {
-      "NombreArea": "511601",
-      "Referencia": "18P09K21H14W",
-      "Celdas": [
-        "18P09K21H14W"
-      ]
-    },
-    {
-      "NombreArea": "511602",
-      "Referencia": "18P09K21H19A",
-      "Celdas": [
-        "18P09K21H19A"
-      ]
-    },
-    {
-      "NombreArea": "511603",
-      "Referencia": "18P09K21H18T",
-      "Celdas": [
-        "18P09K21H18T"
-      ]
-    },
-    {
-      "NombreArea": "511604",
-      "Referencia": "18P09K21Q06B",
-      "Celdas": [
-        "18P09K21Q06B"
-      ]
-    },
-    {
-      "NombreArea": "511605",
-      "Referencia": "18P09K21P23V",
-      "Celdas": [
-        "18P09K21P23V"
-      ]
-    },
-    {
-      "NombreArea": "511606",
-      "Referencia": "18P09P01A23X",
-      "Celdas": [
-        "18P09P01A23X"
-      ]
+    // // // }*/ 
+
+
+    {
+      NombreArea: "507945",
+      Referencia: "18P09K04M20C",
+      Celdas: ["18P09K04M20C, 18P09K04M20N, 18P09K04N16K, 18P09K04N11R, 18P09K04N11L, 18P09K04N16N, 18P09K04N11Z, 18P09K04N17L, 18P09K04N17G, 18P09K04N17S, 18P09K04N17C, 18P09K04N12S, 18P09K04N12Z, 18P09K04M20S, 18P09K04M15Y, 18P09K04M20P, 18P09K04N11V, 18P09K04N16R, 18P09K04N16G, 18P09K04N16S, 18P09K04N11X, 18P09K04N12V, 18P09K04N12X, 18P09K04N17D, 18P09K04N12Y, 18P09K04N17J, 18P09K04N12U, 18P09K04N12P, 18P09K04N18Q, 18P09K04N13V, 18P09K04N18G, 18P09K04M20U, 18P09K04M15U, 18P09K04N16A, 18P09K04N11K, 18P09K04N16C, 18P09K04N16D, 18P09K04N11Y, 18P09K04N17F, 18P09K04N12K, 18P09K04N17H, 18P09K04N17N, 18P09K04N12T, 18P09K04M20D, 18P09K04M20J, 18P09K04N16L, 18P09K04N11W, 18P09K04N16H, 18P09K04N11S, 18P09K04N16J, 18P09K04N16E, 18P09K04N17R, 18P09K04N12W, 18P09K04N12L, 18P09K04N17M, 18P09K04N17T, 18P09K04N13Q, 18P09K04N13K, 18P09K04N18B, 18P09K04N13W, 18P09K04N13S, 18P09K04N13M, 18P09K04M20X, 18P09K04M20M, 18P09K04M20T, 18P09K04M20I, 18P09K04M20Z, 18P09K04N16Q, 18P09K04N16X, 18P09K04N16Z, 18P09K04N17A, 18P09K04N17W, 18P09K04N18A, 18P09K04N18W, 18P09K04M20Y, 18P09K04M15T, 18P09K04M15N, 18P09K04M15Z, 18P09K04N11Q, 18P09K04N16B, 18P09K04N16I, 18P09K04N11M, 18P09K04N11N, 18P09K04N12R, 18P09K04N17U, 18P09K04N18V, 18P09K04N18L, 18P09K04N13L, 18P09K04M15P, 18P09K04N16W, 18P09K04N16Y, 18P09K04N16M, 18P09K04N16U, 18P09K04N12Q, 18P09K04N17X, 18P09K04N17Y, 18P09K04N12N, 18P09K04N18K, 18P09K04N18F, 18P09K04M20H, 18P09K04M20E, 18P09K04N16V, 18P09K04N16F, 18P09K04N16T, 18P09K04N11T, 18P09K04N16P, 18P09K04N11U, 18P09K04N11P, 18P09K04N17V, 18P09K04N17Q, 18P09K04N17K, 18P09K04N17B, 18P09K04N12M, 18P09K04N17I, 18P09K04N17Z, 18P09K04N17P, 18P09K04N17E, 18P09K04N18R, 18P09K04N13R"]
+    },
+     {
+      NombreArea: "508391",
+      Referencia: "18P09K04N18H",
+      Celdas: ["18P09K04N18H, 18P09K04N18Y, 18P09K04N18N, 18P09K04N19Z, 18P09K04N19P, 18P09K04N20H, 18P09K04N20I, 18P09K04N20U, 18P09K04P16V, 18P09K04P16W, 18P09K04P16S, 18P09K04P16H, 18P09K04P16D, 18P09K04P16J, 18P09K04P16E, 18P09K04P17V, 18P09K04P17W, 18P09K04P17S, 18P09K04P18F, 18P09K04P18U, 18P09K09C04Q, 18P09K04P19F, 18P09K09C14G, 18P09K09C09R, 18P09K04P19B, 18P09K09C04S, 18P09K04P19H, 18P09K04P19T, 18P09K09C04Z, 18P09K04P24U, 18P09K09C05K, 18P09K09C05F, 18P09K09C05A, 18P09K04P25F, 18P09K04P20A, 18P09K09C05S, 18P09K09C05G, 18P09K09C05B, 18P09K09C10Y, 18P09K09C10I, 18P09K04P20Y, 18P09K09C10E, 18P09K09C05E, 18P09K04P25P, 18P09K04P20U, 18P09K09D11A, 18P09K09D01K, 18P09K09D01X, 18P09K09D01M, 18P09K04Q21S, 18P09K04Q16M, 18P09K09D11D, 18P09K09D06I, 18P09K09D01D, 18P09K09D06Z, 18P09K09D01Z, 18P09K09D01E, 18P09K09D12F, 18P09K09D07F, 18P09K09D02F, 18P09K04Q17F, 18P09K09D07R, 18P09K04Q17W, 18P09K04Q17R, 18P09K04N18U, 18P09K04N19Q, 18P09K04N19K, 18P09K04N19B, 18P09K04N20Y, 18P09K04N20P, 18P09K04P16R, 18P09K04P16T, 18P09K04P16N, 18P09K04P17L, 18P09K04P17X, 18P09K04P18A, 18P09K09C09K, 18P09K09C04F, 18P09K04P24F, 18P09K09C04R, 18P09K04P24S, 18P09K04P19N, 18P09K09C09J, 18P09K09C04U, 18P09K04P20Q, 18P09K04P20F, 18P09K09C10W, 18P09K09C05R, 18P09K04P25H, 18P09K04P20X, 18P09K09C10D, 18P09K09C05N, 18P09K04P25Y, 18P09K04P25N, 18P09K09C10U, 18P09K09C05P, 18P09K04P20P, 18P09K04P20E, 18P09K09D06L, 18P09K09D01G, 18P09K04Q21L, 18P09K04Q21B, 18P09K04Q16R, 18P09K09D01S, 18P09K04Q21M, 18P09K04Q16C, 18P09K09D01N, 18P09K04Q21D, 18P09K09D06U, 18P09K04Q21P, 18P09K04Q16U, 18P09K09D07V, 18P09K09D07Q, 18P09K09D07A, 18P09K09D02Q, 18P09K04Q22V, 18P09K09D07W, 18P09K09D02L, 18P09K09D02G, 18P09K04Q22H, 18P09K04Q17H, 18P09K04N18I, 18P09K04N18D, 18P09K04N19A, 18P09K04N19I, 18P09K04N19U, 18P09K04N20A, 18P09K04N20X, 18P09K04N20D, 18P09K04P16F, 18P09K04P16U, 18P09K04P17G, 18P09K04P17B, 18P09K04P17H, 18P09K04P17N, 18P09K04P17J, 18P09K04P18L, 18P09K04P18M, 18P09K09C09V, 18P09K04P24K, 18P09K09C09L, 18P09K04P24W, 18P09K04P19R, 18P09K04P19L, 18P09K09C14C, 18P09K09C04M, 18P09K04P24X, 18P09K09C09D, 18P09K09C04Y, 18P09K09C04N, 18P09K04P24T, 18P09K04P24I, 18P09K09C09Z, 18P09K09C09E, 18P09K04P24E, 18P09K04P19J, 18P09K09C15A, 18P09K09C10F, 18P09K04P25V, 18P09K04P25A, 18P09K09C15H, 18P09K09C10X, 18P09K09C10G, 18P09K09C10B, 18P09K09C10C, 18P09K09C05C, 18P09K04P25W, 18P09K04P25M, 18P09K04P25G, 18P09K04P20B, 18P09K09C15D, 18P09K09C05I, 18P09K09C05D, 18P09K04P20I, 18P09K09D06V, 18P09K04Q16A, 18P09K09D01L, 18P09K04Q21W, 18P09K04Q21R, 18P09K04Q21C, 18P09K04Q16S, 18P09K04Q11Y, 18P09K09D01P, 18P09K04Q21J, 18P09K04Q21E, 18P09K04Q22F, 18P09K04Q22A, 18P09K09D07G, 18P09K04Q22B, 18P09K09D07X, 18P09K09D07C, 18P09K09D02M, 18P09K04Q17C, 18P09K04N18J, 18P09K04N19V, 18P09K04N19W, 18P09K04N19R, 18P09K04N19X, 18P09K04N20Q, 18P09K04N20M, 18P09K04P17F, 18P09K04P17Y, 18P09K04P17T, 18P09K04P17I, 18P09K04P17D, 18P09K04P17U, 18P09K04P17E, 18P09K04P18Q, 18P09K04P18W, 18P09K04P18R, 18P09K04P18K, 18P09K04P18D, 18P09K04P18P, 18P09K04P19Q, 18P09K09C09B, 18P09K04P19G, 18P09K09C09C, 18P09K09C04X, 18P09K04P24M, 18P09K04P24C, 18P09K04P19X, 18P09K09C14I, 18P09K09C09N, 18P09K04P24D, 18P09K04P19D, 18P09K09C14J, 18P09K04P24P, 18P09K04P19P, 18P09K09C10V, 18P09K09C10A, 18P09K09C15G, 18P09K09C10S, 18P09K09C05W, 18P09K09C05H, 18P09K04P25X, 18P09K04P20G, 18P09K09C10P, 18P09K04P25Z, 18P09K04P25U, 18P09K04P25E, 18P09K09D11F, 18P09K09D06Q, 18P09K04Q21K, 18P09K04Q21F, 18P09K04Q21A, 18P09K04Q16F, 18P09K04Q16W, 18P09K04Q16G, 18P09K09D01C, 18P09K09D06T, 18P09K09D01T, 18P09K04Q21T, 18P09K09D01J, 18P09K04Q21U, 18P09K04Q16Z, 18P09K09D07K, 18P09K09D02K, 18P09K04Q22Q, 18P09K09D07L, 18P09K09D07B, 18P09K09D02B, 18P09K04Q17G, 18P09K09D02S, 18P09K09D02C, 18P09K04Q22X, 18P09K04N18M, 18P09K04N18T, 18P09K04N18E, 18P09K04N19G, 18P09K04N19S, 18P09K04N19Y, 18P09K04N20R, 18P09K04N20G, 18P09K04N20Z, 18P09K04P16K, 18P09K04P16G, 18P09K04P16B, 18P09K04P16Z, 18P09K04P17Q, 18P09K04P17K, 18P09K04P17R, 18P09K04P17Z, 18P09K04P17P, 18P09K04P18V, 18P09K04P18G, 18P09K04P18B, 18P09K04P18T, 18P09K09C09W, 18P09K09C04W, 18P09K09C04L, 18P09K09C04B, 18P09K04P24R, 18P09K04P24L, 18P09K09C04H, 18P09K04P24H, 18P09K04P19S, 18P09K04P19C, 18P09K09C14D, 18P09K09C09T, 18P09K04P24Y, 18P09K04P24N, 18P09K09C09U, 18P09K09C04E, 18P09K09C15F, 18P09K09C10K, 18P09K04P25K, 18P09K04P20K, 18P09K09C10L, 18P09K09C05X, 18P09K09C05M, 18P09K04P25R, 18P09K04P25L, 18P09K04P25B, 18P09K04P20M, 18P09K09C15I, 18P09K09C10T, 18P09K09C05T, 18P09K04P25D, 18P09K04P20N, 18P09K04P20D, 18P09K09C15J, 18P09K09C05U, 18P09K04P25J, 18P09K04P20Z, 18P09K09D06A, 18P09K09D01Q, 18P09K09D01F, 18P09K04Q21Q, 18P09K04Q16Q, 18P09K09D11G, 18P09K09D06G, 18P09K09D06B, 18P09K09D01R, 18P09K09D06S, 18P09K04Q21X, 18P09K04Q16X, 18P09K04Q16H, 18P09K04Q21Y, 18P09K04Q16I, 18P09K04Q16D, 18P09K04Q21Z, 18P09K04Q11Z, 18P09K09D02V, 18P09K04Q17K, 18P09K04Q22G, 18P09K09D12H, 18P09K09D07H, 18P09K04Q22M, 18P09K04Q17X, 18P09K04N18X, 18P09K04N18S, 18P09K04N18C, 18P09K04N18P, 18P09K04N19L, 18P09K04N19C, 18P09K04N20V, 18P09K04N20W, 18P09K04N20B, 18P09K04N20C, 18P09K04N20T, 18P09K04P16Q, 18P09K04N20E, 18P09K04P16A, 18P09K04P17A, 18P09K04P18S, 18P09K04P18Y, 18P09K04P18N, 18P09K04P18I, 18P09K04P18Z, 18P09K09C04V, 18P09K04P24Q, 18P09K04P19A, 18P09K09C14B, 18P09K04P24B, 18P09K04P19W, 18P09K09C09X, 18P09K09C09I, 18P09K09C04D, 18P09K09C14E, 18P09K04P20V, 18P09K09C10R, 18P09K09C05L, 18P09K04P25S, 18P09K04P25T, 18P09K04P20T, 18P09K09C15E, 18P09K09C10Z, 18P09K09D01V, 18P09K04Q21V, 18P09K09D06R, 18P09K04Q21G, 18P09K09D11H, 18P09K09D11C, 18P09K09D06X, 18P09K09D06C, 18P09K04Q21H, 18P09K09D01Y, 18P09K09D01I, 18P09K04Q21N, 18P09K04Q21I, 18P09K04Q16T, 18P09K04Q16N, 18P09K09D06P, 18P09K09D12A, 18P09K09D02A, 18P09K04Q22K, 18P09K04Q12V, 18P09K09D12B, 18P09K09D02W, 18P09K09D02R, 18P09K04Q22R, 18P09K04Q17B, 18P09K09D02X, 18P09K04Q22S, 18P09K04Q22C, 18P09K04Q17M, 18P09K04N18Z, 18P09K04N19F, 18P09K04N19J, 18P09K04N19E, 18P09K04N20K, 18P09K04N20F, 18P09K04N20S, 18P09K04N20N, 18P09K04N20J, 18P09K04P16P, 18P09K04P17C, 18P09K04P18C, 18P09K09C09Q, 18P09K09C09A, 18P09K09C04A, 18P09K04P24V, 18P09K04P19V, 18P09K09C09G, 18P09K09C04G, 18P09K09C14H, 18P09K09C09H, 18P09K09C09Y, 18P09K04P19I, 18P09K09C09P, 18P09K04P24J, 18P09K04P19Z, 18P09K09C10Q, 18P09K04P25Q, 18P09K09C15B, 18P09K09C15C, 18P09K09C10H, 18P09K04P20W, 18P09K04P20R, 18P09K04P20S, 18P09K04P20H, 18P09K04P20C, 18P09K09C10N, 18P09K04P25I, 18P09K09C10J, 18P09K09C05J, 18P09K04P20J, 18P09K09D06F, 18P09K04Q16K, 18P09K09D06W, 18P09K09D01B, 18P09K04Q16B, 18P09K09D06M, 18P09K09D06H, 18P09K09D01H, 18P09K09D06N, 18P09K09D11J, 18P09K09D11E, 18P09K09D06J, 18P09K09D06E, 18P09K09D01U, 18P09K04Q16P, 18P09K04Q17V, 18P09K04Q22L, 18P09K04Q12W, 18P09K09D12C, 18P09K09D07S, 18P09K04Q12X, 18P09K04N19M, 18P09K04N19H, 18P09K04N19T, 18P09K04N19N, 18P09K04N19D, 18P09K04N20L, 18P09K04P16L, 18P09K04P16X, 18P09K04P16M, 18P09K04P16C, 18P09K04P16Y, 18P09K04P16I, 18P09K04P17M, 18P09K04P18X, 18P09K04P18H, 18P09K04P18J, 18P09K04P18E, 18P09K09C14F, 18P09K09C14A, 18P09K09C09F, 18P09K09C04K, 18P09K04P24A, 18P09K04P19K, 18P09K04P24G, 18P09K09C09S, 18P09K09C09M, 18P09K09C04C, 18P09K04P19M, 18P09K09C04T, 18P09K09C04I, 18P09K04P19Y, 18P09K09C04P, 18P09K09C04J, 18P09K04P24Z, 18P09K04P19U, 18P09K04P19E, 18P09K09C05V, 18P09K09C05Q, 18P09K09C10M, 18P09K04P25C, 18P09K04P20L, 18P09K09C05Y, 18P09K09C05Z, 18P09K09D06K, 18P09K09D01A, 18P09K04Q16V, 18P09K09D11B, 18P09K09D01W, 18P09K04Q16L, 18P09K04Q11X, 18P09K09D11I, 18P09K09D06Y, 18P09K09D06D, 18P09K04Q16Y, 18P09K04Q16J, 18P09K04Q16E, 18P09K04Q17Q, 18P09K04Q17A, 18P09K09D12G, 18P09K04Q22W, 18P09K04Q17L, 18P09K09D07M, 18P09K09D02H, 18P09K04Q17S"]
     }
-    // , {
-    //   NombreArea: "511210",
-    //   Referencia: "18N05E04A03C",
-    //   Celdas: ["18N05E04A03C, 18N05A24M13S, 18N05A24M18Z, 18N05A24M18I, 18N05A24M19V, 18N05A24M19F, 18N05A24M14Q, 18N05A24M24L, 18N05A24M24H, 18N05A24M19S, 18N05A24M19M, 18N05A24M19H, 18N05A24M24Y, 18N05A24M24D, 18N05A24M24J, 18N05A24M20R, 18N05A24M25C, 18N05A24M20X, 18N05A24M25D, 18N05A24M23X, 18N05A24M23S, 18N05A24M18H, 18N05A24M14K, 18N05A24M19L, 18N05A24M19G, 18N05A24M25Q, 18N05E04A05B, 18N05A24M23M, 18N05A24M18M, 18N05A24M13X, 18N05A24M13M, 18N05A24M23T, 18N05A24M23D, 18N05A24M18Y, 18N05A24M18P, 18N05A24M18J, 18N05A24M13U, 18N05E04A04B, 18N05A24M19Y, 18N05E04A05A, 18N05A24M20F, 18N05A24M25L, 18N05A24M20W, 18N05A24M25M, 18N05A24M25T, 18N05A24M18U, 18N05A24M18N, 18N05A24M18D, 18N05A24M18E, 18N05A24M13T, 18N05A24M24F, 18N05A24M24A, 18N05A24M14V, 18N05A24M24X, 18N05A24M19C, 18N05A24M19T, 18N05A24M24P, 18N05A24M25K, 18N05A24M23C, 18N05A24M18X, 18N05E04A03E, 18N05A24M23Y, 18N05A24M23Z, 18N05A24M23E, 18N05A24M19Q, 18N05A24M19K, 18N05A24M24B, 18N05A24M19R, 18N05E04A04D, 18N05A24M24T, 18N05A24M19Z, 18N05A24M25A, 18N05A24M20Q, 18N05A24M25B, 18N05A24M25H, 18N05A24M25I, 18N05A24M23U, 18N05A24M23I, 18N05A24M13Y, 18N05A24M24V, 18N05A24M19W, 18N05A24M14W, 18N05E04A04C, 18N05A24M24M, 18N05A24M19X, 18N05A24M19J, 18N05A24M25W, 18N05A24M25G, 18N05A24M25S, 18N05A24M20S, 18N05A24M25N, 18N05A24M23H, 18N05A24M23P, 18N05A24M23J, 18N05A24M18T, 18N05A24M13Z, 18N05A24M13P, 18N05A24M24K, 18N05A24M19A, 18N05A24M24W, 18N05A24M19B, 18N05A24M24S, 18N05A24M24C, 18N05A24M24N, 18N05A24M19I, 18N05E04A04E, 18N05A24M24Z, 18N05A24M24U, 18N05A24M19U, 18N05A24M25R, 18N05A24M25X, 18N05A24M18S, 18N05A24M18C, 18N05E04A03D, 18N05A24M23N, 18N05A24M13N, 18N05E04A04A, 18N05A24M24Q, 18N05A24M24R, 18N05A24M24G, 18N05A24M24I, 18N05A24M19N, 18N05A24M24E, 18N05A24M19P, 18N05A24M25V, 18N05A24M25F, 18N05A24M20V, 18N05A24M20K"]
-    // }
+
+  
   ]
 
