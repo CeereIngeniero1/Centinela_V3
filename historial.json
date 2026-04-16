@@ -1,5 +1,17 @@
 [
   {
+    "id": "1776346645015",
+    "archivoBase": "Valleduper.js",
+    "nombreSalida": "Valleduper Marvin.js",
+    "modo": "Prueba de Radiación",
+    "cliente": "No asignado",
+    "areas": [
+      "MARVIN"
+    ],
+    "estado": "Generado OK",
+    "fecha": "2026-04-16T13:37:25.015Z"
+  },
+  {
     "id": "1773923393601uuqj5",
     "fecha": "2026-03-18T21:15:52.379Z",
     "archivoBase": "N/A (Lega)",
