@@ -1,5 +1,29 @@
 [
   {
+    "id": "1776347480072",
+    "archivoBase": "Valleduper.js",
+    "nombreSalida": "Valleduper MarvinRA.js",
+    "modo": "Radicación Real",
+    "cliente": "No asignado",
+    "areas": [
+      "MARVIN"
+    ],
+    "estado": "Generado OK",
+    "fecha": "2026-04-16T13:51:20.072Z"
+  },
+  {
+    "id": "1776347297993",
+    "archivoBase": "Valleduper.js",
+    "nombreSalida": "Valleduper Marvin2.js",
+    "modo": "Radicación Real",
+    "cliente": "No asignado",
+    "areas": [
+      "MARVIN"
+    ],
+    "estado": "Generado OK",
+    "fecha": "2026-04-16T13:48:17.993Z"
+  },
+  {
     "id": "1776346645015",
     "archivoBase": "Valleduper.js",
     "nombreSalida": "Valleduper Marvin.js",
