@@ -1,23 +1,13 @@
 {
-  "name": "Centinela_V3",
+  "name": "centinela_v3",
   "version": "1.0.0",
-  "description": "",
+  "description": "Proyecto Centinela_V3",
   "main": "V2.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "make-bat": "node make-bat.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CeereIngeniero1/Centinela_V3.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CeereIngeniero1/Centinela_V3/issues"
-  },
-  "homepage": "https://github.com/CeereIngeniero1/Centinela_V3#readme",
   "dependencies": {
     "@nut-tree-fork/nut-js": "^4.2.6",
     "axios": "^1.13.1",
