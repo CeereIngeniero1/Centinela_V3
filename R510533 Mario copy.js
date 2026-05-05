@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '83949';
-const pass2 = 'JorgeC2025.';
+const user2 = '73620';
+const pass2 = 'pC6*qS2*dE'; 
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "C4:") {
+    if (Pines.substring(i + 1, i + 4) == "Co:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -1726,8 +1726,7 @@ function Mineria(browser, Pin,) {
     }
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
- 
-
+   
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
     await page.waitForTimeout(180000);
@@ -2088,9 +2087,9 @@ const Areas =
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
     {
-      NombreArea: "510759",
-      Referencia: "18N05A25N06D",
-      Celdas: ["18N05A25N06D, 18N05N14M12R"]
+      NombreArea: "510533",
+      Referencia: "18N05A24N13W",
+      Celdas: ["18N05A24N13X, 18N05A24N13W"]
     }
     /* {
       NombreArea: "prueba",

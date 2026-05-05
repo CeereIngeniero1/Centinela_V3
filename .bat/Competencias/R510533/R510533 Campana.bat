@@ -1,0 +1,2 @@
+
+start /d "../../../" node "R510533 Campana.js"

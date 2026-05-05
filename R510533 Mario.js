@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '96233';
-const pass2 = 'SuperAgente86*';
+const user2 = '73620';
+const pass2 = 'pC6*qS2*dE';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -64,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "C1:") {
+    if (Pines.substring(i + 1, i + 4) == "Co:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -2164,9 +2164,9 @@ const Areas =
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
     {
-      NombreArea: "510601A",
-      Referencia: "18N05E04L17D",
-      Celdas: ["18N05E04L17D, 18N05E04L12U, 18N05E04L12E, 18N05E04L07N, 18N05E04L07P, 18N05E04L13W, 18N05E04L08S, 18N05E04L17I, 18N05E04L17E, 18N05E04L12P, 18N05E04L07T, 18N05E04L13K, 18N05E04L13F, 18N05E04L08K, 18N05E04L18G, 18N05E04L18B, 18N05E04L13G, 18N05E04L13Y, 18N05E04L12J, 18N05E04L07I, 18N05E04L08L, 18N05E04L18H, 18N05E04L18C, 18N05E04L13C, 18N05E04L08X, 18N05E04L08Y, 18N05E04L08T, 18N05E04L08N, 18N05E04L12T, 18N05E04L07Y, 18N05E04L18F, 18N05E04L08V, 18N05E04L13M, 18N05E04L12N, 18N05E04L12I, 18N05E04L07U, 18N05E04L18A, 18N05E04L13V, 18N05E04L08Q, 18N05E04L08F, 18N05E04L13R, 18N05E04L13L, 18N05E04L08R, 18N05E04L08G, 18N05E04L08H, 18N05E04L18D, 18N05E04L13D, 18N05E04L12Y, 18N05E04L12Z, 18N05E04L12D, 18N05E04L07Z, 18N05E04L13Q, 18N05E04L13B, 18N05E04L18I, 18N05E04L13I, 18N05E04L07J, 18N05E04L13X, 18N05E04L13S, 18N05E04L13H, 18N05E04L08M, 18N05E04L13T, 18N05E04L13N, 18N05E04L08I, 18N05E04L17J, 18N05E04L13A, 18N05E04L08W"]
+      NombreArea: "510533",
+      Referencia: "18N05A24N13W",
+      Celdas: ["18N05A24N13X, 18N05A24N13W"]
     }
     /* {
       NombreArea: "prueba",
