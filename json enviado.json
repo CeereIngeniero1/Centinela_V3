@@ -1,0 +1,379 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "timestamp": "2026-05-07T20:27:09.000Z",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Composition",
+        "id": "Composition-0",
+        "meta": {
+          "profile": [
+            "https://fhir.minsalud.gov.co/rda/StructureDefinition/CompositionPatientStatementRDA"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "102089-0",
+              "display": "FHIR resource patient medical record"
+            }
+          ],
+          "text": "FHIR resource patient medical record"
+        },
+        "date": "2026-05-07T20:27:09.000Z",
+        "title": "Resumen Digital de Atención en Salud - RDA de antecedentes manifestados por el paciente",
+        "confidentiality": "N",
+        "event": [
+          {
+            "period": {
+              "start": "2026-05-07T14:15:00.000Z",
+              "end": "2026-05-07T14:20:00.000Z"
+            },
+            "code": [
+              {
+                "coding": [
+                  {
+                    "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianTechModality",
+                    "code": "01",
+                    "display": "Intramural"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/GrupoServicios",
+                    "code": "01",
+                    "display": "Consulta externa"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "#PA-X0S52D86"
+        },
+        "custodian": {
+          "reference": "#0500110244"
+        },
+        "author": [
+          {
+            "reference": "#CC-43866023"
+          }
+        ],
+        "section": [
+          {
+            "title": "Historial de medicamentos",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10160-0",
+                  "display": "History of Medication use Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Sin antecedentes farmacologicos</div>"
+            }
+          },
+          {
+            "title": "Historial de alergias, intolerancias y reacciones adversas",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "48765-2",
+                  "display": "Allergies and adverse reactions Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No se conocen alergias</div>"
+            }
+          },
+          {
+            "title": "Historial de diagnósticos de problemas de salud",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11450-4",
+                  "display": "Problem list - Reported"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No se registran antecedentes patologicos</div>"
+            }
+          },
+          {
+            "title": "Historial de antecedentes familiares",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10157-6",
+                  "display": "History of family member diseases Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No se registran antecedentes familiares</div>"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "PA-X0S52D86",
+        "meta": {
+          "profile": [
+            "https://fhir.minsalud.gov.co/rda/StructureDefinition/PatientRDA"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionPatientNationality",
+            "valueCoding": {
+              "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ISO31661",
+              "code": "170",
+              "display": "Colombia"
+            }
+          },
+          {
+            "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionPatientEthnicity",
+            "valueCoding": {
+              "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianEthnicGroup",
+              "code": "6",
+              "display": "Otras etnias"
+            }
+          },
+          {
+            "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionPatientEthnicCommunity",
+            "valueString": "Comunidad etnica"
+          },
+          {
+            "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionPatientDisability",
+            "valueCoding": {
+              "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianDisabilityClassification",
+              "code": "08",
+              "display": "Sin discapacidad"
+            }
+          },
+          {
+            "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionPatientGenderIdentity",
+            "valueCoding": {
+              "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianGenderIdentity",
+              "code": "06",
+              "display": "Sin asignar"
+            }
+          }
+        ],
+        "identifier": [
+          {
+            "id": "NationalPersonIdentifier-0",
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "PN",
+                  "display": "Person number"
+                },
+                {
+                  "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianPersonIdentifier",
+                  "code": "PA",
+                  "display": "Pasaporte"
+                }
+              ]
+            },
+            "system": "https://fhir.minsalud.gov.co/rda/NamingSystem/RNEC",
+            "value": "X0S52D86"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Tutiven",
+            "_family": {
+              "extension": [
+                {
+                  "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionFathersFamilyName",
+                  "valueString": "Tutiven"
+                },
+                {
+                  "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionMothersFamilyName",
+                  "valueString": "Falcon"
+                }
+              ]
+            },
+            "given": [
+              "Celine",
+              "Pascale"
+            ]
+          }
+        ],
+        "gender": "female",
+        "_gender": {
+          "extension": [
+            {
+              "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionBiologicalGender",
+              "valueCoding": {
+                "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianGenderGroup",
+                "code": "02",
+                "display": "Mujer"
+              }
+            }
+          ]
+        },
+        "birthDate": "2001-06-23",
+        "_birthDate": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/patient-birthTime",
+              "valueDateTime": "2001-06-23T15:00:00.000Z"
+            }
+          ]
+        },
+        "deceasedBoolean": false,
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+41766079923"
+          }
+        ],
+        "address": [
+          {
+            "id": "HomeAddress-0",
+            "use": "home",
+            "type": "physical",
+            "extension": [
+              {
+                "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionResidenceZone",
+                "valueCoding": {
+                  "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianResidenceZone",
+                  "code": "01",
+                  "display": "Urbana"
+                }
+              }
+            ],
+            "city": "MEDELLÍN",
+            "country": "COLOMBIA",
+            "_country": {
+              "extension": [
+                {
+                  "url": "https://fhir.minsalud.gov.co/rda/StructureDefinition/ExtensionCountryCode",
+                  "valueCoding": {
+                    "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ISO31661",
+                    "code": "170"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "CC-43866023",
+        "meta": {
+          "profile": [
+            "https://fhir.minsalud.gov.co/rda/StructureDefinition/PractitionerRDA"
+          ]
+        },
+        "identifier": [
+          {
+            "id": "NationalPersonIdentifier-0",
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "PN",
+                  "display": "Person number"
+                },
+                {
+                  "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianPersonIdentifier",
+                  "code": "CC",
+                  "display": "Cédula ciudadanía"
+                }
+              ]
+            },
+            "system": "https://fhir.minsalud.gov.co/rda/NamingSystem/RNEC",
+            "value": "43866023"
+          }
+        ],
+        "active": true
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Organization",
+        "id": "0500110244",
+        "active": true,
+        "meta": {
+          "profile": [
+            "https://fhir.minsalud.gov.co/rda/StructureDefinition/CareDeliveryOrganizationRDA"
+          ]
+        },
+        "name": "CLINIQ DERMOESTETICA Y LASER S.A",
+        "identifier": [
+          {
+            "id": "TaxIdentifier",
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "TAX",
+                  "display": "Tax ID number"
+                },
+                {
+                  "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianOrganizationIdentifiers",
+                  "code": "NIT",
+                  "display": "Número de Identificación Tributaria"
+                }
+              ]
+            },
+            "system": "https://fhir.minsalud.gov.co/rda/NamingSystem/DIAN",
+            "value": "900063460"
+          },
+          {
+            "id": "HealthcareProviderIdentifier",
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "PRN",
+                  "display": "Provider number"
+                },
+                {
+                  "system": "https://fhir.minsalud.gov.co/rda/CodeSystem/ColombianOrganizationIdentifiers",
+                  "code": "CodigoPrestador",
+                  "display": "Código de habilitación de prestador de servicios de salud"
+                }
+              ]
+            },
+            "system": "https://fhir.minsalud.gov.co/rda/NamingSystem/REPS",
+            "value": "0500110244"
+          }
+        ]
+      }
+    }
+  ]
+}
