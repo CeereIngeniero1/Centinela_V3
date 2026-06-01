@@ -101,16 +101,16 @@ async function Login(page) {
     await page.type("#username", user);
     await page.type("#password", pass);
 
-    page.click("#loginButton");
+    // page.click("#loginButton");
   } catch (ex) {
     console.log("Entro en el catch");
   }
 
   // page.setDefaultTimeout(0);
-  try {
+   try {
     await page.waitForNavigation({
       waitUntil: "networkidle0",
-      timeout: 5000, // 5 segundos en milisegundos
+      timeout: 10000, // 5 segundos en milisegundos
     });
   } catch (error) {
     if (error instanceof puppeteer.errors.TimeoutError) {
