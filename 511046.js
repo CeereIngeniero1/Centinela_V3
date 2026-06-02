@@ -15,7 +15,7 @@ const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
 const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
 const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
-
+ 
 
 
 const NombreEquipo = os.hostname();
@@ -81,7 +81,7 @@ async function Pagina() {
     devtools: false,
   });
 
-  Mineria(browser, Pin, 0, page);
+  Mineria(browser, Pin);
 }
 
 async function Login(page) {
@@ -103,7 +103,7 @@ async function Login(page) {
   }
 
   // page.setDefaultTimeout(0);
-  try {
+   try {
     await page.waitForNavigation({
       waitUntil: "networkidle0",
       timeout: 10000, // 5 segundos en milisegundos
@@ -1373,48 +1373,27 @@ async function verificarCaptchaResuelto(page, imagendeCaptcha) {
 }
 
 
-function Mineria(browser, Pin, Cierra, page) {
+function Mineria(browser, Pin,) {
   (async () => {
-    try {
+    console.log("Esta es la vuelta " + ContadorVueltas);
+    const page = await browser.newPage();
 
-      console.log("Esta es la vuelta " + ContadorVueltas);
-      console.log("Cierra: " + Cierra);
-      console.log("page: " + page);
-
-    } catch (error) {
-      console.error("Error en la función Mineria:", error);
-    }
-
-
-  
-    var page;
-
-   
-
-    
-      page = await browser.newPage();
-    
-
-  await page.waitForTimeout(10000000);
-  
     let Primerpaso = setTimeout(() => {
       console.log("ENTRO EN EL PRIMERPASO");
 
       page.close();
-      Mineria(browser, Pin, 0, page);
-    }, 10000);
+      Mineria(browser, Pin);
+    }, 20000);
 
     await Login(page);
 
     clearTimeout(Primerpaso);
 
-
-
     let Segundopaso = setTimeout(() => {
       console.log("ENTRO EN EL Segundopaso");
-      // page.close();
-      Mineria(browser, Pin, 1);
-    }, 20000);
+      page.close();
+      Mineria(browser, Pin);
+    }, 25000);
 
     await RadicarPropuesta(page);
 
@@ -1467,7 +1446,7 @@ function Mineria(browser, Pin, Cierra, page) {
       let TimeArea = setTimeout(() => {
         console.log("ENTRO EN EL TimeArea");
         page.close();
-        Mineria(browser, Pin, 0, page);
+        Mineria(browser, Pin);
       }, 25000);
 
       console.log("Bandera: " + Band);
@@ -1638,7 +1617,7 @@ function Mineria(browser, Pin, Cierra, page) {
       bandera = 99;
       console.log("ENTRO EN EL TimeNOpaso");
       page.close();
-      Mineria(browser, Pin, 0, page);
+      Mineria(browser, Pin);
     }, 20000);
 
 
@@ -1663,7 +1642,7 @@ function Mineria(browser, Pin, Cierra, page) {
     let RadiPrimero = setTimeout(() => {
       console.log("ENTRO EN EL RadiPrimero");
       page.close();
-      Mineria(browser, Pin, 0, page);
+      Mineria(browser, Pin);
     }, 30000);
 
     try {
@@ -1672,7 +1651,7 @@ function Mineria(browser, Pin, Cierra, page) {
       await Detalles_de_area(page);
     }
 
-
+    
     Pasolotecnico = await Informacion_tecnica(page);
     if (Pasolotecnico) {
     } else {
@@ -1738,7 +1717,7 @@ function Mineria(browser, Pin, Cierra, page) {
     let Radisegundo = setTimeout(() => {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
-      Mineria(browser, Pin, 0, page);
+      Mineria(browser, Pin);
     }, 10000);
 
 
@@ -1771,7 +1750,7 @@ function Mineria(browser, Pin, Cierra, page) {
     let RadiTercero = setTimeout(() => {
       console.log("ENTRO EN EL Radisegundo");
       //page.close();
-      Mineria(browser, Pin, 0, page);
+      Mineria(browser, Pin);
     }, 120000);
 
     //  await page.waitForTimeout(1000000);
@@ -1799,7 +1778,7 @@ function Mineria(browser, Pin, Cierra, page) {
           console.log("El captcha sigue en modo reto de imagenes");
           Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
           // lO RETIRO PORQUE NO VALE LA PENA
-          // Mineria(browser, Pin, 0, page);
+          // Mineria(browser, Pin);
           imagendeCaptcha = 1;
         } else {
           // await RECAPTCHA(page);
@@ -1838,14 +1817,14 @@ function Mineria(browser, Pin, Cierra, page) {
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
     await page.waitForTimeout(180000);
-    Mineria(browser, Pin, 0, page);
+    Mineria(browser, Pin);
   })();
 }
 
 // FUNCIÓN PARA ENVÍO DE CORREO SEGÚN LA SITUACIÓN
 function Correo(Tipo, Area, Celda) {
   // 1. Liberada 2. radicada 3. Fecha reapertura
-  let msg = "";
+  let msg = ""; 
   let Color = "";
   let Texto = "";
   //Area = "Tranquilos area de prueba";
@@ -1875,6 +1854,10 @@ function Correo(Tipo, Area, Celda) {
       `Rapido aparecio un recaptcha   ${EquipoActual}`;
     Color = "rgba(180, 33, 170, 1)";
     Texto = "RECAPTCHA RECAPTCHA RECAPTCHA";
+  }else if (Tipo == 7) {
+    msg = "LOGIN";
+    Color = "#fe1426";
+    Texto = "😡😡AVISO llevo 1:00 minutos en login😡😡😡😡😡😡";
   }
 
 
@@ -1894,8 +1877,8 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+   to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+   //  to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -2186,12 +2169,17 @@ function VerificarVencimientoPin(
 
 const Areas =
   [
+
+    // // // /* {
+    // // //   NombreArea: "prueba",
+    // // //   Referencia: "18N05N14M12R",
+    // // //   Celdas: ["18N05N14M12R"]
+    // // // }*/ 
     {
       NombreArea: "511046",
       Referencia: "18P09K04A20B",
       Celdas: ["18P09K04A20B, 18P09K04A20H, 18P09K04A20T, 18P09K04A15T, 18P09K04A20Z, 18P09K04B16Q, 18P09K04B21B, 18P09K04B16R, 18P09K04B16B, 18P09K04B11I, 18P09K04B17K, 18P09K04B17W, 18P09K04B17R, 18P09K04B12R, 18P09K04B12Y, 18P09K04B12P, 18P09K04A15K, 18P09K04A20W, 18P09K04A20R, 18P09K04A15R, 18P09K04A15G, 18P09K04A20M, 18P09K04A20Y, 18P09K04A20D, 18P09K04A15Y, 18P09K04A20E, 18P09K04A15J, 18P09K04B16L, 18P09K04B11W, 18P09K04B21C, 18P09K04B16Y, 18P09K04B16T, 18P09K04B16D, 18P09K04B11X, 18P09K04B11S, 18P09K04B11N, 18P09K04B16U, 18P09K04B16P, 18P09K04B11U, 18P09K04B22H, 18P09K04B17X, 18P09K04B17M, 18P09K04B12M, 18P09K04B17I, 18P09K04B12U, 18P09K04A15W, 18P09K04A15X, 18P09K04A25D, 18P09K04A20P, 18P09K04B16F, 18P09K04B11V, 18P09K04B16G, 18P09K04B16S, 18P09K04B11M, 18P09K04B11J, 18P09K04B17A, 18P09K04B12V, 18P09K04B12K, 18P09K04B22B, 18P09K04B12G, 18P09K04B12X, 18P09K04B12S, 18P09K04B12H, 18P09K04B22E, 18P09K04A25A, 18P09K04A20K, 18P09K04A25B, 18P09K04A20L, 18P09K04A20N, 18P09K04A15I, 18P09K04A20U, 18P09K04A20J, 18P09K04A15U, 18P09K04B16V, 18P09K04B11K, 18P09K04B11H, 18P09K04B21J, 18P09K04B17Q, 18P09K04B17S, 18P09K04B17D, 18P09K04B12T, 18P09K04B22J, 18P09K04B17U, 18P09K04A15L, 18P09K04A15M, 18P09K04A15H, 18P09K04A20I, 18P09K04A15N, 18P09K04B11R, 18P09K04B21H, 18P09K04B21D, 18P09K04B11Y, 18P09K04B11T, 18P09K04B22F, 18P09K04B17F, 18P09K04B12F, 18P09K04B17L, 18P09K04B17G, 18P09K04B17B, 18P09K04B12W, 18P09K04B22I, 18P09K04B17Y, 18P09K04A20V, 18P09K04A20Q, 18P09K04A20A, 18P09K04A15V, 18P09K04A20G, 18P09K04A25C, 18P09K04A20X, 18P09K04A25E, 18P09K04A15Z, 18P09K04B16K, 18P09K04B11Q, 18P09K04B11F, 18P09K04B11L, 18P09K04B16M, 18P09K04B16H, 18P09K04B16I, 18P09K04B21E, 18P09K04B16J, 18P09K04B22A, 18P09K04B12L, 18P09K04B22C, 18P09K04B17C, 18P09K04B12I, 18P09K04B17P, 18P09K04B17E, 18P09K04B12Z, 18P09K04A15F, 18P09K04A20S, 18P09K04A15S, 18P09K04B21A, 18P09K04B16A, 18P09K04B11G, 18P09K04B21I, 18P09K04B16E, 18P09K04B11Z, 18P09K04B11P, 18P09K04B12Q, 18P09K04B22G, 18P09K04B17H, 18P09K04B17T, 18P09K04B17J, 18P09K04B12J, 18P09K04A20F, 18P09K04A15Q, 18P09K04A20C, 18P09K04A15P, 18P09K04B16W, 18P09K04B16N, 18P09K04B16C, 18P09K04B16Z, 18P09K04B17V, 18P09K04B22D, 18P09K04B17N, 18P09K04B12N, 18P09K04B17Z"]
     }
   ]
-
 
 

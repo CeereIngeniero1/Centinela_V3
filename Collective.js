@@ -88,6 +88,8 @@ async function Pagina() {
   Mineria(browser, Pin);
 }
 
+
+
 async function Login(page) {
   await page.setViewport({ width: 1368, height: 620 });
   await page.goto("https://annamineria.anm.gov.co/sigm/");
@@ -106,8 +108,9 @@ async function Login(page) {
     console.log("Entro en el catch");
   }
 
+
   // page.setDefaultTimeout(0);
-   try {
+  try {
     await page.waitForNavigation({
       waitUntil: "networkidle0",
       timeout: 10000, // 5 segundos en milisegundos
@@ -1377,6 +1380,13 @@ function Mineria(browser, Pin,) {
       Mineria(browser, Pin);
     }, 20000);
 
+    let aviso = setTimeout(() => {
+      console.log("AVISO DE QUE ESTA EN LOGIN");
+
+      Correo(7, "", "");
+      
+    }, 60000);
+
     await Login(page);
 
     clearTimeout(Primerpaso);
@@ -1386,9 +1396,12 @@ function Mineria(browser, Pin,) {
       page.close();
       Mineria(browser, Pin);
     }, 25000);
-
+  
     await RadicarPropuesta(page);
 
+    console.log("Limpio El AVISO DE QUE ESTA EN LOGIN");
+    
+    clearTimeout(aviso);
     if (Agente == 1) {
       await Agente_Selecion_Empresa(page);
     }
@@ -1814,7 +1827,7 @@ function Mineria(browser, Pin,) {
 // FUNCIÓN PARA ENVÍO DE CORREO SEGÚN LA SITUACIÓN
 function Correo(Tipo, Area, Celda) {
   // 1. Liberada 2. radicada 3. Fecha reapertura
-  let msg = "";
+  let msg = ""; 
   let Color = "";
   let Texto = "";
   //Area = "Tranquilos area de prueba";
@@ -1844,6 +1857,10 @@ function Correo(Tipo, Area, Celda) {
       `Rapido aparecio un recaptcha   ${EquipoActual}`;
     Color = "rgba(180, 33, 170, 1)";
     Texto = "RECAPTCHA RECAPTCHA RECAPTCHA";
+  }else if (Tipo == 7) {
+    msg = "LOGIN";
+    Color = "#fe1426";
+    Texto = "😡😡AVISO llevo 1:00 minutos en login😡😡😡😡😡😡";
   }
 
 

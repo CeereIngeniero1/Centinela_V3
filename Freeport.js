@@ -1828,7 +1828,7 @@ function Mineria(browser, Pin,) {
 // FUNCIÓN PARA ENVÍO DE CORREO SEGÚN LA SITUACIÓN
 function Correo(Tipo, Area, Celda) {
   // 1. Liberada 2. radicada 3. Fecha reapertura
-  let msg = "";
+  let msg = ""; 
   let Color = "";
   let Texto = "";
   //Area = "Tranquilos area de prueba";
@@ -1858,6 +1858,10 @@ function Correo(Tipo, Area, Celda) {
       `Rapido aparecio un recaptcha   ${EquipoActual}`;
     Color = "rgba(180, 33, 170, 1)";
     Texto = "RECAPTCHA RECAPTCHA RECAPTCHA";
+  }else if (Tipo == 7) {
+    msg = "LOGIN";
+    Color = "#fe1426";
+    Texto = "😡😡AVISO llevo 1:00 minutos en login😡😡😡😡😡😡";
   }
 
 
