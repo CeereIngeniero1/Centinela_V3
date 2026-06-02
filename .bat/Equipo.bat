@@ -1,2 +1,1 @@
-
-start /d "../" node "Equipo.js"
+start "" /d "../" cmd /k node "Equipo.js"
