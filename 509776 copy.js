@@ -15,7 +15,11 @@ const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
 const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
 const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
- 
+// console.log(Informacion_Empresas);
+// console.log(Informacion_Economica);
+// console.log(EquiposGenerales);
+// console.log(Geologos);
+// console.log(Contadores);
 
 
 const NombreEquipo = os.hostname();
@@ -25,7 +29,7 @@ const EquipoActual = EquiposGenerales[NombreEquipo];
 console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "Valleduper"; // Collective, NegoYMetales, Freeport, Provenza
+const Empresa = "Collective"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
 const Datos_Economicos = Informacion_Economica[Empresa];
 const Datos_Geologos = Geologos[Empresa];
@@ -34,9 +38,9 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '97295';
-const pass2 = 'Freeport2025#';
-const Agente = 1;
+const user2 = '83949';
+const pass2 = 'JorgeC2025.';
+const Agente = 0;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
 var ContadorVueltas = 0;
@@ -60,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "VL:") {
+    if (Pines.substring(i + 1, i + 4) == "Co:") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -84,6 +88,8 @@ async function Pagina() {
   Mineria(browser, Pin);
 }
 
+
+
 async function Login(page) {
   await page.setViewport({ width: 1368, height: 620 });
   await page.goto("https://annamineria.anm.gov.co/sigm/");
@@ -102,8 +108,9 @@ async function Login(page) {
     console.log("Entro en el catch");
   }
 
+
   // page.setDefaultTimeout(0);
-   try {
+  try {
     await page.waitForNavigation({
       waitUntil: "networkidle0",
       timeout: 10000, // 5 segundos en milisegundos
@@ -184,7 +191,6 @@ async function Agente_Selecion_Empresa(page) {
   } catch (error) {
 
   }
-
 
 
   await page.keyboard.press("Enter");
@@ -295,14 +301,7 @@ async function Minerales(page) {
   page.evaluate(() => {
     document.querySelector('[ng-class="settings.buttonClasses"]').click();
     var elementos = document.getElementsByClassName("ng-binding ng-scope");
-    let Minerales = [
-      "COBRE",
-      "cobre",
-      "PLATA",
-      "Plata",
-      "ORO",
-      "oro"
-    ];
+    let Minerales = ['COBRE', 'cobre', 'MOLIBDENO', 'molibdeno', 'NIQUEL', 'niquel', 'ORO', 'oro', 'PLATA', 'plata', 'PLATINO', 'platino', 'WOLFRAMIO', 'wolframio', 'ZINC', 'zinc'];
     let elementosConMinerales = [];
 
     // ITERA SOBRE TODOS LOS ELEMENTOS CON CLASE (ng-binding ng-scope)
@@ -369,561 +368,557 @@ async function Detalles_de_area(page) {
 }
 
 async function Informacion_tecnica(page) {
-  try {
-    const btnInfoTecnica = await page.$x('//a[contains(.,"Información t")]');
-    await btnInfoTecnica[0].click();
 
-    await page.evaluate(() => {
-      document.querySelector('[id="yearOfExecutionId0"]').value = "number:1";
+  const btnInfoTecnica = await page.$x('//a[contains(.,"Información t")]');
+  await btnInfoTecnica[0].click();
 
-      angular
-        .element(document.getElementById("yearOfExecutionId0"))
-        .triggerHandler("change");
+  await page.evaluate(() => {
+    document.querySelector('[id="yearOfExecutionId0"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId0"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId0"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId0"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId0"]').value = "IIG";
 
-      //Contactos con la comunidad y enfoque social
+    angular
+      .element(document.getElementById("laborSuitabilityId0"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId1"]').value = "number:1";
+    //Contactos con la comunidad y enfoque social
 
-      angular
-        .element(document.getElementById("yearOfExecutionId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId1"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId1"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId1"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId1"]').value = "TSCA";
+    angular
+      .element(document.getElementById("yearOfDeliveryId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId1"]').value = "TSCA";
 
-      //Base topográfica del área
+    angular
+      .element(document.getElementById("laborSuitabilityId1"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId2"]').value = "number:1";
+    //Base topográfica del área
 
-      angular
-        .element(document.getElementById("yearOfExecutionId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId2"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId2"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId2"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId2"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId2"]').value = "IIG";
 
-      //Cartografía geológica
+    angular
+      .element(document.getElementById("laborSuitabilityId2"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId3"]').value = "number:1";
+    //Cartografía geológica
 
-      angular
-        .element(document.getElementById("yearOfExecutionId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId3"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId3"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId3"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId3"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId3"]').value = "IIG";
 
-      //Excavación de trincheras y apiques
+    angular
+      .element(document.getElementById("laborSuitabilityId3"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId4"]').value = "number:2";
+    //Excavación de trincheras y apiques
 
-      angular
-        .element(document.getElementById("yearOfExecutionId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId4"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId4"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId4"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId4"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId4"]').value = "IIG";
 
-      //Geoquímica y otros análisis
+    angular
+      .element(document.getElementById("laborSuitabilityId4"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId5"]').value = "number:2";
+    //Geoquímica y otros análisis
 
-      angular
-        .element(document.getElementById("yearOfExecutionId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId5"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId5"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId5"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId5"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId5"]').value = "IIG";
 
-      //Geofísica
+    angular
+      .element(document.getElementById("laborSuitabilityId5"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId6"]').value = "number:2";
+    //Geofísica
 
-      angular
-        .element(document.getElementById("yearOfExecutionId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId6"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId6"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId6"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId6"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId6"]').value = "IIG";
 
-      //Estudio de dinámica fluvial del cauce
+    angular
+      .element(document.getElementById("laborSuitabilityId6"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId7"]').value = "number:2";
+    //Estudio de dinámica fluvial del cauce
 
-      angular
-        .element(document.getElementById("yearOfExecutionId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId7"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId7"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId7"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId7"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId7"]').value = "IIG";
 
-      // Características hidrológicas y sedimentológicas del cauce
+    angular
+      .element(document.getElementById("laborSuitabilityId7"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId8"]').value = "number:2";
+    // Características hidrológicas y sedimentológicas del cauce
 
-      angular
-        .element(document.getElementById("yearOfExecutionId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId8"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId8"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId8"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId8"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId8"]').value = "IIG";
 
-      //Pozos y Galerías Exploratorias
+    angular
+      .element(document.getElementById("laborSuitabilityId8"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId9"]').value = "number:2";
+    //Pozos y Galerías Exploratorias
 
-      angular
-        .element(document.getElementById("yearOfExecutionId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId9"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId9"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId9"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId9"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId9"]').value = "IIG";
 
-      //Perforaciones profundas
+    angular
+      .element(document.getElementById("laborSuitabilityId9"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId10"]').value = "number:2";
+    //Perforaciones profundas
 
-      angular
-        .element(document.getElementById("yearOfExecutionId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId10"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId10"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId10"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId10"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId10"]').value = "IIG";
 
-      //Muestreo y análisis de calidad
+    angular
+      .element(document.getElementById("laborSuitabilityId10"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId11"]').value = "number:2";
+    //Muestreo y análisis de calidad
 
-      angular
-        .element(document.getElementById("yearOfExecutionId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId11"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId11"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId11"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId11"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId11"]').value = "IIG";
 
-      //Estudio geotécnico
+    angular
+      .element(document.getElementById("laborSuitabilityId11"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId12"]').value = "number:2";
+    //Estudio geotécnico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId12"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId12"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId12"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId12"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId12"]').value = "IIG";
 
-      //Estudio Hidrológico
+    angular
+      .element(document.getElementById("laborSuitabilityId12"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId13"]').value = "number:2";
+    //Estudio Hidrológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId13"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId13"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId13"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId13"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId13"]').value = "IIG";
 
-      //Estudio Hidrogeológico
+    angular
+      .element(document.getElementById("laborSuitabilityId13"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId14"]').value = "number:2";
+    //Estudio Hidrogeológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId14"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId14"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId14"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId14"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId14"]').value = "IIG";
 
-      //Evaluación del modelo geológico
+    angular
+      .element(document.getElementById("laborSuitabilityId14"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId15"]').value = "number:3";
+    //Evaluación del modelo geológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId15"]').value = "number:3";
 
-      document.querySelector('[id="yearOfDeliveryId15"]').value = "number:3";
+    angular
+      .element(document.getElementById("yearOfExecutionId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId15"]').value = "number:3";
 
-      document.querySelector('[id="laborSuitabilityId15"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId15"]').value = "IIG";
 
-      //Actividades exploratorias adicionales (Se describe en el anexo Tecnico que se allegue)
+    angular
+      .element(document.getElementById("laborSuitabilityId15"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId16"]').value = "number:3";
+    //Actividades exploratorias adicionales (Se describe en el anexo Tecnico que se allegue)
 
-      angular
-        .element(document.getElementById("yearOfExecutionId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId16"]').value = "number:3";
 
-      document.querySelector('[id="yearOfDeliveryId16"]').value = "number:3";
+    angular
+      .element(document.getElementById("yearOfExecutionId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId16"]').value = "number:3";
 
-      document.querySelector('[id="laborSuitabilityId16"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId16"]').value = "IIG";
 
-      // Actividades Ambientales etapa de exploración
+    angular
+      .element(document.getElementById("laborSuitabilityId16"))
+      .triggerHandler("change");
 
-      //Selección optima de Sitios de Campamentos y Helipuertos
+    // Actividades Ambientales etapa de exploración
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId0"))
-        .triggerHandler("change");
+    //Selección optima de Sitios de Campamentos y Helipuertos
 
-      document.querySelector('[id="envLaborSuitabilityId0"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId0"]').value = "MULT";
 
-      //Manejo de Aguas Lluvias
+    angular
+      .element(document.getElementById("envLaborSuitabilityId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId1"))
-        .triggerHandler("change");
+    //Manejo de Aguas Lluvias
 
-      document.querySelector('[id="envLaborSuitabilityId1"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId1"]').value = "MULT";
 
-      //Manejo de Aguas Residuales Domesticas
+    angular
+      .element(document.getElementById("envLaborSuitabilityId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId2"))
-        .triggerHandler("change");
+    //Manejo de Aguas Residuales Domesticas
 
-      document.querySelector('[id="envLaborSuitabilityId2"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId2"]').value = "MULT";
 
-      //Manejo de Cuerpos de Agua
+    angular
+      .element(document.getElementById("envLaborSuitabilityId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId3"))
-        .triggerHandler("change");
+    //Manejo de Cuerpos de Agua
 
-      document.querySelector('[id="envLaborSuitabilityId3"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId3"]').value = "MULT";
 
-      //Manejo de Material Particulado y Gases
+    angular
+      .element(document.getElementById("envLaborSuitabilityId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId4"))
-        .triggerHandler("change");
+    //Manejo de Material Particulado y Gases
 
-      document.querySelector('[id="envLaborSuitabilityId4"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId4"]').value = "MULT";
 
-      //Manejo del Ruido
+    angular
+      .element(document.getElementById("envLaborSuitabilityId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId5"))
-        .triggerHandler("change");
+    //Manejo del Ruido
 
-      document.querySelector('[id="envLaborSuitabilityId5"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId5"]').value = "MULT";
 
-      // Manejo de Combustibles
+    angular
+      .element(document.getElementById("envLaborSuitabilityId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId6"))
-        .triggerHandler("change");
+    // Manejo de Combustibles
 
-      document.querySelector('[id="envLaborSuitabilityId6"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId6"]').value = "MULT";
 
-      //Manejo de Taludes
+    angular
+      .element(document.getElementById("envLaborSuitabilityId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId7"))
-        .triggerHandler("change");
+    //Manejo de Taludes
 
-      document.querySelector('[id="envLaborSuitabilityId7"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId7"]').value = "MULT";
 
-      //Manejo de Accesos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId8"))
-        .triggerHandler("change");
+    //Manejo de Accesos
 
-      document.querySelector('[id="envLaborSuitabilityId8"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId8"]').value = "MULT";
 
-      // Manejo de Residuos Solidos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId9"))
-        .triggerHandler("change");
+    // Manejo de Residuos Solidos
 
-      document.querySelector('[id="envLaborSuitabilityId9"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId9"]').value = "MULT";
 
-      //Adecuación y Recuperación de Sitios de Uso Temporal
+    angular
+      .element(document.getElementById("envLaborSuitabilityId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId10"))
-        .triggerHandler("change");
+    //Adecuación y Recuperación de Sitios de Uso Temporal
 
-      document.querySelector('[id="envLaborSuitabilityId10"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId10"]').value = "MULT";
 
-      //Manejo de Fauna y Flora
+    angular
+      .element(document.getElementById("envLaborSuitabilityId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId11"))
-        .triggerHandler("change");
+    //Manejo de Fauna y Flora
 
-      document.querySelector('[id="envLaborSuitabilityId11"]').value = "IFEB";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId11"]').value = "IFEB";
 
-      //Plan de Gestión Social
+    angular
+      .element(document.getElementById("envLaborSuitabilityId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId12"))
-        .triggerHandler("change");
+    //Plan de Gestión Social
 
-      document.querySelector('[id="envLaborSuitabilityId12"]').value = "TSCA";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId12"]').value = "TSCA";
 
-      //capacitación de Personal
+    angular
+      .element(document.getElementById("envLaborSuitabilityId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId13"))
-        .triggerHandler("change");
+    //capacitación de Personal
 
-      document.querySelector('[id="envLaborSuitabilityId13"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId13"]').value = "MULT";
 
-      //Contratación de Mano de Obra no Calificada
+    angular
+      .element(document.getElementById("envLaborSuitabilityId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId14"))
-        .triggerHandler("change");
+    //Contratación de Mano de Obra no Calificada
 
-      document.querySelector('[id="envLaborSuitabilityId14"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId14"]').value = "MULT";
 
-      //Rescate Arqueológico
+    angular
+      .element(document.getElementById("envLaborSuitabilityId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId15"))
-        .triggerHandler("change");
+    //Rescate Arqueológico
 
-      document.querySelector('[id="envLaborSuitabilityId15"]').value = "ARQ";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId15"]').value = "ARQ";
 
-      //Manejo de Hundimientos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId16"))
-        .triggerHandler("change");
+    //Manejo de Hundimientos
 
-      document.querySelector('[id="envLaborSuitabilityId16"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId16"))
-        .triggerHandler("change");
-    });
-    return true;
-  } catch (error) {
-    return false;
-  }
+    document.querySelector('[id="envLaborSuitabilityId16"]').value = "MULT";
 
+    angular
+      .element(document.getElementById("envLaborSuitabilityId16"))
+      .triggerHandler("change");
+  });
 }
+
 async function Profesionales(page, Eventos) {
 
 
@@ -1385,6 +1380,13 @@ function Mineria(browser, Pin,) {
       Mineria(browser, Pin);
     }, 20000);
 
+    let aviso = setTimeout(() => {
+      console.log("AVISO DE QUE ESTA EN LOGIN");
+
+      Correo(7, "", "");
+      
+    }, 60000);
+
     await Login(page);
 
     clearTimeout(Primerpaso);
@@ -1394,9 +1396,12 @@ function Mineria(browser, Pin,) {
       page.close();
       Mineria(browser, Pin);
     }, 25000);
-
+  
     await RadicarPropuesta(page);
 
+    console.log("Limpio El AVISO DE QUE ESTA EN LOGIN");
+    
+    clearTimeout(aviso);
     if (Agente == 1) {
       await Agente_Selecion_Empresa(page);
     }
@@ -1651,10 +1656,9 @@ function Mineria(browser, Pin,) {
       await Detalles_de_area(page);
     }
 
-    
-    Pasolotecnico = await Informacion_tecnica(page);
-    if (Pasolotecnico) {
-    } else {
+    try {
+      await Informacion_tecnica(page);
+    } catch (error) {
       await Informacion_tecnica(page);
     }
 
@@ -1716,7 +1720,6 @@ function Mineria(browser, Pin,) {
     clearTimeout(RadiPrimero);
     
 
-
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
 
 
@@ -1730,9 +1733,8 @@ function Mineria(browser, Pin,) {
 
     }
 
-
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-     
+    
 
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
@@ -1797,7 +1799,7 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+   // to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
     to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
@@ -2087,19 +2089,24 @@ function VerificarVencimientoPin(
   }
 }
 
+
+
 const Areas =
   [
 
-    // // // /* {
-    // // //   NombreArea: "prueba",
-    // // //   Referencia: "18N05N14M12R",
-    // // //   Celdas: ["18N05N14M12R"]
-    // // // }*/ 
+    /* {
+      NombreArea: "prueba", // nombre del area
+      Referencia: "18N05N14M12R", // celda referencia
+      Celdas: ["18N05N14M12R"] // area completa de celdas
+    },*/
     {
-      NombreArea: "511046",
-      Referencia: "18P09K04A20B",
-      Celdas: ["18P09K04A20B, 18P09K04A20H, 18N05N14M12R, 18P09K04A20T, 18P09K04A15T, 18P09K04A20Z, 18P09K04B16Q, 18P09K04B21B, 18P09K04B16R, 18P09K04B16B, 18P09K04B11I, 18P09K04B17K, 18P09K04B17W, 18P09K04B17R, 18P09K04B12R, 18P09K04B12Y, 18P09K04B12P, 18P09K04A15K, 18P09K04A20W, 18P09K04A20R, 18P09K04A15R, 18P09K04A15G, 18P09K04A20M, 18P09K04A20Y, 18P09K04A20D, 18P09K04A15Y, 18P09K04A20E, 18P09K04A15J, 18P09K04B16L, 18P09K04B11W, 18P09K04B21C, 18P09K04B16Y, 18P09K04B16T, 18P09K04B16D, 18P09K04B11X, 18P09K04B11S, 18P09K04B11N, 18P09K04B16U, 18P09K04B16P, 18P09K04B11U, 18P09K04B22H, 18P09K04B17X, 18P09K04B17M, 18P09K04B12M, 18P09K04B17I, 18P09K04B12U, 18P09K04A15W, 18P09K04A15X, 18P09K04A25D, 18P09K04A20P, 18P09K04B16F, 18P09K04B11V, 18P09K04B16G, 18P09K04B16S, 18P09K04B11M, 18P09K04B11J, 18P09K04B17A, 18P09K04B12V, 18P09K04B12K, 18P09K04B22B, 18P09K04B12G, 18P09K04B12X, 18P09K04B12S, 18P09K04B12H, 18P09K04B22E, 18P09K04A25A, 18P09K04A20K, 18P09K04A25B, 18P09K04A20L, 18P09K04A20N, 18P09K04A15I, 18P09K04A20U, 18P09K04A20J, 18P09K04A15U, 18P09K04B16V, 18P09K04B11K, 18P09K04B11H, 18P09K04B21J, 18P09K04B17Q, 18P09K04B17S, 18P09K04B17D, 18P09K04B12T, 18P09K04B22J, 18P09K04B17U, 18P09K04A15L, 18P09K04A15M, 18P09K04A15H, 18P09K04A20I, 18P09K04A15N, 18P09K04B11R, 18P09K04B21H, 18P09K04B21D, 18P09K04B11Y, 18P09K04B11T, 18P09K04B22F, 18P09K04B17F, 18P09K04B12F, 18P09K04B17L, 18P09K04B17G, 18P09K04B17B, 18P09K04B12W, 18P09K04B22I, 18P09K04B17Y, 18P09K04A20V, 18P09K04A20Q, 18P09K04A20A, 18P09K04A15V, 18P09K04A20G, 18P09K04A25C, 18P09K04A20X, 18P09K04A25E, 18P09K04A15Z, 18P09K04B16K, 18P09K04B11Q, 18P09K04B11F, 18P09K04B11L, 18P09K04B16M, 18P09K04B16H, 18P09K04B16I, 18P09K04B21E, 18P09K04B16J, 18P09K04B22A, 18P09K04B12L, 18P09K04B22C, 18P09K04B17C, 18P09K04B12I, 18P09K04B17P, 18P09K04B17E, 18P09K04B12Z, 18P09K04A15F, 18P09K04A20S, 18P09K04A15S, 18P09K04B21A, 18P09K04B16A, 18P09K04B11G, 18P09K04B21I, 18P09K04B16E, 18P09K04B11Z, 18P09K04B11P, 18P09K04B12Q, 18P09K04B22G, 18P09K04B17H, 18P09K04B17T, 18P09K04B17J, 18P09K04B12J, 18P09K04A20F, 18P09K04A15Q, 18P09K04A20C, 18P09K04A15P, 18P09K04B16W, 18P09K04B16N, 18P09K04B16C, 18P09K04B16Z, 18P09K04B17V, 18P09K04B22D, 18P09K04B17N, 18P09K04B12N, 18P09K04B17Z"]
+      NombreArea: "509776",
+      Referencia: "18N05E05A15B",
+      Celdas: ["18N05E05A15B, 18N05E05A15G, 18N05N14M12R"]
     }
+    /* {
+      NombreArea: "prueba",
+      Referencia: "18N05N14M12R",
+      Celdas: ["18N05N14M12R"]
+    }*/
   ]
-
-

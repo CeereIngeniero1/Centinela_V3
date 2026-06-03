@@ -38,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '96233';
-const pass2 = 'SuperAgente86*';
+const user2 = '98908';
+const pass2 = 'Sebas2025?';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -1718,7 +1718,12 @@ function Mineria(browser, Pin,) {
 
 
     clearTimeout(RadiPrimero);
-     
+    let Radisegundo = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 10000);
+
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
 
@@ -1734,7 +1739,82 @@ function Mineria(browser, Pin,) {
     }
 
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-     
+    await continPag[1].click();
+
+    clearTimeout(Radisegundo);
+    await page.waitForNavigation({
+      waitUntil: "networkidle0",
+    });
+    console.log(" si navego ");
+
+
+
+
+    let RadiTercero = setTimeout(() => {
+      console.log("ENTRO EN EL Radisegundo");
+      //page.close();
+      Mineria(browser, Pin);
+    }, 120000);
+
+    //  await page.waitForTimeout(1000000);
+
+
+    while (true) {
+
+      let resultado = await RECAPTCHA(page);
+      if (resultado == 1) {
+        break;
+      }
+
+    }
+
+    var imagendeCaptcha = 0;
+    while (true) {
+      await page.waitForTimeout(1500);
+
+      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
+        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
+        if (resultado === 1) {
+          clearTimeout(RadiTercero);
+          break;
+        } else if (resultado === 2) {
+          console.log("El captcha sigue en modo reto de imagenes");
+          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
+          // lO RETIRO PORQUE NO VALE LA PENA
+          // Mineria(browser, Pin);
+          imagendeCaptcha = 1;
+        } else {
+          // await RECAPTCHA(page);
+        }
+
+      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
+        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
+        if (posibleContinuar.length > 0) {
+          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
+          console.log([posibleContinuar]);
+          await posibleContinuar[1].click();
+          await page.waitForNavigation({
+            waitUntil: "networkidle0",
+          });
+          await RECAPTCHA(page);
+        }
+      }
+    }
+
+    // await page.waitForTimeout(1000000);
+
+    console.log("51. Bóton Radicar");
+
+    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
+    console.log("Este es el boton radicar : " + btnRadicar1);
+
+    console.log("Le di click");
+
+    try {
+      await btnRadicar1[1].click();
+    } catch (exepcion) {
+      console.log("La 1 tampoco Y_Y");
+    }
 
 
     //CORREO RADICACION
@@ -1800,8 +1880,8 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    to: '  Soporte2ceere@gmail.com',
+    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    //to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -2101,9 +2181,13 @@ const Areas =
       Celdas: ["18N05N14M12R"] // area completa de celdas
     },*/
     {
-      NombreArea: "QCO-08033",
-      Referencia: "18N05E04B19L",
-      Celdas: ["18N05N14M12R, 18N05E04A20M, 18N05E04A15C, 18N05E04A20D, 18N05E04B11V, 18N05E04A10J, 18N05E04B11G, 18N05E04B16S, 18N05E04B11H, 18N05E04B11C, 18N05E04B06S, 18N05E04B11N, 18N05E04B16U, 18N05E04B12G, 18N05E04B12X, 18N05E04B17N, 18N05E04B12T, 18N05E04B12N, 18N05E04B12D, 18N05E04B13R, 18N05E04B13F, 18N05E04B18H, 18N05E04B18N, 18N05E04B14V, 18N05E04B14K, 18N05E04B19N, 18N05E04B20L, 18N05E04A20H, 18N05E04A15S, 18N05E04A10M, 18N05E04A15Y, 18N05E04A15T, 18N05E04A10I, 18N05E04A15Z, 18N05E04B16B, 18N05E04B11B, 18N05E04B06R, 18N05E04B16N, 18N05E04B16P, 18N05E04B12F, 18N05E04B07W, 18N05E04B17H, 18N05E04B12J, 18N05E04B13T, 18N05E04B13N, 18N05E04B18J, 18N05E04B18E, 18N05E04B19Q, 18N05E04B19M, 18N05E04B14X, 18N05E04B19P, 18N05E04B20G, 18N05E04B20T, 18N05E04A20S, 18N05E04A20C, 18N05E04A15H, 18N05E04A15I, 18N05E04A20U, 18N05E04B16K, 18N05E04B16F, 18N05E04B16A, 18N05E04B11Q, 18N05E04A15J, 18N05E04B06K, 18N05E04B11S, 18N05E04B16E, 18N05E04B11J, 18N05E04B17F, 18N05E04B17S, 18N05E04B17C, 18N05E04B12Y, 18N05E04B12E, 18N05E04B13V, 18N05E04B13Q, 18N05E04B18I, 18N05E04B13Y, 18N05E04B14Q, 18N05E04B19R, 18N05E04B19G, 18N05E04B19U, 18N05E04B14Z, 18N05E04B20F, 18N05E04B20S, 18N05E04B20C, 18N05E04B20N, 18N05E04A20E, 18N05E04A15U, 18N05E04B11A, 18N05E04B11L, 18N05E04B06W, 18N05E04B06L, 18N05E04B06M, 18N05E04B16I, 18N05E04B06Y, 18N05E04B17B, 18N05E04B12R, 18N05E04B12L, 18N05E04B12S, 18N05E04B17U, 18N05E04B17E, 18N05E04B12U, 18N05E04B18L, 18N05E04B18B, 18N05E04B18S, 18N05E04B13S, 18N05E04B18D, 18N05E04B13P, 18N05E04B14R, 18N05E04B19H, 18N05E04B14Y, 18N05E04B20Q, 18N05E04B20K, 18N05E04B20I, 18N05E04A10H, 18N05E04A15N, 18N05E04A10N, 18N05E04A20P, 18N05E04A20J, 18N05E04A15P, 18N05E04A15E, 18N05E04A10P, 18N05E04B16C, 18N05E04B11M, 18N05E04B11Y, 18N05E04B11D, 18N05E04B11E, 18N05E04B06U, 18N05E04B07V, 18N05E04B12W, 18N05E04B12B, 18N05E04B12M, 18N05E04B12C, 18N05E04B12Z, 18N05E04B18R, 18N05E04B18K, 18N05E04B13W, 18N05E04B13K, 18N05E04B13X, 18N05E04B13H, 18N05E04B18T, 18N05E04B19A, 18N05E04B19T, 18N05E04B19E, 18N05E04B20A, 18N05E04A15M, 18N05E04A20N, 18N05E04A20I, 18N05E04A10T, 18N05E04B11K, 18N05E04B16R, 18N05E04B16H, 18N05E04B16T, 18N05E04B11I, 18N05E04B17A, 18N05E04B17R, 18N05E04B12H, 18N05E04B17I, 18N05E04B12I, 18N05E04B18A, 18N05E04B13L, 18N05E04B18M, 18N05E04B18P, 18N05E04B19K, 18N05E04B19S, 18N05E04B14T, 18N05E04B20H, 18N05E04B15W, 18N05E04A15X, 18N05E04A10S, 18N05E04A20T, 18N05E04A10Y, 18N05E04B16Q, 18N05E04B11F, 18N05E04A10Z, 18N05E04A10U, 18N05E04B11W, 18N05E04B11R, 18N05E04B11X, 18N05E04B16D, 18N05E04B16J, 18N05E04B11P, 18N05E04B06Z, 18N05E04B17K, 18N05E04B17L, 18N05E04B17G, 18N05E04B17M, 18N05E04B07X, 18N05E04B17D, 18N05E04B17J, 18N05E04B18Q, 18N05E04B18F, 18N05E04B18G, 18N05E04B13Z, 18N05E04B13U, 18N05E04B14W, 18N05E04B19D, 18N05E04B15V, 18N05E04B20D, 18N05E04A10X, 18N05E04A15D, 18N05E04B06V, 18N05E04B06Q, 18N05E04B16L, 18N05E04B16G, 18N05E04B16M, 18N05E04B06X, 18N05E04B11T, 18N05E04B06T, 18N05E04B11Z, 18N05E04B11U, 18N05E04B17Q, 18N05E04B12V, 18N05E04B12Q, 18N05E04B12K, 18N05E04B12A, 18N05E04B17T, 18N05E04B17P, 18N05E04B12P, 18N05E04B13G, 18N05E04B13A, 18N05E04B18C, 18N05E04B13M, 18N05E04B18U, 18N05E04B19F, 18N05E04B19L, 18N05E04B19B, 18N05E04B19C, 18N05E04B14S, 18N05E04B19I, 18N05E04B19J, 18N05E04B20R, 18N05E04B20M, 18N05E04B20B"]
+      NombreArea: "509776",
+      Referencia: "18N05E05A15B",
+      Celdas: ["18N05E05A15B, 18N05E05A15G"]
     }
-  
+    /* {
+      NombreArea: "prueba",
+      Referencia: "18N05N14M12R",
+      Celdas: ["18N05N14M12R"]
+    }*/
   ]
