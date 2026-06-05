@@ -42,13 +42,23 @@ const pass2 = 'Sebas2025?';
 const user2 = '76467';
 const pass2 = 'Maxamaga2025.';
 
+
+<!-- Alejandro -->
+const user2 = '102249';
+const pass2 = 'Alejo2026*';
+
+<!-- Mario -->
+const user2 = '73620';
+const pass2 = 'pC6*qs2*dE';
+
 <!-- Provenza -->
 const user2 = '74025'; 
-const pass2 = 'provenXa2026.*';
+const pass2 = 'Bloqueo2026CML.';
 
-<!-- nuevos -->
-70164
+<!-- OSCAR BENITO CUELLO TORREs -->
+70164  
 Cuello_1606
+<!-- nuevos -->
 
 79474
 Camila04!! no es la contraseña
