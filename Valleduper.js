@@ -94,6 +94,7 @@ async function Login(page) {
   try {
     console.log(user);
     console.log(pass);
+    
     await page.type("#username", user);
     await page.type("#password", pass);
 

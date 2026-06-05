@@ -1383,7 +1383,7 @@ function Mineria(browser, Pin,) {
     let aviso = setTimeout(() => {
       console.log("AVISO DE QUE ESTA EN LOGIN");
 
-      Correo(7, "", "");
+      // Correo(7, "", "");
       
     }, 60000);
 

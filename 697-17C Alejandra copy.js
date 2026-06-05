@@ -15,7 +15,11 @@ const Informacion_Empresas = JSON.parse(process.env.Informacion_Empresas);
 const Informacion_Economica = JSON.parse(process.env.Informacion_Economica);
 const Geologos = JSON.parse(process.env.Geologos);
 const Contadores = JSON.parse(process.env.Contadores);
- 
+// console.log(Informacion_Empresas);
+// console.log(Informacion_Economica);
+// console.log(EquiposGenerales);
+// console.log(Geologos);
+// console.log(Contadores);
 
 
 const NombreEquipo = os.hostname();
@@ -25,7 +29,7 @@ const EquipoActual = EquiposGenerales[NombreEquipo];
 console.log(" Equipo Actual: ", EquipoActual);
 
 // Actualizado
-const Empresa = "Valleduper"; // Collective, NegoYMetales, Freeport, Provenza
+const Empresa = "Collective"; // Collective, NegoYMetales, Freeport, Provenza
 const Datos_Empresa = Informacion_Empresas[Empresa];
 const Datos_Economicos = Informacion_Economica[Empresa];
 const Datos_Geologos = Geologos[Empresa];
@@ -34,8 +38,8 @@ const Datos_Contadores = Contadores[Empresa];
 // console.log(" Datos de Datos_Contadores: ", Datos_Contadores);
 const user1 = Datos_Empresa.Codigo;
 const pass1 = Datos_Empresa.Contraseña;
-const user2 = '97295';
-const pass2 = 'Freeport2025#';
+const user2 = '76467';
+const pass2 = 'Maxamaga2025.';
 const Agente = 1;
 var EnviarCorreosParaPestanas = 0;
 var contreapertura = 0;
@@ -60,7 +64,7 @@ async function Pagina() {
     })
   );
   for (let i = 0; i < Pines.length; i++) {
-    if (Pines.substring(i + 1, i + 4) == "V1:") {
+    if (Pines.substring(i + 1, i + 4) == "C2") {
       console.log(Pines.substring(i + 1, i + 4));
       Pin = Pines.substring(i + 4, i + 31);
       break;
@@ -103,7 +107,7 @@ async function Login(page) {
   }
 
   // page.setDefaultTimeout(0);
-   try {
+  try {
     await page.waitForNavigation({
       waitUntil: "networkidle0",
       timeout: 10000, // 5 segundos en milisegundos
@@ -184,7 +188,6 @@ async function Agente_Selecion_Empresa(page) {
   } catch (error) {
 
   }
-
 
 
   await page.keyboard.press("Enter");
@@ -295,14 +298,7 @@ async function Minerales(page) {
   page.evaluate(() => {
     document.querySelector('[ng-class="settings.buttonClasses"]').click();
     var elementos = document.getElementsByClassName("ng-binding ng-scope");
-    let Minerales = [
-      "COBRE",
-      "cobre",
-      "PLATA",
-      "Plata",
-      "ORO",
-      "oro"
-    ];
+    let Minerales = ['COBRE', 'cobre', 'MOLIBDENO', 'molibdeno', 'NIQUEL', 'niquel', 'ORO', 'oro', 'PLATA', 'plata', 'PLATINO', 'platino', 'WOLFRAMIO', 'wolframio', 'ZINC', 'zinc'];
     let elementosConMinerales = [];
 
     // ITERA SOBRE TODOS LOS ELEMENTOS CON CLASE (ng-binding ng-scope)
@@ -369,561 +365,557 @@ async function Detalles_de_area(page) {
 }
 
 async function Informacion_tecnica(page) {
-  try {
-    const btnInfoTecnica = await page.$x('//a[contains(.,"Información t")]');
-    await btnInfoTecnica[0].click();
 
-    await page.evaluate(() => {
-      document.querySelector('[id="yearOfExecutionId0"]').value = "number:1";
+  const btnInfoTecnica = await page.$x('//a[contains(.,"Información t")]');
+  await btnInfoTecnica[0].click();
 
-      angular
-        .element(document.getElementById("yearOfExecutionId0"))
-        .triggerHandler("change");
+  await page.evaluate(() => {
+    document.querySelector('[id="yearOfExecutionId0"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId0"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId0"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId0"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId0"]').value = "IIG";
 
-      //Contactos con la comunidad y enfoque social
+    angular
+      .element(document.getElementById("laborSuitabilityId0"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId1"]').value = "number:1";
+    //Contactos con la comunidad y enfoque social
 
-      angular
-        .element(document.getElementById("yearOfExecutionId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId1"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId1"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId1"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId1"]').value = "TSCA";
+    angular
+      .element(document.getElementById("yearOfDeliveryId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId1"]').value = "TSCA";
 
-      //Base topográfica del área
+    angular
+      .element(document.getElementById("laborSuitabilityId1"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId2"]').value = "number:1";
+    //Base topográfica del área
 
-      angular
-        .element(document.getElementById("yearOfExecutionId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId2"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId2"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId2"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId2"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId2"]').value = "IIG";
 
-      //Cartografía geológica
+    angular
+      .element(document.getElementById("laborSuitabilityId2"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId3"]').value = "number:1";
+    //Cartografía geológica
 
-      angular
-        .element(document.getElementById("yearOfExecutionId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId3"]').value = "number:1";
 
-      document.querySelector('[id="yearOfDeliveryId3"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId3"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId3"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId3"]').value = "IIG";
 
-      //Excavación de trincheras y apiques
+    angular
+      .element(document.getElementById("laborSuitabilityId3"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId4"]').value = "number:2";
+    //Excavación de trincheras y apiques
 
-      angular
-        .element(document.getElementById("yearOfExecutionId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId4"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId4"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId4"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId4"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId4"]').value = "IIG";
 
-      //Geoquímica y otros análisis
+    angular
+      .element(document.getElementById("laborSuitabilityId4"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId5"]').value = "number:2";
+    //Geoquímica y otros análisis
 
-      angular
-        .element(document.getElementById("yearOfExecutionId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId5"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId5"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId5"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId5"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId5"]').value = "IIG";
 
-      //Geofísica
+    angular
+      .element(document.getElementById("laborSuitabilityId5"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId6"]').value = "number:2";
+    //Geofísica
 
-      angular
-        .element(document.getElementById("yearOfExecutionId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId6"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId6"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId6"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId6"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId6"]').value = "IIG";
 
-      //Estudio de dinámica fluvial del cauce
+    angular
+      .element(document.getElementById("laborSuitabilityId6"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId7"]').value = "number:2";
+    //Estudio de dinámica fluvial del cauce
 
-      angular
-        .element(document.getElementById("yearOfExecutionId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId7"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId7"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId7"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId7"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId7"]').value = "IIG";
 
-      // Características hidrológicas y sedimentológicas del cauce
+    angular
+      .element(document.getElementById("laborSuitabilityId7"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId8"]').value = "number:2";
+    // Características hidrológicas y sedimentológicas del cauce
 
-      angular
-        .element(document.getElementById("yearOfExecutionId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId8"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId8"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId8"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId8"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId8"]').value = "IIG";
 
-      //Pozos y Galerías Exploratorias
+    angular
+      .element(document.getElementById("laborSuitabilityId8"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId9"]').value = "number:2";
+    //Pozos y Galerías Exploratorias
 
-      angular
-        .element(document.getElementById("yearOfExecutionId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId9"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId9"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId9"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId9"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId9"]').value = "IIG";
 
-      //Perforaciones profundas
+    angular
+      .element(document.getElementById("laborSuitabilityId9"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId10"]').value = "number:2";
+    //Perforaciones profundas
 
-      angular
-        .element(document.getElementById("yearOfExecutionId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId10"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId10"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId10"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId10"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId10"]').value = "IIG";
 
-      //Muestreo y análisis de calidad
+    angular
+      .element(document.getElementById("laborSuitabilityId10"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId11"]').value = "number:2";
+    //Muestreo y análisis de calidad
 
-      angular
-        .element(document.getElementById("yearOfExecutionId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId11"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId11"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId11"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId11"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId11"]').value = "IIG";
 
-      //Estudio geotécnico
+    angular
+      .element(document.getElementById("laborSuitabilityId11"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId12"]').value = "number:2";
+    //Estudio geotécnico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId12"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId12"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId12"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId12"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId12"]').value = "IIG";
 
-      //Estudio Hidrológico
+    angular
+      .element(document.getElementById("laborSuitabilityId12"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId13"]').value = "number:2";
+    //Estudio Hidrológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId13"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId13"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId13"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId13"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId13"]').value = "IIG";
 
-      //Estudio Hidrogeológico
+    angular
+      .element(document.getElementById("laborSuitabilityId13"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId14"]').value = "number:2";
+    //Estudio Hidrogeológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId14"]').value = "number:2";
 
-      document.querySelector('[id="yearOfDeliveryId14"]').value = "number:2";
+    angular
+      .element(document.getElementById("yearOfExecutionId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId14"]').value = "number:2";
 
-      document.querySelector('[id="laborSuitabilityId14"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId14"]').value = "IIG";
 
-      //Evaluación del modelo geológico
+    angular
+      .element(document.getElementById("laborSuitabilityId14"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId15"]').value = "number:3";
+    //Evaluación del modelo geológico
 
-      angular
-        .element(document.getElementById("yearOfExecutionId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId15"]').value = "number:3";
 
-      document.querySelector('[id="yearOfDeliveryId15"]').value = "number:3";
+    angular
+      .element(document.getElementById("yearOfExecutionId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId15"]').value = "number:3";
 
-      document.querySelector('[id="laborSuitabilityId15"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId15"]').value = "IIG";
 
-      //Actividades exploratorias adicionales (Se describe en el anexo Tecnico que se allegue)
+    angular
+      .element(document.getElementById("laborSuitabilityId15"))
+      .triggerHandler("change");
 
-      document.querySelector('[id="yearOfExecutionId16"]').value = "number:3";
+    //Actividades exploratorias adicionales (Se describe en el anexo Tecnico que se allegue)
 
-      angular
-        .element(document.getElementById("yearOfExecutionId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfExecutionId16"]').value = "number:3";
 
-      document.querySelector('[id="yearOfDeliveryId16"]').value = "number:3";
+    angular
+      .element(document.getElementById("yearOfExecutionId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("yearOfDeliveryId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="yearOfDeliveryId16"]').value = "number:3";
 
-      document.querySelector('[id="laborSuitabilityId16"]').value = "IIG";
+    angular
+      .element(document.getElementById("yearOfDeliveryId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("laborSuitabilityId16"))
-        .triggerHandler("change");
+    document.querySelector('[id="laborSuitabilityId16"]').value = "IIG";
 
-      // Actividades Ambientales etapa de exploración
+    angular
+      .element(document.getElementById("laborSuitabilityId16"))
+      .triggerHandler("change");
 
-      //Selección optima de Sitios de Campamentos y Helipuertos
+    // Actividades Ambientales etapa de exploración
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId0"))
-        .triggerHandler("change");
+    //Selección optima de Sitios de Campamentos y Helipuertos
 
-      document.querySelector('[id="envLaborSuitabilityId0"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId0"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId0"]').value = "MULT";
 
-      //Manejo de Aguas Lluvias
+    angular
+      .element(document.getElementById("envLaborSuitabilityId0"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId1"))
-        .triggerHandler("change");
+    //Manejo de Aguas Lluvias
 
-      document.querySelector('[id="envLaborSuitabilityId1"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId1"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId1"]').value = "MULT";
 
-      //Manejo de Aguas Residuales Domesticas
+    angular
+      .element(document.getElementById("envLaborSuitabilityId1"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId2"))
-        .triggerHandler("change");
+    //Manejo de Aguas Residuales Domesticas
 
-      document.querySelector('[id="envLaborSuitabilityId2"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId2"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId2"]').value = "MULT";
 
-      //Manejo de Cuerpos de Agua
+    angular
+      .element(document.getElementById("envLaborSuitabilityId2"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId3"))
-        .triggerHandler("change");
+    //Manejo de Cuerpos de Agua
 
-      document.querySelector('[id="envLaborSuitabilityId3"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId3"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId3"]').value = "MULT";
 
-      //Manejo de Material Particulado y Gases
+    angular
+      .element(document.getElementById("envLaborSuitabilityId3"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId4"))
-        .triggerHandler("change");
+    //Manejo de Material Particulado y Gases
 
-      document.querySelector('[id="envLaborSuitabilityId4"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId4"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId4"]').value = "MULT";
 
-      //Manejo del Ruido
+    angular
+      .element(document.getElementById("envLaborSuitabilityId4"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId5"))
-        .triggerHandler("change");
+    //Manejo del Ruido
 
-      document.querySelector('[id="envLaborSuitabilityId5"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId5"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId5"]').value = "MULT";
 
-      // Manejo de Combustibles
+    angular
+      .element(document.getElementById("envLaborSuitabilityId5"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId6"))
-        .triggerHandler("change");
+    // Manejo de Combustibles
 
-      document.querySelector('[id="envLaborSuitabilityId6"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId6"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId6"]').value = "MULT";
 
-      //Manejo de Taludes
+    angular
+      .element(document.getElementById("envLaborSuitabilityId6"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId7"))
-        .triggerHandler("change");
+    //Manejo de Taludes
 
-      document.querySelector('[id="envLaborSuitabilityId7"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId7"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId7"]').value = "MULT";
 
-      //Manejo de Accesos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId7"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId8"))
-        .triggerHandler("change");
+    //Manejo de Accesos
 
-      document.querySelector('[id="envLaborSuitabilityId8"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId8"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId8"]').value = "MULT";
 
-      // Manejo de Residuos Solidos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId8"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId9"))
-        .triggerHandler("change");
+    // Manejo de Residuos Solidos
 
-      document.querySelector('[id="envLaborSuitabilityId9"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId9"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId9"]').value = "MULT";
 
-      //Adecuación y Recuperación de Sitios de Uso Temporal
+    angular
+      .element(document.getElementById("envLaborSuitabilityId9"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId10"))
-        .triggerHandler("change");
+    //Adecuación y Recuperación de Sitios de Uso Temporal
 
-      document.querySelector('[id="envLaborSuitabilityId10"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId10"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId10"]').value = "MULT";
 
-      //Manejo de Fauna y Flora
+    angular
+      .element(document.getElementById("envLaborSuitabilityId10"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId11"))
-        .triggerHandler("change");
+    //Manejo de Fauna y Flora
 
-      document.querySelector('[id="envLaborSuitabilityId11"]').value = "IFEB";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId11"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId11"]').value = "IFEB";
 
-      //Plan de Gestión Social
+    angular
+      .element(document.getElementById("envLaborSuitabilityId11"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId12"))
-        .triggerHandler("change");
+    //Plan de Gestión Social
 
-      document.querySelector('[id="envLaborSuitabilityId12"]').value = "TSCA";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId12"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId12"]').value = "TSCA";
 
-      //capacitación de Personal
+    angular
+      .element(document.getElementById("envLaborSuitabilityId12"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId13"))
-        .triggerHandler("change");
+    //capacitación de Personal
 
-      document.querySelector('[id="envLaborSuitabilityId13"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId13"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId13"]').value = "MULT";
 
-      //Contratación de Mano de Obra no Calificada
+    angular
+      .element(document.getElementById("envLaborSuitabilityId13"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId14"))
-        .triggerHandler("change");
+    //Contratación de Mano de Obra no Calificada
 
-      document.querySelector('[id="envLaborSuitabilityId14"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId14"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId14"]').value = "MULT";
 
-      //Rescate Arqueológico
+    angular
+      .element(document.getElementById("envLaborSuitabilityId14"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId15"))
-        .triggerHandler("change");
+    //Rescate Arqueológico
 
-      document.querySelector('[id="envLaborSuitabilityId15"]').value = "ARQ";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId15"))
-        .triggerHandler("change");
+    document.querySelector('[id="envLaborSuitabilityId15"]').value = "ARQ";
 
-      //Manejo de Hundimientos
+    angular
+      .element(document.getElementById("envLaborSuitabilityId15"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envYearOfDeliveryId16"))
-        .triggerHandler("change");
+    //Manejo de Hundimientos
 
-      document.querySelector('[id="envLaborSuitabilityId16"]').value = "MULT";
+    angular
+      .element(document.getElementById("envYearOfDeliveryId16"))
+      .triggerHandler("change");
 
-      angular
-        .element(document.getElementById("envLaborSuitabilityId16"))
-        .triggerHandler("change");
-    });
-    return true;
-  } catch (error) {
-    return false;
-  }
+    document.querySelector('[id="envLaborSuitabilityId16"]').value = "MULT";
 
+    angular
+      .element(document.getElementById("envLaborSuitabilityId16"))
+      .triggerHandler("change");
+  });
 }
+
 async function Profesionales(page, Eventos) {
 
 
@@ -1651,10 +1643,9 @@ function Mineria(browser, Pin,) {
       await Detalles_de_area(page);
     }
 
-    
-    Pasolotecnico = await Informacion_tecnica(page);
-    if (Pasolotecnico) {
-    } else {
+    try {
+      await Informacion_tecnica(page);
+    } catch (error) {
       await Informacion_tecnica(page);
     }
 
@@ -1714,11 +1705,7 @@ function Mineria(browser, Pin,) {
 
 
     clearTimeout(RadiPrimero);
-    let Radisegundo = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 10000);
+   
 
 
     await Certificado_Shapefile(page, Empresa, Areas[Band].NombreArea);
@@ -1734,85 +1721,8 @@ function Mineria(browser, Pin,) {
 
     }
 
-
     const continPag = await page.$x('//span[contains(.,"Continuar")]');
-    await continPag[1].click();
-
-    clearTimeout(Radisegundo);
-    await page.waitForNavigation({
-      waitUntil: "networkidle0",
-    });
-    console.log(" si navego ");
-
-
-
-
-    let RadiTercero = setTimeout(() => {
-      console.log("ENTRO EN EL Radisegundo");
-      //page.close();
-      Mineria(browser, Pin);
-    }, 120000);
-
-    //  await page.waitForTimeout(1000000);
-
-
-    while (true) {
-
-      let resultado = await RECAPTCHA(page);
-      if (resultado == 1) {
-        break;
-      }
-
-    }
-
-    var imagendeCaptcha = 0;
-    while (true) {
-      await page.waitForTimeout(1500);
-
-      if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataSummary') {
-        let resultado = await verificarCaptchaResuelto(page, imagendeCaptcha);
-        if (resultado === 1) {
-          clearTimeout(RadiTercero);
-          break;
-        } else if (resultado === 2) {
-          console.log("El captcha sigue en modo reto de imagenes");
-          Correo(6, Areas[Band].NombreArea, Areas[Band].Referencia);
-          // lO RETIRO PORQUE NO VALE LA PENA
-          // Mineria(browser, Pin);
-          imagendeCaptcha = 1;
-        } else {
-          // await RECAPTCHA(page);
-        }
-
-      } else if (page.url() === 'https://annamineria.anm.gov.co/sigm/index.html#/p_CaaIataAttachDocuments') {
-        const posibleContinuar = await page.$x('//span[contains(.,"Continuar")]');
-        if (posibleContinuar.length > 0) {
-          console.log("⚠️ Se encontró el botón 'Continuar' en la página.");
-          console.log([posibleContinuar]);
-          await posibleContinuar[1].click();
-          await page.waitForNavigation({
-            waitUntil: "networkidle0",
-          });
-          await RECAPTCHA(page);
-        }
-      }
-    }
-
-    // await page.waitForTimeout(1000000);
-
-    console.log("51. Bóton Radicar");
-
-    const btnRadicar1 = await page.$x('//span[contains(.,"Radicar")]');
-    console.log("Este es el boton radicar : " + btnRadicar1);
-
-    console.log("Le di click");
-
-    try {
-      await btnRadicar1[1].click();
-    } catch (exepcion) {
-      console.log("La 1 tampoco Y_Y");
-    }
-
+     
 
     //CORREO RADICACION
     Correo(2, Areas[Band].NombreArea, Areas[Band].Referencia);
@@ -1877,8 +1787,8 @@ function Correo(Tipo, Area, Celda) {
 
   let mailOptions = {
     from: msg + '"Ceere" <correomineria2@ceere.net>', //Deje eso quieto Outlook porne demasiados problemas
-    to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
-    //to: '  Soporte2ceere@gmail.com',
+    //to: "jorgecalle@hotmail.com, jorgecaller@gmail.com, alexisaza@hotmail.com,  ceereweb@gmail.com, Soporte2ceere@gmail.com, soportee4@gmail.com, soporte.ceere06068@gmail.com",
+    to: '  Soporte2ceere@gmail.com',
     subject: "LA AREA ES-> " + Area,
     text: "LA AREA ES->  " + Area + "  " + Celda,
     html: `
@@ -2167,14 +2077,24 @@ function VerificarVencimientoPin(
   }
 }
 
+
+
 const Areas =
   [
-   {
-      NombreArea: "510593",
-      Referencia: "18P09K22I12V",
-      Celdas: ["18P09K21L03L, 18P09K21L04A, 18P09K21L09C, 18P09K21L09U, 18P09K21L04U, 18P09K21L10K, 18P09K21L10F, 18P09K21L05S, 18P09K21L10Y, 18P09K21L05T, 18P09K21L10Z, 18P09K21L10E, 18P09K22I06A, 18P09K22I01G, 18P09K22I11T, 18P09K22I01D, 18P09K22I11U, 18P09K22I11E, 18P09K22I01P, 18P09K22I12V, 18P09K22I12F, 18P09K22I07Q, 18P09K22I07W, 18P09K22I02L, 18P09K22I07N, 18P09K22I02M, 18P09K22I17P, 18P09K22I17J, 18P09K22I18A, 18P09K22I13Q, 18P09K22I13A, 18P09K22I08V, 18P09K22I08F, 18P09K22I18G, 18P09K22I13B, 18P09K22I03W, 18P09K22I08S, 18P09K22I08H, 18P09K22I08C, 18P09K22I13N, 18P09K22I03Y, 18P09K22I13Z, 18P09K22I09F, 18P09K22I19L, 18P09K22I14L, 18P09K22I09B, 18P09K22I14M, 18P09K22I09X, 18P09K22I04S, 18P09K22I24T, 18P09K22I19Z, 18P09K22I14Y, 18P09K22I14I, 18P09K22I04Y, 18P09K22I25Q, 18P09K22I20V, 18P09K22I10Q, 18P09K22I05V, 18P09K22I05Q, 18P09K22I25G, 18P09K22I25S, 18P09K22I25H, 18P09K22I25C, 18P09K22I20X, 18P09K22I15M, 18P09K22I05S, 18P09K22M05E, 18P09K22I25J, 18P09K22I05Z, 18P09K22I05U, 18P09K22N01F, 18P09K22J06V, 18P09K22N01G, 18P09K22J16R, 18P09K22J16B, 18P09K22N01C, 18P09K22J21H, 18P09K22J11X, 18P09K22J11H, 18P09K22J01M, 18P09K22N01T, 18P09K22J21I, 18P09K22J16T, 18P09K22J06N, 18P09K22J01Y, 18P09K22J01T, 18P09K22N07A, 18P09K22N02F, 18P09K22J21U, 18P09K22J22K, 18P09K22J22A, 18P09K22J12Q, 18P09K22J06J, 18P09K22J07K, 18P09K22J02L, 18P09K22J02G, 18P09K22N02S, 18P09K22N02C, 18P09K22J22M, 18P09K22J02M, 18P09K22N07D, 18P09K22J17N, 18P09K22J12D, 18P09K22J12Z, 18P09K22J12E, 18P09K22J07P, 18P09K22N03F, 18P09K22J08Q, 18P09K22N03L, 18P09K22J03B, 18P09K22J23X, 18P09K22J03C, 18P09K22J23Y, 18P09K22N04W, 18P09K22N04B, 18P09K22J14H, 18P09K22N04N, 18P09K22J14Y, 18P09K22J14N, 18P09K22N09E, 18P09K21L03A, 18P09K21L09A, 18P09K21L04Q, 18P09K21L09G, 18P09K21L04W, 18P09K21L04H, 18P09K21L09N, 18P09K21L04T, 18P09K21L09P, 18P09K21L05Q, 18P09K21L10N, 18P09K22I06K, 18P09K22I11L, 18P09K22I06B, 18P09K22I01B, 18P09K22I06H, 18P09K22I06D, 18P09K22I01Y, 18P09K22I01I, 18P09K22I06J, 18P09K22I07A, 18P09K22I02G, 18P09K22I17I, 18P09K22I12X, 18P09K22I02X, 18P09K22I02T, 18P09K22I12P, 18P09K22I12J, 18P09K22I08K, 18P09K22I08R, 18P09K22I08Y, 18P09K22I18J, 18P09K22I18E, 18P09K22I13U, 18P09K22I13J, 18P09K22I03P, 18P09K22I14V, 18P09K22I14K, 18P09K22I04A, 18P09K22I24G, 18P09K22I19R, 18P09K22I04R, 18P09K22I04X, 18P09K22I19T, 18P09K22I19N, 18P09K22I09Z, 18P09K22I25F, 18P09K22I15Q, 18P09K22I25W, 18P09K22I20G, 18P09K22I05L, 18P09K22I25Y, 18P09K22I25D, 18P09K22I20I, 18P09K22I15T, 18P09K22I10I, 18P09K22I05T, 18P09K22I05I, 18P09K22I25P, 18P09K22I15J, 18P09K22I10U, 18P09K22J21V, 18P09K22J16K, 18P09K22J16A, 18P09K22J11Q, 18P09K22J11K, 18P09K22J21B, 18P09K22N01M, 18P09K22N01H, 18P09K22J11S, 18P09K22J06M, 18P09K22J21N, 18P09K22J16Y, 18P09K22J16D, 18P09K22J11I, 18P09K22J22Q, 18P09K22J17A, 18P09K22J11Z, 18P09K22J06U, 18P09K22N02R, 18P09K22J22W, 18P09K22J22B, 18P09K22J12B, 18P09K22N02H, 18P09K22J12C, 18P09K22J02X, 18P09K22J02C, 18P09K22J17I, 18P09K22J12N, 18P09K22J02I, 18P09K22J02D, 18P09K22N02U, 18P09K22J17J, 18P09K22J17E, 18P09K22J12U, 18P09K22J07U, 18P09K22J02P, 18P09K22N03A, 18P09K22J13V, 18P09K22J13A, 18P09K22J03A, 18P09K22J13W, 18P09K22J13H, 18P09K22N03D, 18P09K22J23T, 18P09K22J18D, 18P09K22J13Y, 18P09K22J03D, 18P09K22N03U, 18P09K22N03P, 18P09K22N03E, 18P09K22J18J, 18P09K22J18E, 18P09K22N04G, 18P09K22N04A, 18P09K22J19A, 18P09K22J14V, 18P09K22J14G, 18P09K21L03B, 18P09K21L03X, 18P09K21L03C, 18P09K21L04R, 18P09K21L04B, 18P09K21L04M, 18P09K21L04N, 18P09K21L04I, 18P09K21L09J, 18P09K21L04E, 18P09K21L05A, 18P09K21L10L, 18P09K21L10H, 18P09K21L05G, 18P09K21L05I, 18P09K21L15E, 18P09K21L05Z, 18P09K22I06Q, 18P09K22I06F, 18P09K22I01Q, 18P09K22I11G, 18P09K22I06R, 18P09K22I01R, 18P09K22I11S, 18P09K22I06C, 18P09K22I11Y, 18P09K22I11I, 18P09K22I11D, 18P09K22I06I, 18P09K22I01N, 18P09K22I11P, 18P09K22I06E, 18P09K22I12K, 18P09K22I07V, 18P09K22I12L, 18P09K22I07R, 18P09K22I07G, 18P09K22I02B, 18P09K22I17D, 18P09K22I12Y, 18P09K22I12T, 18P09K22I12D, 18P09K22I07Y, 18P09K22I02Y, 18P09K22I02N, 18P09K22I02C, 18P09K22I12Z, 18P09K22I18F, 18P09K22I13F, 18P09K22I03A, 18P09K22I18R, 18P09K22I03B, 18P09K22I18C, 18P09K22I13C, 18P09K22I03X, 18P09K22I18N, 18P09K22I18D, 18P09K22I13Y, 18P09K22I13I, 18P09K22I18U, 18P09K22I18P, 18P09K22I13P, 18P09K22I19F, 18P09K22I19A, 18P09K22I09Q, 18P09K22I24L, 18P09K22I14X, 18P09K22I09M, 18P09K22I24J, 18P09K22I09U, 18P09K22I09J, 18P09K22I04U, 18P09K22I04E, 18P09K22I10F, 18P09K22I20W, 18P09K22I20R, 18P09K22I20L, 18P09K22I15L, 18P09K22I10B, 18P09K22I05W, 18P09K22I25M, 18P09K22I20S, 18P09K22I20M, 18P09K22I20N, 18P09K22I15D, 18P09K22I05N, 18P09K22M05J, 18P09K22I25Z, 18P09K22I10J, 18P09K22J21A, 18P09K22J16F, 18P09K22J01V, 18P09K22J11W, 18P09K22J11L, 18P09K22J06L, 18P09K22J01L, 18P09K22J01G, 18P09K22N01S, 18P09K22J21X, 18P09K22J16M, 18P09K22J11M, 18P09K22J06C, 18P09K22J01C, 18P09K22J16I, 18P09K22J06Y, 18P09K22N01P, 18P09K22N02A, 18P09K22J17V, 18P09K22J17K, 18P09K22J12V, 18P09K22J11U, 18P09K22J12K, 18P09K22J06Z, 18P09K22J07A, 18P09K22J02V, 18P09K22J02F, 18P09K22N02W, 18P09K22J22L, 18P09K22J17B, 18P09K22J22H, 18P09K22J07M, 18P09K22J07H, 18P09K22N02T, 18P09K22J02T, 18P09K22N02J, 18P09K22N03K, 18P09K22J23K, 18P09K22J13K, 18P09K22J08V, 18P09K22J03K, 18P09K22J03F, 18P09K22N03R, 18P09K22N03B, 18P09K22J23R, 18P09K22J18G, 18P09K22J13X, 18P09K22J13C, 18P09K22J13T, 18P09K22J13P, 18P09K22J13J, 18P09K22J19F, 18P09K22J19B, 18P09K22J14K, 18P09K22N04S, 18P09K22J19D, 18P09K22J14U, 18P09K22J14P, 18P09K21L03S, 18P09K21L03H, 18P09K21L03T, 18P09K21L03N, 18P09K21L04V, 18P09K21L09I, 18P09K21L09D, 18P09K21L04D, 18P09K21L04Z, 18P09K21L04J, 18P09K21L10W, 18P09K21L10X, 18P09K21L10R, 18P09K21L10S, 18P09K21L10G, 18P09K21L05X, 18P09K21L05L, 18P09K21L15I, 18P09K21L15D, 18P09K21L05Y, 18P09K21L05J, 18P09K22I11K, 18P09K22I11A, 18P09K22I06W, 18P09K22I06Y, 18P09K22I11J, 18P09K22I12A, 18P09K22I02A, 18P09K22I12W, 18P09K22I07B, 18P09K22I12M, 18P09K22I07C, 18P09K22I07Z, 18P09K22I07E, 18P09K22I02U, 18P09K22I02J, 18P09K22I13K, 18P09K22I18L, 18P09K22I13W, 18P09K22I08W, 18P09K22I08B, 18P09K22I03R, 18P09K22I03G, 18P09K22I13T, 18P09K22I08D, 18P09K22I24A, 18P09K22I19Q, 18P09K22I14A, 18P09K22I04F, 18P09K22I14W, 18P09K22I14B, 18P09K22I09L, 18P09K22I14C, 18P09K22I09S, 18P09K22I09C, 18P09K22I04C, 18P09K22I24U, 18P09K22I24E, 18P09K22I19P, 18P09K22I19D, 18P09K22I14P, 18P09K22I09N, 18P09K22I09P, 18P09K22I04P, 18P09K22I04D, 18P09K22I25A, 18P09K22I10V, 18P09K22I25R, 18P09K22I25L, 18P09K22I15W, 18P09K22I10G, 18P09K22I05R, 18P09K22I05G, 18P09K22I25X, 18P09K22I15C, 18P09K22I10X, 18P09K22I10H, 18P09K22I05M, 18P09K22I05C, 18P09K22I25N, 18P09K22I20D, 18P09K22I15Y, 18P09K22I15I, 18P09K22I15Z, 18P09K22N01B, 18P09K22J01B, 18P09K22J21M, 18P09K22J21C, 18P09K22J11C, 18P09K22J01X, 18P09K22J01H, 18P09K22J21Y, 18P09K22J21Z, 18P09K22J22V, 18P09K22J21P, 18P09K22J22F, 18P09K22J11P, 18P09K22J11J, 18P09K22J01Z, 18P09K22J01P, 18P09K22J01E, 18P09K22N02L, 18P09K22J22G, 18P09K22J17W, 18P09K22J12W, 18P09K22J02R, 18P09K22J22X, 18P09K22J17C, 18P09K22J12H, 18P09K22J02S, 18P09K22N02Y, 18P09K22J22Y, 18P09K22J12I, 18P09K22J07T, 18P09K22J07I, 18P09K22N02P, 18P09K22J13F, 18P09K22N03W, 18P09K22N03G, 18P09K22J13L, 18P09K22J08W, 18P09K22J03G, 18P09K22N03S, 18P09K22J18H, 18P09K22N04K, 18P09K22N04F, 18P09K22J24V, 18P09K22J14A, 18P09K22N04X, 18P09K22J14T, 18P09K21L03Y, 18P09K21L03U, 18P09K21L09B, 18P09K21L04S, 18P09K21L04C, 18P09K21L04Y, 18P09K21L04P, 18P09K21L05K, 18P09K21L05F, 18P09K21L10B, 18P09K21L05M, 18P09K21L05H, 18P09K21L05B, 18P09K21L10T, 18P09K21L10D, 18P09K21L05D, 18P09K22I06V, 18P09K22I01F, 18P09K22I01A, 18P09K22I11B, 18P09K22I06N, 18P09K22I06P, 18P09K22I01U, 18P09K22I01E, 18P09K22I17A, 18P09K22I07K, 18P09K22I02V, 18P09K22I02F, 18P09K22I17H, 18P09K22I12N, 18P09K22I07S, 18P09K22I07D, 18P09K22I02H, 18P09K22I02D, 18P09K22I02Z, 18P09K22I02P, 18P09K22I18Q, 18P09K22I18K, 18P09K22I13V, 18P09K22I03V, 18P09K22I03Q, 18P09K22I18W, 18P09K22I08G, 18P09K22I03L, 18P09K22I13X, 18P09K22I13S, 18P09K22I03C, 18P09K22I18Y, 18P09K22I08T, 18P09K22I08N, 18P09K22I03Z, 18P09K22I19V, 18P09K22I19K, 18P09K22I09V, 18P09K22I19G, 18P09K22I19B, 18P09K22I09W, 18P09K22I04L, 18P09K22I24C, 18P09K22I19S, 18P09K22I14H, 18P09K22I04M, 18P09K22I24I, 18P09K22I14J, 18P09K22I14D, 18P09K22I09T, 18P09K22I09I, 18P09K22I04T, 18P09K22I04I, 18P09K22I20Q, 18P09K22I10A, 18P09K22I05F, 18P09K22I05A, 18P09K22M05B, 18P09K22I10L, 18P09K22I05B, 18P09K22I20H, 18P09K22I10S, 18P09K22I10M, 18P09K22I25I, 18P09K22I20T, 18P09K22I10T, 18P09K22I10D, 18P09K22I15E, 18P09K22I05P, 18P09K22I05J, 18P09K22N01K, 18P09K22J21Q, 18P09K22J21K, 18P09K22J21F, 18P09K22J01K, 18P09K22J01F, 18P09K22N01L, 18P09K22J21W, 18P09K22J21L, 18P09K22J21G, 18P09K22J11G, 18P09K22J16H, 18P09K22N01N, 18P09K22N01I, 18P09K22J21T, 18P09K22J21D, 18P09K22J16N, 18P09K22J06T, 18P09K22J06D, 18P09K22J01N, 18P09K22N01U, 18P09K22J16U, 18P09K22J16P, 18P09K22J17Q, 18P09K22J11E, 18P09K22J06E, 18P09K22N02G, 18P09K22J17R, 18P09K22J07B, 18P09K22N07C, 18P09K22N02M, 18P09K22J17S, 18P09K22J17M, 18P09K22J07S, 18P09K22N02D, 18P09K22J22T, 18P09K22J12T, 18P09K22J22J, 18P09K22J12J, 18P09K22J23Q, 18P09K22J18K, 18P09K22J18A, 18P09K22J23L, 18P09K22J13R, 18P09K22N03H, 18P09K22J03H, 18P09K22N03N, 18P09K22J18I, 18P09K22J13D, 18P09K22N03J, 18P09K22J19G, 18P09K22J14Q, 18P09K22J14F, 18P09K22J14X, 18P09K22N09D, 18P09K22N04Y, 18P09K21L03J, 18P09K21L04X, 18P09K21L05V, 18P09K21L10I, 18P09K21L10U, 18P09K21L10P, 18P09K21L05P, 18P09K21L05E, 18P09K22I11F, 18P09K22I01K, 18P09K22I06L, 18P09K22I01S, 18P09K22I01M, 18P09K22I01C, 18P09K22I12Q, 18P09K22I07F, 18P09K22I17G, 18P09K22I12R, 18P09K22I12B, 18P09K22I02S, 18P09K22I17E, 18P09K22I03K, 18P09K22I03F, 18P09K22I13L, 18P09K22I13G, 18P09K22I08L, 18P09K22I18M, 18P09K22I13H, 18P09K22I08M, 18P09K22I03H, 18P09K22I23D, 18P09K22I18I, 18P09K22I08I, 18P09K22I03N, 18P09K22I18Z, 18P09K22I08U, 18P09K22I08P, 18P09K22I03U, 18P09K22I14F, 18P09K22I04V, 18P09K22I04Q, 18P09K22I19W, 18P09K22I09G, 18P09K22I04B, 18P09K22I19M, 18P09K22I24P, 18P09K22I24D, 18P09K22I19U, 18P09K22I19J, 18P09K22I14Z, 18P09K22I14E, 18P09K22I04N, 18P09K22I04J, 18P09K22I20K, 18P09K22I15V, 18P09K22I25B, 18P09K22I20B, 18P09K22I20C, 18P09K22I15X, 18P09K22I05H, 18P09K22M05I, 18P09K22I20Y, 18P09K22I10Y, 18P09K22I05Y, 18P09K22I25U, 18P09K22I10Z, 18P09K22I10P, 18P09K22J16V, 18P09K22J11V, 18P09K22N01R, 18P09K22J06R, 18P09K22J06B, 18P09K22J01W, 18P09K22J11N, 18P09K22N01Z, 18P09K22N02K, 18P09K22N01E, 18P09K22J17F, 18P09K22J06P, 18P09K22J01J, 18P09K22J17G, 18P09K22J07W, 18P09K22J07G, 18P09K22J02B, 18P09K22N02X, 18P09K22J07C, 18P09K22J02N, 18P09K22N02Z, 18P09K22J02U, 18P09K22J23V, 18P09K22J18F, 18P09K22J13Q, 18P09K22J23W, 18P09K22J18B, 18P09K22J13M, 18P09K22J08X, 18P09K22J13N, 18P09K22J13I, 18P09K22J13U, 18P09K22J14R, 18P09K22J19C, 18P09K22N04I, 18P09K22J15F, 18P09K21L03F, 18P09K21L03G, 18P09K21L03M, 18P09K21L03I, 18P09K21L09F, 18P09K21L04K, 18P09K21L04L, 18P09K21L04G, 18P09K21L09M, 18P09K21L15C, 18P09K21L05C, 18P09K21L05N, 18P09K21L10J, 18P09K21L05U, 18P09K22I01L, 18P09K22I11H, 18P09K22I06X, 18P09K22I01H, 18P09K22I06T, 18P09K22I01T, 18P09K22I01J, 18P09K22I07L, 18P09K22I02W, 18P09K22I02R, 18P09K22I12S, 18P09K22I12H, 18P09K22I12I, 18P09K22I07X, 18P09K22I07M, 18P09K22I07H, 18P09K22I02E, 18P09K22I08A, 18P09K22I18H, 18P09K22I08X, 18P09K22I03S, 18P09K22I18T, 18P09K22I03T, 18P09K22I03D, 18P09K22I23E, 18P09K22I08J, 18P09K22I03E, 18P09K22I24F, 18P09K22I14Q, 18P09K22I09A, 18P09K22I04K, 18P09K22I04G, 18P09K22I19X, 18P09K22I19C, 18P09K22I09H, 18P09K22I24N, 18P09K22I19Y, 18P09K22I19I, 18P09K22I14T, 18P09K22I09D, 18P09K22I09E, 18P09K22I25V, 18P09K22I25K, 18P09K22I10K, 18P09K22I05K, 18P09K22I15R, 18P09K22I15B, 18P09K22I10W, 18P09K22I10R, 18P09K22M05C, 18P09K22M05D, 18P09K22I25T, 18P09K22I15N, 18P09K22I20U, 18P09K22I20J, 18P09K22I20E, 18P09K22I15U, 18P09K22I10E, 18P09K22J06Q, 18P09K22J01A, 18P09K22J16L, 18P09K22J11R, 18P09K22J11B, 18P09K22J01R, 18P09K22J16S, 18P09K22J06S, 18P09K22J06H, 18P09K22J11Y, 18P09K22J11D, 18P09K22J01I, 18P09K22N02Q, 18P09K22N01J, 18P09K22J21E, 18P09K22J16J, 18P09K22J12A, 18P09K22J07V, 18P09K22J01U, 18P09K22J02K, 18P09K22J02A, 18P09K22N07B, 18P09K22J17L, 18P09K22J12R, 18P09K22J12L, 18P09K22J07X, 18P09K22J02H, 18P09K22N02N, 18P09K22N02I, 18P09K22J22N, 18P09K22J22I, 18P09K22J17T, 18P09K22J07D, 18P09K22N02E, 18P09K22J22U, 18P09K22J22P, 18P09K22J17P, 18P09K22J12P, 18P09K22J07Z, 18P09K22J13B, 18P09K22N03M, 18P09K22J18C, 18P09K22N04R, 18P09K22N04L, 18P09K22J14L, 18P09K22N04M, 18P09K22N04H, 18P09K22N04C, 18P09K22J14J, 18P09K21L02P, 18P09K21L02J, 18P09K21L03R, 18P09K21L03K, 18P09K21L03D, 18P09K21L08E, 18P09K21L03Z, 18P09K21L03P, 18P09K21L03E, 18P09K21L04F, 18P09K21L09H, 18P09K21L09E, 18P09K21L10V, 18P09K21L10Q, 18P09K21L10A, 18P09K21L10M, 18P09K21L10C, 18P09K21L05W, 18P09K21L05R, 18P09K21L15J, 18P09K22I01V, 18P09K22I06G, 18P09K22I01W, 18P09K22I11M, 18P09K22I11C, 18P09K22I06S, 18P09K22I06M, 18P09K22I01X, 18P09K22I11N, 18P09K22I11Z, 18P09K22I06Z, 18P09K22I06U, 18P09K22I01Z, 18P09K22I02Q, 18P09K22I02K, 18P09K22I17B, 18P09K22I12G, 18P09K22I17N, 18P09K22I17C, 18P09K22I12C, 18P09K22I07T, 18P09K22I07I, 18P09K22I02I, 18P09K22I12U, 18P09K22I12E, 18P09K22I07U, 18P09K22I07P, 18P09K22I07J, 18P09K22I08Q, 18P09K22I18B, 18P09K22I13R, 18P09K22I18X, 18P09K22I18S, 18P09K22I13M, 18P09K22I03M, 18P09K22I13D, 18P09K22I03I, 18P09K22I13E, 18P09K22I08Z, 18P09K22I08E, 18P09K22I03J, 18P09K22I09K, 18P09K22I24B, 18P09K22I14R, 18P09K22I14G, 18P09K22I09R, 18P09K22I04W, 18P09K22I24M, 18P09K22I24H, 18P09K22I19H, 18P09K22I14S, 18P09K22I04H, 18P09K22I24Z, 18P09K22I19E, 18P09K22I14U, 18P09K22I14N, 18P09K22I09Y, 18P09K22I04Z, 18P09K22I20F, 18P09K22I20A, 18P09K22I15K, 18P09K22I15F, 18P09K22I15A, 18P09K22I15G, 18P09K22I15S, 18P09K22I15H, 18P09K22I10C, 18P09K22I05X, 18P09K22I10N, 18P09K22I05D, 18P09K22M05P, 18P09K22I25E, 18P09K22I20Z, 18P09K22I20P, 18P09K22I15P, 18P09K22I05E, 18P09K22N01A, 18P09K22J16Q, 18P09K22J11F, 18P09K22J11A, 18P09K22J06K, 18P09K22J06F, 18P09K22J06A, 18P09K22J01Q, 18P09K22J21R, 18P09K22J16W, 18P09K22J16G, 18P09K22J06W, 18P09K22J06G, 18P09K22N01X, 18P09K22J21S, 18P09K22J16X, 18P09K22J16C, 18P09K22J06X, 18P09K22J01S, 18P09K22N01Y, 18P09K22N01D, 18P09K22J11T, 18P09K22J06I, 18P09K22J01D, 18P09K22N02V, 18P09K22J21J, 18P09K22J16Z, 18P09K22J16E, 18P09K22J12F, 18P09K22J07Q, 18P09K22J07F, 18P09K22J02Q, 18P09K22N02B, 18P09K22J22R, 18P09K22J12G, 18P09K22J07R, 18P09K22J07L, 18P09K22J02W, 18P09K22J22S, 18P09K22J17H, 18P09K22J12X, 18P09K22J12S, 18P09K22J12M, 18P09K22J17D, 18P09K22J12Y, 18P09K22J07Y, 18P09K22J07N, 18P09K22J02Y, 18P09K22J22Z, 18P09K22J02J, 18P09K22J02E, 18P09K22N03V, 18P09K22N03Q, 18P09K22J13G, 18P09K22N03C, 18P09K22J23S, 18P09K22J13S, 18P09K22N03T, 18P09K22N03I, 18P09K22J23Z, 18P09K22J13Z, 18P09K22J13E, 18P09K22N04Q, 18P09K22J14W, 18P09K22J19H, 18P09K22J14S, 18P09K22J14M, 18P09K22N04T, 18P09K22J14I, 18P09K22N04Z"]
-    }    
+
+    /* {
+      NombreArea: "prueba", // nombre del area
+      Referencia: "18N05N14M12R", // celda referencia
+      Celdas: ["18N05N14M12R"] // area completa de celdas
+    },*/
+    {
+      NombreArea: "697-17",
+      Referencia: "18N05A25Q07I",
+      Celdas: ["18N05A25Q07I, 18N05A25Q02Y, 18N05N14M12R, 18N05A25Q02T, 18N05A25Q02I, 18N05A25L22P, 18N05A25L12E, 18N05A25L07E, 18N05A25L02Z, 18N05A25Q08K, 18N05A25L23Q, 18N05A25L23F, 18N05A25L03V, 18N05A25Q08G, 18N05A25Q03L, 18N05A25Q03B, 18N05A25L18B, 18N05A25Q08M, 18N05A25Q08H, 18N05A25Q03M, 18N05A25Q03C, 18N05A25L23M, 18N05A25L13H, 18N05A25Q08T, 18N05A25Q03Y, 18N05A25L18Y, 18N05A25L13T, 18N05A25Q08J, 18N05A25Q04A, 18N05A25L18P, 18N05A25L14V, 18N05A25L13P, 18N05A25L09K, 18N05A25Q04B, 18N05A25L19B, 18N05A25L09L, 18N05A25Q09S, 18N05A25L24H, 18N05A25L19H, 18N05A25Q04D, 18N05A25L24N, 18N05A25L14I, 18N05A25Q09J, 18N05A25L24E, 18N05A25Q10K, 18N05A25Q05Q, 18N05A25L20Q, 18N05A25L20F, 18N05A25L10A, 18N05A25Q15L, 18N05A25Q10W, 18N05A25Q05W, 18N05A25L25L, 18N05A25Q15C, 18N05A25Q10M, 18N05A25Q05X, 18N05A25Q05S, 18N05A25L10X, 18N05A25Q10Y, 18N05A25Q10D, 18N05A25L25N, 18N05A25L20I, 18N05A25L15N, 18N05A25L15I, 18N05A25L10T, 18N05A25L05Y, 18N05A25Q20E, 18N05A25Q05U, 18N05A25L10U, 18N05B21M16K, 18N05B21M16G, 18N05B21M11K, 18N05B21M01K, 18N05B21M01L, 18N05B21M01A, 18N05B21I11R, 18N05B21I11G, 18N05B21I06Q, 18N05B21I06L, 18N05A25Q02Z, 18N05A25Q02P, 18N05A25L22J, 18N05A25L17Z, 18N05A25L17U, 18N05A25L17J, 18N05A25L12Z, 18N05A25L18K, 18N05A25L08V, 18N05A25L23B, 18N05A25L08R, 18N05A25L08G, 18N05A25Q08S, 18N05A25Q03S, 18N05A25L23H, 18N05A25L18S, 18N05A25L13C, 18N05A25L08T, 18N05A25L08D, 18N05A25L03Y, 18N05A25Q04F, 18N05A25L19V, 18N05A25L08U, 18N05A25L08P, 18N05A25L04V, 18N05A25Q09L, 18N05A25L14L, 18N05A25L04W, 18N05A25Q09H, 18N05A25L19S, 18N05A25L19C, 18N05A25L14H, 18N05A25Q09D, 18N05A25Q04N, 18N05A25Q04I, 18N05A25L24D, 18N05A25L19N, 18N05A25L09I, 18N05A25L04Y, 18N05A25Q09E, 18N05A25Q04Z, 18N05A25L24Z, 18N05A25L09Z, 18N05A25Q10Q, 18N05A25L15K, 18N05A25Q20L, 18N05A25Q10G, 18N05A25L25G, 18N05A25L20G, 18N05A25L10G, 18N05A25Q05M, 18N05A25Q05H, 18N05A25L25M, 18N05A25L25H, 18N05A25L25C, 18N05A25Q10T, 18N05A25Q10N, 18N05A25Q05N, 18N05A25L10I, 18N05A25Q10P, 18N05A25Q05Z, 18N05A25L20P, 18N05A25L10P, 18N05B21M16A, 18N05B21M11G, 18N05B21M11A, 18N05B21M06K, 18N05B21M06L, 18N05B21I21G, 18N05B21I16W, 18N05B21I16F, 18N05B21I11B, 18N05B21I06F, 18N05B21I06B, 18N05B21I01W, 18N05A25Q07T, 18N05A25L17P, 18N05A25L07Z, 18N05A25L07J, 18N05A25Q03K, 18N05A25L08Q, 18N05A25L08K, 18N05A25Q08R, 18N05A25Q08B, 18N05A25L23L, 18N05A25L13W, 18N05A25L08W, 18N05A25L23S, 18N05A25L18M, 18N05A25L08M, 18N05A25L08H, 18N05A25L03X, 18N05A25Q03T, 18N05A25Q03N, 18N05A25L23T, 18N05A25L23D, 18N05A25L13I, 18N05A25L08Y, 18N05A25L08N, 18N05A25Q08U, 18N05A25Q03J, 18N05A25L24Q, 18N05A25L18U, 18N05A25L19K, 18N05A25L18J, 18N05A25L13Z, 18N05A25L14K, 18N05A25L14A, 18N05A25L08J, 18N05A25L09F, 18N05A25Q09B, 18N05A25L19L, 18N05A25L14X, 18N05A25L09M, 18N05A25Q09T, 18N05A25L09Y, 18N05A25Q04P, 18N05A25L19U, 18N05A25L09U, 18N05A25L09E, 18N05A25Q05K, 18N05A25Q05F, 18N05A25L25A, 18N05A25L15Q, 18N05A25Q15R, 18N05A25L25W, 18N05A25L10L, 18N05A25L25S, 18N05A25L15H, 18N05A25L15C, 18N05A25L10M, 18N05A25Q20I, 18N05A25Q15Y, 18N05A25Q15D, 18N05A25L25D, 18N05A25L20Y, 18N05A25L15T, 18N05A25L10N, 18N05A25Q20J, 18N05A25Q15J, 18N05A25Q10J, 18N05A25L20E, 18N05A25L15Z, 18N05B21M16B, 18N05B21M11L, 18N05B21M06V, 18N05B21M01V, 18N05B21I16V, 18N05B21I16G, 18N05B21I16A, 18N05B21I11F, 18N05A25Q07U, 18N05A25Q07J, 18N05A25Q02J, 18N05A25Q02E, 18N05A25L12U, 18N05A25L07U, 18N05A25Q03V, 18N05A25Q03F, 18N05A25L23A, 18N05A25L18Q, 18N05A25L13V, 18N05A25L13F, 18N05A25L08A, 18N05A25L18R, 18N05A25L08L, 18N05A25L08B, 18N05A25Q08C, 18N05A25L18H, 18N05A25L08X, 18N05A25Q08D, 18N05A25L23I, 18N05A25L13D, 18N05A25Q08P, 18N05A25L09A, 18N05A25L14G, 18N05A25L09R, 18N05A25Q04C, 18N05A25L24S, 18N05A25L19M, 18N05A25Q04U, 18N05A25L19J, 18N05A25Q05V, 18N05A25L25V, 18N05A25L25K, 18N05A25L20K, 18N05A25L10V, 18N05A25Q20G, 18N05A25Q10R, 18N05A25Q10L, 18N05A25Q10B, 18N05A25Q05R, 18N05A25L15G, 18N05A25L10W, 18N05A25L10B, 18N05A25L05W, 18N05A25Q20M, 18N05A25Q10C, 18N05A25L20X, 18N05A25L10S, 18N05A25Q15N, 18N05A25Q05I, 18N05A25L20D, 18N05A25L15Y, 18N05A25L15D, 18N05A25Q15Z, 18N05A25Q15P, 18N05A25L15U, 18N05A25L10Z, 18N05B21M11V, 18N05B21M11Q, 18N05B21M11R, 18N05B21M06G, 18N05B21M01Q, 18N05B21M01G, 18N05B21I21V, 18N05B21I21Q, 18N05B21I21R, 18N05B21I11V, 18N05B21I11W, 18N05B21I06W, 18N05B21I06K, 18N05A25Q07E, 18N05A25Q02U, 18N05A25L22Z, 18N05A25L22U, 18N05A25L22E, 18N05A25L12P, 18N05A25L12J, 18N05A25Q08Q, 18N05A25Q03Q, 18N05A25L23K, 18N05A25L18V, 18N05A25L18F, 18N05A25L13A, 18N05A25Q03W, 18N05A25L03W, 18N05A25L23X, 18N05A25L13X, 18N05A25L18N, 18N05A25L18I, 18N05A25L18D, 18N05A25Q09A, 18N05A25Q03E, 18N05A25L23P, 18N05A25L23J, 18N05A25L13J, 18N05A25L14F, 18N05A25Q09R, 18N05A25L24W, 18N05A25L24R, 18N05A25Q09M, 18N05A25Q04X, 18N05A25L19X, 18N05A25L14C, 18N05A25L04X, 18N05A25Q09N, 18N05A25Q04T, 18N05A25L19Y, 18N05A25L14Y, 18N05A25L14D, 18N05A25L14U, 18N05A25L14P, 18N05A25L14J, 18N05A25L15A, 18N05A25L10F, 18N05A25Q20B, 18N05A25Q15G, 18N05A25Q05L, 18N05A25Q05G, 18N05A25L25R, 18N05A25L15R, 18N05A25L15L, 18N05A25Q15X, 18N05A25Q10S, 18N05A25Q10H, 18N05A25L20C, 18N05A25L10H, 18N05A25Q05Y, 18N05A25Q05T, 18N05A25L25Y, 18N05A25L25I, 18N05A25L20T, 18N05A25L20N, 18N05A25Q20P, 18N05A25Q10Z, 18N05A25Q05P, 18N05A25Q05J, 18N05A25L20J, 18N05A25L05Z, 18N05B21M11W, 18N05B21M11F, 18N05B21M06Q, 18N05B21M06A, 18N05B21M06B, 18N05B21M01R, 18N05B21M01F, 18N05B21I21L, 18N05B21I16Q, 18N05B21I16K, 18N05B21I11Q, 18N05B21I11A, 18N05A25Q07P, 18N05A25Q02N, 18N05A25L18A, 18N05A25Q08L, 18N05A25L13R, 18N05A25L13L, 18N05A25L13B, 18N05A25L13S, 18N05A25Q08I, 18N05A25Q03I, 18N05A25Q03D, 18N05A25Q09Q, 18N05A25Q03Z, 18N05A25Q04K, 18N05A25L23Z, 18N05A25L24K, 18N05A25L24F, 18N05A25L24A, 18N05A25L18Z, 18N05A25L19Q, 18N05A25L14Q, 18N05A25L13E, 18N05A25L08Z, 18N05A25L09Q, 18N05A25L08E, 18N05A25Q09G, 18N05A25L24L, 18N05A25L24G, 18N05A25L24B, 18N05A25L09W, 18N05A25L09G, 18N05A25Q04H, 18N05A25L14S, 18N05A25L14M, 18N05A25Q09I, 18N05A25Q04Y, 18N05A25L24I, 18N05A25L19D, 18N05A25L14T, 18N05A25L09T, 18N05A25L09N, 18N05A25Q09P, 18N05A25Q04J, 18N05A25Q04E, 18N05A25L24U, 18N05A25L24J, 18N05A25L19P, 18N05A25L14Z, 18N05A25L25F, 18N05A25L15V, 18N05A25L10K, 18N05A25Q15W, 18N05A25Q05B, 18N05A25L15W, 18N05A25L10R, 18N05A25Q20H, 18N05A25Q20C, 18N05A25Q15M, 18N05A25L25X, 18N05A25L20M, 18N05A25L20H, 18N05A25L15S, 18N05A25L10C, 18N05A25L05X, 18N05A25Q15T, 18N05A25Q10I, 18N05A25L10D, 18N05A25Q15E, 18N05A25L25P, 18N05A25L25J, 18N05A25L20Z, 18N05B21I21W, 18N05B21I21F, 18N05B21I11K, 18N05B21I06V, 18N05B21I06R, 18N05A25Q07N, 18N05A25Q07D, 18N05A25L07P, 18N05A25Q08F, 18N05A25Q08A, 18N05A25L23V, 18N05A25L13K, 18N05A25L08F, 18N05A25Q03G, 18N05A25L23W, 18N05A25L23G, 18N05A25L18W, 18N05A25L13G, 18N05A25Q03X, 18N05A25Q03H, 18N05A25L23C, 18N05A25L18X, 18N05A25L18C, 18N05A25L08S, 18N05A25L23Y, 18N05A25L23N, 18N05A25L13Y, 18N05A25L13N, 18N05A25L08I, 18N05A25Q09K, 18N05A25Q08E, 18N05A25Q04V, 18N05A25Q04Q, 18N05A25Q03P, 18N05A25L24V, 18N05A25L23U, 18N05A25L19F, 18N05A25L13U, 18N05A25L03Z, 18N05A25Q04W, 18N05A25Q04G, 18N05A25L19G, 18N05A25L14W, 18N05A25L14B, 18N05A25L24X, 18N05A25L24M, 18N05A25L09X, 18N05A25L09H, 18N05A25L14N, 18N05A25L09D, 18N05A25Q09U, 18N05A25L24P, 18N05A25Q10F, 18N05A25L10Q, 18N05A25L05V, 18N05A25L25B, 18N05A25L20W, 18N05A25L20R, 18N05A25L20L, 18N05A25L20B, 18N05A25L15B, 18N05A25Q15S, 18N05A25Q10X, 18N05A25Q05C, 18N05A25L15M, 18N05A25Q20D, 18N05A25Q15I, 18N05A25Q05D, 18N05A25L25T, 18N05A25L10Y, 18N05A25Q10U, 18N05A25Q05E, 18N05A25L25E, 18N05A25L15P, 18N05A25L15E, 18N05B21M06W, 18N05B21M06F, 18N05B21M01W, 18N05B21I16L, 18N05B21I06G, 18N05A25Q02D, 18N05A25L17E, 18N05A25Q03A, 18N05A25L13Q, 18N05A25Q03R, 18N05A25L23R, 18N05A25L18L, 18N05A25L18G, 18N05A25L13M, 18N05A25L08C, 18N05A25Q08N, 18N05A25L18T, 18N05A25Q09F, 18N05A25Q03U, 18N05A25L23E, 18N05A25L18E, 18N05A25L19A, 18N05A25L09V, 18N05A25Q04R, 18N05A25Q04L, 18N05A25L19W, 18N05A25L19R, 18N05A25L14R, 18N05A25L09B, 18N05A25Q09C, 18N05A25Q04S, 18N05A25Q04M, 18N05A25L24C, 18N05A25L09S, 18N05A25L09C, 18N05A25L24Y, 18N05A25L24T, 18N05A25L19T, 18N05A25L19I, 18N05A25L19Z, 18N05A25L19E, 18N05A25L14E, 18N05A25L09P, 18N05A25L09J, 18N05A25L04Z, 18N05A25Q10A, 18N05A25Q05A, 18N05A25L25Q, 18N05A25L20V, 18N05A25L20A, 18N05A25L15F, 18N05A25Q15B, 18N05A25Q15H, 18N05A25L20S, 18N05A25L15X, 18N05A25Q20N, 18N05A25Q15U, 18N05A25Q10E, 18N05A25L25Z, 18N05A25L25U, 18N05A25L20U, 18N05A25L15J, 18N05A25L10J, 18N05A25L10E, 18N05B21M16F, 18N05B21M16L, 18N05B21M11B, 18N05B21M06R, 18N05B21M01B, 18N05B21I21K, 18N05B21I21A, 18N05B21I21B, 18N05B21I16R, 18N05B21I16B, 18N05B21I11L, 18N05B21I06A, 18N05B21I01V"]
+    }
+    /* {
+      NombreArea: "prueba",
+      Referencia: "18N05N14M12R",
+      Celdas: ["18N05N14M12R"]
+    }*/
   ]
-
-
-
