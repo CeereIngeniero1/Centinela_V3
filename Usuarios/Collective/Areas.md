@@ -51,6 +51,14 @@ const pass2 = 'Alejo2026*';
 const user2 = '73620';
 const pass2 = 'pC6*qs2*dE';
 
+<!-- David santiago -->
+const user2 = '71381';
+const pass2 = '3117334589DsBv_';
+
+<!-- Oscar javier -->
+const user2 = '73619';
+const pass2 = 'qU4*dO4*nH';
+
 <!-- Provenza -->
 const user2 = '74025'; 
 const pass2 = 'Bloqueo2026CML.';
