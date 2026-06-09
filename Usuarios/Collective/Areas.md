@@ -59,6 +59,11 @@ const pass2 = '3117334589DsBv_';
 const user2 = '73619';
 const pass2 = 'qU4*dO4*nH';
 
+<!-- Jessica Paola Paternina Polo -->
+const user2 = '104734';
+const pass2 = 'pD6*sXO*yT';
+
+
 <!-- Provenza -->
 const user2 = '74025'; 
 const pass2 = 'Bloqueo2026CML.';
