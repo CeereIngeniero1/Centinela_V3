@@ -52,10 +52,12 @@ const user2 = '73620';
 const pass2 = 'pC6*qs2*dE';
 
 <!-- David santiago -->
+<!-- para are -->
 const user2 = '71381';
 const pass2 = '3117334589DsBv_';
 
 <!-- Oscar javier -->
+ <!-- para are -->
 const user2 = '73619';
 const pass2 = 'qU4*dO4*nH';
 

@@ -55,3 +55,12 @@ Rincondelmar2025_
 104736 (agentes  98897)
 Laura123..
 
+<!-- Oscar javier -->
+ <!-- para are -->
+const user2 = '73619';
+const pass2 = 'qU4*dO4*nH';
+
+<!-- David santiago -->
+<!-- para are -->
+const user2 = '71381';
+const pass2 = '3117334589DsBv_';
