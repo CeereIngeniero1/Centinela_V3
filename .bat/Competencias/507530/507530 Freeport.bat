@@ -1,1 +1,1 @@
-start /d "../../../../" node "507530 Freeport.js"
+start /d "../../../" node "507530 Freeport.js"

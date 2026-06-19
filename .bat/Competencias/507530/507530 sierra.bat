@@ -1,1 +1,1 @@
-start /d "../../../../" node "507530 sierra.js"
+start /d "../../../" node "507530 sierra.js"

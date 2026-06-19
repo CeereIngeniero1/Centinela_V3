@@ -1,1 +1,1 @@
-start /d "../../../../" node "507530 Guajira.js"
+start /d "../../../" node "507530 Guajira.js"
